@@ -3,7 +3,10 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-RUN corepack enable
+ENV CI=true
+
+RUN corepack enable \
+    && corepack prepare pnpm@10.33.2 --activate
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
