@@ -27,8 +27,8 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v4
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push ARM64 Docker Image
         uses: docker/build-push-action@v7
@@ -36,7 +36,7 @@ jobs:
           context: .
           platforms: linux/arm64
           push: true
-          tags: ${{ secrets.DOCKERHUB_REPO }}:latest
+          tags: ${{ secrets.DOCKER_REPO }}:latest
           build-args: |
             NEXT_PUBLIC_API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }}
           cache-from: type=gha
@@ -50,12 +50,12 @@ jobs:
       - name: Deploy to Oracle Cloud ARM Server
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.OCI_HOST }}
-          username: ${{ secrets.OCI_USERNAME }}
-          key: ${{ secrets.OCI_SSH_PRIVATE_KEY }}
+          host: ${{ secrets.SSH_IP }}
+          username: ${{ secrets.SSH_ID }}
+          key: ${{ secrets.SSH_KEY }}
           script: |
-            echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-            docker pull "${{ secrets.DOCKERHUB_REPO }}:latest"
+            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+            docker pull "${{ secrets.DOCKER_REPO }}:latest"
             docker stop bigbangmadevip-fe 2>/dev/null || true
             docker rm bigbangmadevip-fe 2>/dev/null || true
             docker run -d \
@@ -63,5 +63,5 @@ jobs:
               --restart unless-stopped \
               --network docker-network \
               -p 3000:3000 \
-              "${{ secrets.DOCKERHUB_REPO }}:latest"
+              "${{ secrets.DOCKER_REPO }}:latest"
             docker image prune -f
