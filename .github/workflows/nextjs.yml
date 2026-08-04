@@ -61,7 +61,7 @@ jobs:
             docker run -d \
               --name bigbangmadevip-fe \
               --restart unless-stopped \
-              --network docker-network \
+              --network bigbangmadevip-net \
               -p 3000:3000 \
               "${{ secrets.DOCKER_REPO }}:latest"
             docker image prune -f
