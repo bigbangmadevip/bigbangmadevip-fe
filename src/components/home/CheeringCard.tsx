@@ -14,8 +14,10 @@ export function CheeringCard({
   title,
   iconSrc,
   iconAlt,
+  completed,
   onParticipate,
 }: CheeringCardProps) {
+  const ctaText = completed ? '완료' : '참여하기';
   return (
     <article className="flex min-w-0 flex-col items-center text-center">
       {iconSrc ? (
@@ -36,10 +38,23 @@ export function CheeringCard({
 
       <button
         type="button"
-        className="mt-[6px] rounded-[16px] bg-main px-[10px] py-[4px] text-body-11 font-bold text-secondary-950"
+        className={`flex gap-[2px] mt-[6px] rounded-[16px] px-[10px] py-[4px] text-body-11 ${
+          completed
+            ? 'bg-secondary-800 text-secondary-500 border border-[rgba(255,255,255,0.08)]'
+            : 'bg-main text-secondary-950 text-body-11 font-bold'
+        }`}
         onClick={onParticipate}
+        disabled={completed}
       >
-        참여하기
+        {completed && (
+          <Image
+            src={'/icon/check.svg'}
+            alt="checkIcon"
+            width={12}
+            height={12}
+          />
+        )}
+        {ctaText}
       </button>
     </article>
   );

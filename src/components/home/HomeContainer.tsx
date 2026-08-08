@@ -1,23 +1,27 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { AppDialog } from '@/components/common/AppDialog';
 import NavigationListItem, {
   NavigationListItemProps,
 } from '@/components/common/NavigationListItem';
 import { SectionTitle } from '@/components/common/SectionTitle';
-import { api } from '@/lib/api';
-import { HomeResponse } from '@/types/home';
+import { useParticipateCheeringMutation } from '@/hooks/mutations/useParticipateCheeringMutation';
+import type { HomeResponse } from '@/types/home';
 import CheeringGrid from './CheeringGrid';
+import { CHEERING_DIALOG_CONFIG } from './constants';
 
-const VISITOR_CNT = '8,019';
+type DialogStep = 'CONFIRM' | 'COMPLETE';
 
-type DIALOG_STEP = 'CONFIRM' | 'COMPLETE';
+interface HomeContainerProps {
+  initialData: HomeResponse;
+}
 
 const todayScheduleMock: NavigationListItemProps[] = [
   {
     id: '0',
-    icon: 'icon',
+    icon: 'music',
     title: '멜론 다운로드 총공',
     time: '19:00',
     platform: '멜론 (Melon)',
@@ -25,7 +29,7 @@ const todayScheduleMock: NavigationListItemProps[] = [
   },
   {
     id: '1',
-    icon: 'icon',
+    icon: 'vote',
     title: '최애돌 생일 이벤트 화력 지원',
     time: '23:59',
     platform: '최애돌',
@@ -33,102 +37,64 @@ const todayScheduleMock: NavigationListItemProps[] = [
   },
 ];
 
-// const CHEERING_LIST: CheeringItem[] = [
-//   {
-//     id: 0,
-//     icon: '/cheering_music.svg',
-//     completedIcon: '/cheering_music_completed.svg',
-//     alt: '음원 스트리밍',
-//     title: '음원\n스트리밍',
-//   },
-//   {
-//     id: 1,
-//     icon: '/cheering_vote.svg',
-//     alt: '인기가요 사전 투표',
-//     title: '인기가요\n사전 투표',
-//   },
-//   {
-//     id: 2,
-//     icon: '/cheering_melon_vote.svg',
-//     alt: '멜론 주간인기상 투표',
-//     title: '멜론 주간인기상\n투표',
-//   },
-//   {
-//     id: 3,
-//     icon: '/cheering_youtube.svg',
-//     alt: '유튜브 뮤직비디오 조회',
-//     title: '유튜브\n뮤직비디오 조회',
-//   },
-//   {
-//     id: '4',
-//     icon: '/cheering_report.svg',
-//     alt: '네이버 기사 댓글 작성',
-//     title: '네이버 기사\n댓글 작성',
-//   },
-//   {
-//     id: '5',
-//     icon: '/cheering_event.svg',
-//     alt: '선착순 이벤트 참여',
-//     title: '선착순\n이벤트 참여',
-//   },
-// ];
-
-interface HomeContainerProps {
-  initialData: HomeResponse;
-}
-
 export default function HomeContainer({ initialData }: HomeContainerProps) {
-  const [dialogStep, setDialogStep] = useState<DIALOG_STEP | null>(null);
+  const [dialogStep, setDialogStep] = useState<DialogStep | null>(null);
+
   const [selectedCheeringId, setSelectedCheeringId] = useState<string | null>(
     null,
   );
-  const [completedCheeringIds, setCompletedCheeringIds] = useState<string[]>(
-    () =>
-      initialData.cheeringItems
-        .filter((item) => item.completed)
-        .map((item) => item.id),
+
+  const participateCheeringMutation = useParticipateCheeringMutation();
+
+  const completedCheeringIds = initialData.cheeringItems
+    .filter((item) => item.completed)
+    .map((item) => item.id);
+
+  const selectedCheering = initialData.cheeringItems.find(
+    (item) => item.id === selectedCheeringId,
   );
-  const [isParticipating, setIsParticipating] = useState(false);
+
+  const selectedDialogConfig = selectedCheering
+    ? CHEERING_DIALOG_CONFIG[selectedCheering.category]
+    : null;
+
+  const currentDialogConfig =
+    dialogStep === 'CONFIRM'
+      ? selectedDialogConfig?.confirm
+      : selectedDialogConfig?.complete;
+
+  const dialogContext = selectedCheering
+    ? {
+        item: selectedCheering,
+        participantCount: initialData.participantCount,
+      }
+    : null;
 
   const handleOpenParticipateDialog = (cheeringId: string) => {
     setSelectedCheeringId(cheeringId);
     setDialogStep('CONFIRM');
   };
 
-  const handleParticipate = async () => {
-    if (selectedCheeringId === null || isParticipating) return;
+  const handleCloseDialog = () => {
+    setDialogStep(null);
+    setSelectedCheeringId(null);
+  };
 
-    try {
-      setIsParticipating(true);
+  const handleParticipate = () => {
+    if (!selectedCheeringId || participateCheeringMutation.isPending) return;
 
-      const response = await api.post(
-        `/api/v1/cheerings/${selectedCheeringId}`,
-      );
-
-      console.log(
-        `[POST /api/v1/cheerings/${selectedCheeringId}]`,
-        response.data,
-      );
-
-      setCompletedCheeringIds((currentIds) =>
-        currentIds.includes(selectedCheeringId)
-          ? currentIds
-          : [...currentIds, selectedCheeringId],
-      );
-      setDialogStep('COMPLETE');
-    } catch (error) {
-      console.error('[handleParticipate] 응원 참여 요청 실패', error);
-    } finally {
-      setIsParticipating(false);
-    }
+    participateCheeringMutation.mutate(selectedCheeringId, {
+      onSuccess: () => setDialogStep('COMPLETE'),
+    });
   };
 
   return (
     <main>
       {/* HEADER */}
       <div className="flex justify-end py-[12px]">
-        <div>알림</div>
+        <Image src="/icon/alarm.svg" alt="알림" width={24} height={24} />
       </div>
+
       {/* HOME TITLE */}
       <div className="mb-[24px] text-title-36 font-extralight">
         <h1>오늘</h1>
@@ -140,68 +106,118 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
       </div>
 
       {/* 긴급 안내 배너 */}
-      <div className="rounded-[16px] border border-[#ECE818] p-[16px] mb-[40px]">
-        <p className="text-body-12 mb-[20px] font-medium">
+      <div className="mb-[40px] rounded-[16px] border border-main p-[16px] bg-[rgba(255,251,31,0.04)]">
+        <p className="mb-[20px] text-body-12 font-medium">
           🚨 놓치면 안되는 VIP 긴급 총공
         </p>
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <div>
-            <p className="text-title-17 font-bold">
+            <p className="text-title-17 font-bold mb-[2px]">
               인기가요 생방송 투표 진행중!
             </p>
-            <p className="text-body-13 text-[#BBBBBB]">
-              마감까지 32분 남음 | 하이어(Higher)
-            </p>
+
+            <div className="flex gap-[2px] items-center">
+              <Image
+                src={'/icon/time-red.svg'}
+                alt="time-red"
+                width={16}
+                height={16}
+              />
+              <span className="text-body-13 text-[rgb(255,89,64)]">
+                마감까지 32분 남음
+              </span>
+              <span className="text-body-13 px-[6px] font-bold text-secondary-300">
+                |
+              </span>
+              <span className="text-body-13 font-medium text-secondary-300">
+                하이어(Higher)
+              </span>
+            </div>
           </div>
-          <div>{'>'}</div>
+
+          <Image
+            src={'/icon/arrow-right_yellow-bg.svg'}
+            alt="arrowRightIcon"
+            width={32}
+            height={32}
+          />
         </div>
       </div>
 
       {/* 오늘 해야 할 응원 */}
       <div className="mb-[32px]">
-        <SectionTitle action={<span>4 / 8 완료</span>}>
+        <SectionTitle
+          action={
+            <div className="flex gap-[1px]">
+              <span className="text-body-13 font-bold">
+                {initialData.completedCheeringCount}
+              </span>
+
+              <span className="text-body-13 text-secondary-300">/</span>
+
+              <span className="text-body-13 text-secondary-300">
+                {initialData.totalCheeringCount}
+              </span>
+
+              <span className="ml-[3px] text-body-13 text-secondary-400">
+                완료
+              </span>
+            </div>
+          }
+        >
           오늘 해야 할 응원
         </SectionTitle>
+
         <CheeringGrid
           items={initialData.cheeringItems}
           completedIds={completedCheeringIds}
           onParticipate={handleOpenParticipateDialog}
         />
       </div>
+
       {/* 오늘의 총공 일정 */}
       <div className="mb-[40px]">
         <SectionTitle>오늘의 총공 일정</SectionTitle>
-        {/* 총공 컴포넌트 블록 */}
-        <div className="flex flex-col gap-[8px]">
-          {todayScheduleMock.map((mock) => (
-            <NavigationListItem
-              key={mock.id}
-              icon={mock.icon}
-              title={mock.title}
-              time={mock.time}
-              platform={mock.platform}
-              href={mock.href}
+        {todayScheduleMock.length === 0 ? (
+          <div className="flex flex-col gap-[2px] py-[64px] items-center justify-center">
+            <Image
+              src={'/icon/empty.svg'}
+              alt="EmptyIcon"
+              width={64}
+              height={64}
             />
-          ))}
-        </div>
+            <p className="text-body-13 text-secondary-500">
+              오늘 총공 일정이 없어요.
+            </p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-[8px]">
+            {todayScheduleMock.map((schedule) => (
+              <NavigationListItem
+                key={schedule.id}
+                icon={schedule.icon}
+                title={schedule.title}
+                time={schedule.time}
+                platform={schedule.platform}
+                href={schedule.href}
+              />
+            ))}
+          </div>
+        )}
       </div>
+
       <AppDialog
         open={dialogStep !== null}
         onOpenChange={(open) => {
           if (!open) {
-            setDialogStep(null);
-            setSelectedCheeringId(null);
+            handleCloseDialog();
           }
         }}
-        title={
-          dialogStep === 'CONFIRM'
-            ? '오늘 스트리밍을 완료했나요?'
-            : '오늘의 스트리밍 완료!'
-        }
+        title={currentDialogConfig?.title ?? ''}
         description={
-          dialogStep === 'CONFIRM'
-            ? '봄여름가을겨울을 듣고 왔다면\n참여완료를 눌러주세요.'
-            : '현재 304명의 VIP가 함께 했어요.'
+          currentDialogConfig && dialogContext
+            ? currentDialogConfig.description(dialogContext)
+            : ''
         }
         actions={
           dialogStep === 'CONFIRM'
@@ -209,18 +225,20 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
                 {
                   label: '취소',
                   variant: 'secondary',
-                  onClick: () => setDialogStep(null),
+                  onClick: handleCloseDialog,
                 },
                 {
-                  label: isParticipating ? '처리 중...' : '참여완료',
-                  disabled: isParticipating,
+                  label: participateCheeringMutation.isPending
+                    ? '처리 중...'
+                    : (currentDialogConfig?.buttonLabel ?? '참여완료'),
+                  disabled: participateCheeringMutation.isPending,
                   onClick: handleParticipate,
                 },
               ]
             : [
                 {
-                  label: '확인',
-                  onClick: () => setDialogStep(null),
+                  label: currentDialogConfig?.buttonLabel ?? '확인',
+                  onClick: handleCloseDialog,
                 },
               ]
         }

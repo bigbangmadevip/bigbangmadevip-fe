@@ -1,37 +1,14 @@
 'use client';
 
 import HomeContainer from '@/components/home/HomeContainer';
-import { useEffect, useState } from 'react';
-import { getHomeData } from '../apis/home';
-import { HomeResponse } from '@/types/home';
-
-// const getHomeData = async () => {
-//   try {
-//     const response = await api.get<HomeResponse>('/api/v1/home');
-
-//     console.log('[GET /api/v1/home]', response.data);
-
-//     return response.data;
-//   } catch (error) {
-//     console.error('[getHomeData] API 요청 실패', error);
-//     throw error;
-//   }
-// };
+import { useHomeQuery } from '@/hooks/queries/useHomeQuery';
 
 export default function Home() {
-  // const homeData = await getHomeData();
+  const { data: homeData, isPending, isError } = useHomeQuery();
 
-  const [homeData, setHomeData] = useState<HomeResponse>();
-
-  useEffect(() => {
-    getHomeData()
-      .then((v) => {
-        if (v) setHomeData(v);
-      })
-      .catch(console.error);
-  }, []);
-
-  if (!homeData) return <div>...로딩중</div>;
+  if (isPending) return <div>...로딩중</div>;
+  // TODO: 404 PAGE
+  if (isError || !homeData) return <div>홈 정보를 불러오지 못했어요.</div>;
 
   return <HomeContainer initialData={homeData} />;
 }

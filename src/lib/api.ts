@@ -1,8 +1,20 @@
 import axios from 'axios';
 
-// export const API_BASE_URL =
-//   process.env.NEXT_PUBLIC_API_BASE_URL ??
-//   'https://occultist-small-maximum.ngrok-free.dev';
+type CsrfTokenResponse = {
+  headerName: string;
+  token: string;
+};
+
+type ApiResponse<T> = {
+  data: T;
+  success: boolean;
+};
+
+const CSRF_METHODS = ['post', 'put', 'patch', 'delete'];
+
+let csrfHeaderName: string | null = null;
+let csrfToken: string | null = null;
+let csrfTokenRequest: Promise<void> | null = null;
 
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://bigbangmadevip.com';
@@ -10,5 +22,37 @@ export const API_BASE_URL =
 export const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
-  withXSRFToken: true,
+});
+
+export function initializeCsrfToken() {
+  if (!csrfTokenRequest) {
+    csrfTokenRequest = api
+      .get<ApiResponse<CsrfTokenResponse>>('/api/v1/csrf-token')
+      .then((response) => {
+        csrfHeaderName = response.data.data.headerName;
+        csrfToken = response.data.data.token;
+      })
+      .catch((error: unknown) => {
+        csrfTokenRequest = null;
+        throw error;
+      });
+  }
+
+  return csrfTokenRequest;
+}
+
+api.interceptors.request.use(async (config) => {
+  const method = config.method?.toLowerCase() ?? '';
+
+  if (CSRF_METHODS.includes(method)) {
+    if (!csrfHeaderName || !csrfToken) {
+      await initializeCsrfToken();
+    }
+
+    if (csrfHeaderName && csrfToken) {
+      config.headers.set(csrfHeaderName, csrfToken);
+    }
+  }
+
+  return config;
 });

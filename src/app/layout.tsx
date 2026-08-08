@@ -2,14 +2,15 @@ import type { Metadata, Viewport } from 'next';
 import 'pretendard/dist/web/variable/pretendardvariable.css';
 import './globals.css';
 import { PwaRegister } from '@/components/pwa-register';
+import { QueryProvider } from '@/providers/QueryProvider';
 
 export const metadata: Metadata = {
-  title: 'BigbangMadeVIP',
-  description: 'bigbangmadevip PWA',
-  applicationName: 'bigbangmadevip',
+  title: 'BIGBANG MADE VIP',
+  description: 'BIGBANG MADE VIP PWA',
+  applicationName: 'BIGBANG MADE VIP',
   appleWebApp: {
     capable: true,
-    title: 'bigbangmadevip',
+    title: 'BIGBANG MADE VIP',
     statusBarStyle: 'default',
   },
 };
@@ -29,7 +30,9 @@ export default function RootLayout({
   return (
     <html lang="ko" className="h-full antialiased">
       <body>
-        <div className="app-shell">{children}</div>
+        <QueryProvider>
+          <div className="app-shell">{children}</div>
+        </QueryProvider>
         <PwaRegister />
       </body>
     </html>

@@ -24,12 +24,14 @@ export type CheeringItem = {
   id: string;
   category: CHEERING_CATEGORY;
   title: string;
-  subtitle?: string;
+  subtitle?: string; // 노래제목, 등
   completed: boolean;
 };
 
 export type HomeResponse = {
   participantCount: number;
+  totalCheeringCount: number;
+  completedCheeringCount: number;
   urgentDetail: UrgentDetail | null;
   cheeringItems: CheeringItem[];
 };
