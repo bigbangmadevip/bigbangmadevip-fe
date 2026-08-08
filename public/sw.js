@@ -1,4 +1,4 @@
-const CACHE_NAME = "thevip-v1";
+const CACHE_NAME = "bigbangmadevip-v2";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/favicon.ico"];
 
 self.addEventListener("install", (event) => {
