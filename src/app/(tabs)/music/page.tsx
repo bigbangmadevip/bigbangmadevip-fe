@@ -9,12 +9,13 @@ import { useMusicStreamingQuery } from '@/hooks/queries/useMusicQuery';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
+import MusicNoticeContainer from '@/components/music/MusicNotice/MusicNoticeContainer';
 
 const MUSIC_TABS = [
   { id: 'streaming', title: '스트리밍' },
   { id: 'album', title: '앨범 구매' },
   { id: 'guide', title: '음원 가이드' },
-  { id: 'notice', title: '공지' },
+  { id: 'notice', title: '음총 공지' },
 ] as const;
 
 type MusicTab = (typeof MUSIC_TABS)[number]['id'];
@@ -164,7 +165,7 @@ function MusicPageContent() {
             ))}
           {/* {activeTab === 'album' && <AlbumTab />} */}
           {activeTab === 'guide' && <MusicGuideContainer />}
-          {/* {activeTab === 'notice' && <NoticeTab />} */}
+          {activeTab === 'notice' && <MusicNoticeContainer />}
         </section>
       </main>
     </>

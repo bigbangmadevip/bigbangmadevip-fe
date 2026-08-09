@@ -18,7 +18,7 @@ const MusicGuideReplay = () => {
         {STREAMING_NATIONAL_GUIDE_MOCK.map((item) => (
           <MusicGuideLinkButton
             key={item.id}
-            content={' 반복재생 가이드'}
+            content={' 뮤비 반복재생 가이드'}
             platform={item.platform}
             link={item.link}
           />

@@ -8,8 +8,7 @@ interface TEMP_TYPE {
 }
 
 const STREAMING_NATIONAL_GUIDE_MOCK: TEMP_TYPE[] = [
-  { id: '1', platform: 'genie', link: '' },
-  { id: '2', platform: 'bugs', link: '' },
+  { id: '1', platform: 'melon', link: '' },
 ];
 
 const MusicGuideKChart = () => {
@@ -19,7 +18,7 @@ const MusicGuideKChart = () => {
         {STREAMING_NATIONAL_GUIDE_MOCK.map((item) => (
           <MusicGuideLinkButton
             key={item.id}
-            content={' 가이드'}
+            content={' K차트 가이드'}
             platform={item.platform}
             link={item.link}
           />
