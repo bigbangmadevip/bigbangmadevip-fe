@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: 'BIGBANG MADE VIP PWA',
     start_url: '/',
     display: 'standalone',
-    background_color: '#ffffff',
-    theme_color: '#18181b',
+    background_color: '#0a0a0a',
+    theme_color: '#0a0a0a',
     icons: [{ src: '/favicon.ico', sizes: 'any', type: 'image/x-icon' }],
   };
 }
