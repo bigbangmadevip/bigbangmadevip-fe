@@ -1,11 +1,11 @@
 import { API_BASE_URL, api, initializeCsrfToken } from '@/lib/api';
 
-export const FRONTEND_URL =
-  process.env.NEXT_PUBLIC_FRONTEND_URL || 'http://localhost:3000';
-
-export const KAKAO_LOGIN_URL =
-  `${API_BASE_URL}/oauth2/authorization/kakao` +
-  `?redirect=${encodeURIComponent(FRONTEND_URL)}`;
+export function createKakaoLoginUrl(frontendUrl: string) {
+  return (
+    `${API_BASE_URL}/oauth2/authorization/kakao` +
+    `?redirect=${encodeURIComponent(frontendUrl)}`
+  );
+}
 
 export type CurrentUser = Record<string, unknown>;
 
