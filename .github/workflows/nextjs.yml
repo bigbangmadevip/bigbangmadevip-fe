@@ -39,6 +39,7 @@ jobs:
           tags: ${{ secrets.DOCKER_REPO }}:latest
           build-args: |
             NEXT_PUBLIC_API_BASE_URL=${{ vars.NEXT_PUBLIC_API_BASE_URL }}
+            NEXT_PUBLIC_FRONTEND_URL=${{ vars.NEXT_PUBLIC_FRONTEND_URL }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

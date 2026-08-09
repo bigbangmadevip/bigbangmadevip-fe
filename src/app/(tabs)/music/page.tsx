@@ -103,63 +103,64 @@ function MusicPageContent() {
                 스트리밍 정보를 불러오지 못했어요.
               </div>
             ) : (
-            <>
-              <div className="flex justify-between items-center rounded-full border border-[#ECE818] my-[24px] px-[16px] py-[12px] bg-[rgba(255,251,31,0.04)]">
-                <div className="flex gap-[4px]">
-                  <p className="font-bold text-body-13">🚨</p>
-                  <p className="font-bold text-body-13">
-                    오늘 저녁 12시 30분 멜론 개별곡 다운로드 총공
-                  </p>
-                </div>
-                <Image
-                  src={'/icon/arrow-right_gray-24.svg'}
-                  alt="arrowIcon"
-                  width={18}
-                  height={18}
-                />
-              </div>
-              <div className="mb-[32px]">
-                <SectionTitle>원클릭 스트리밍</SectionTitle>
-                <div className="grid grid-cols-3 gap-[8px]">
-                  {ONE_CLICK_MOCK.map((oneClick) => (
-                    <OneClickBlock
-                      key={oneClick.id}
-                      id={oneClick.id}
-                      platform={oneClick.platform}
-                      links={oneClick.links}
-                    />
-                  ))}
-                </div>
-              </div>
-              <div>
-                <SectionTitle
-                  action={
-                    <div className="flex items-baseline">
-                      <span className="text-body-13 text-secondary-400">
-                        최신 업데이트
-                      </span>
-                      <span className="text-body-13 px-[6px] font-bold text-secondary-700">
-                        |
-                      </span>
-                      <span className="text-body-13 text-secondary-400">
-                        7/19 18:00
-                      </span>
-                    </div>
-                  }
-                >
-                  스트리밍 리스트
-                </SectionTitle>
-                <div className="relative h-[440px] w-full overflow-hidden rounded-[16px]">
+              <>
+                <div className="flex justify-between items-center rounded-full border border-[#ECE818] my-[24px] px-[16px] py-[12px] bg-[rgba(255,251,31,0.04)]">
+                  <div className="flex gap-[4px]">
+                    <p className="font-bold text-body-13">🚨</p>
+                    <p className="font-bold text-body-13">
+                      오늘 저녁 12시 30분 멜론 개별곡 다운로드 총공
+                    </p>
+                  </div>
                   <Image
-                    className="rounded-[16px] object-cover"
-                    src={'/streaming_list.png'}
-                    alt="streamingList"
-                    fill
-                    sizes="(max-width: 430px) calc(100vw - 40px), 390px"
+                    src={'/icon/arrow-right_gray-24.svg'}
+                    alt="arrowIcon"
+                    width={18}
+                    height={18}
                   />
                 </div>
-              </div>
-            </>
+                <div className="mb-[32px]">
+                  <SectionTitle>원클릭 스트리밍</SectionTitle>
+                  <div className="grid grid-cols-3 gap-[8px]">
+                    {ONE_CLICK_MOCK.map((oneClick) => (
+                      <OneClickBlock
+                        key={oneClick.id}
+                        id={oneClick.id}
+                        platform={oneClick.platform}
+                        links={oneClick.links}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <SectionTitle
+                    action={
+                      <div className="flex items-baseline">
+                        <span className="text-body-13 text-secondary-400">
+                          최신 업데이트
+                        </span>
+                        <span className="text-body-13 px-[6px] font-bold text-secondary-700">
+                          |
+                        </span>
+                        <span className="text-body-13 text-secondary-400">
+                          7/19 18:00
+                        </span>
+                      </div>
+                    }
+                  >
+                    스트리밍 리스트
+                  </SectionTitle>
+                  <div className="relative h-[440px] w-full overflow-hidden rounded-[16px]">
+                    <Image
+                      className="rounded-[16px] object-cover"
+                      src={'/streaming_list.png'}
+                      alt="streamingList"
+                      fill
+                      priority
+                      sizes="(max-width: 430px) calc(100vw - 40px), 390px"
+                    />
+                  </div>
+                </div>
+              </>
             ))}
           {/* {activeTab === 'album' && <AlbumTab />} */}
           {activeTab === 'guide' && <MusicGuideContainer />}

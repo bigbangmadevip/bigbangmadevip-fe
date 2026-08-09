@@ -48,6 +48,7 @@ export function CheeringCard({
       >
         {completed && (
           <Image
+            className="h-[12px] w-auto"
             src={'/icon/check.svg'}
             alt="checkIcon"
             width={12}
