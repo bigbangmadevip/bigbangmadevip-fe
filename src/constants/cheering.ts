@@ -14,6 +14,7 @@ const CHEERING_COMPLETED_ICON_BY_CATEGORY: Partial<
   Record<CHEERING_CATEGORY, string>
 > = {
   STREAMING: '/cheering_streaming_completed.svg',
+  VOTE: '/cheering_vote_completed.png',
 };
 
 export function getCheeringIcon(

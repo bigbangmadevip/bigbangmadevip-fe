@@ -37,7 +37,7 @@ export function BottomNavigation() {
                 aria-hidden="true"
               />
               <span
-                className={`text-caption-10 ${isActive ? 'text-secondary-1' : 'text-secondary-500'}`}
+                className={`text-caption-10 ${isActive ? 'text-secondary-1' : 'text-secondary-400'}`}
               >
                 {tab.label}
               </span>

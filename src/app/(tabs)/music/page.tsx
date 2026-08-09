@@ -4,7 +4,8 @@ import { SectionTitle } from '@/components/common/SectionTitle';
 import OneClickBlock, {
   OneClickBlockProps,
 } from '@/components/music/OneClickBlock';
-import MusicGuideContainer from '@/components/music/MusicGuideContainer';
+import MusicGuideContainer from '@/components/music/MusicGuide/MusicGuideContainer';
+import { useMusicStreamingQuery } from '@/hooks/queries/useMusicQuery';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
@@ -40,6 +41,7 @@ function MusicPageContent() {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab');
   const activeTab: MusicTab = isMusicTab(tabParam) ? tabParam : 'streaming';
+  const streamingQuery = useMusicStreamingQuery(activeTab === 'streaming');
 
   const handleTabChange = (tab: MusicTab) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -61,7 +63,7 @@ function MusicPageContent() {
           음원
         </div>
         {/* TABS */}
-        <div className="-mx-5 mb-[24px] border-b-2 border-[#555555]">
+        <div className="sticky top-[env(safe-area-inset-top)] z-40 -mx-5 border-b-2 border-[#555555] bg-background">
           <div className="flex h-[44px] items-center" role="tablist">
             {MUSIC_TABS.map((tab) => (
               <button
@@ -91,9 +93,18 @@ function MusicPageContent() {
           aria-labelledby={`music-tab-${activeTab}`}
         >
           {/* 스트리밍 탭 화면 */}
-          {activeTab === 'streaming' && (
+          {activeTab === 'streaming' &&
+            (streamingQuery.isPending ? (
+              <div className="py-[64px] text-center text-body-13 text-secondary-500">
+                스트리밍 정보를 불러오는 중...
+              </div>
+            ) : streamingQuery.isError ? (
+              <div className="py-[64px] text-center text-body-13 text-secondary-500">
+                스트리밍 정보를 불러오지 못했어요.
+              </div>
+            ) : (
             <>
-              <div className="flex justify-between items-center rounded-full border border-[#ECE818] mb-[24px] px-[16px] py-[12px] bg-[rgba(255,251,31,0.04)]">
+              <div className="flex justify-between items-center rounded-full border border-[#ECE818] my-[24px] px-[16px] py-[12px] bg-[rgba(255,251,31,0.04)]">
                 <div className="flex gap-[4px]">
                   <p className="font-bold text-body-13">🚨</p>
                   <p className="font-bold text-body-13">
@@ -149,7 +160,7 @@ function MusicPageContent() {
                 </div>
               </div>
             </>
-          )}
+            ))}
           {/* {activeTab === 'album' && <AlbumTab />} */}
           {activeTab === 'guide' && <MusicGuideContainer />}
           {/* {activeTab === 'notice' && <NoticeTab />} */}
