@@ -3,6 +3,7 @@
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import LoadingScreen from '@/components/common/LoadingScreen';
 import { getCurrentUser, initializeCsrfToken } from '@/lib/auth';
 
 type AuthGateProps = {
@@ -44,11 +45,7 @@ export function AuthGate({ children }: AuthGateProps) {
   }, [router]);
 
   if (!isAuthenticated) {
-    return (
-      <main className="flex min-h-[calc(100dvh-env(safe-area-inset-top))] items-center justify-center">
-        <p className="text-sm text-[#777777]">로그인 확인 중...</p>
-      </main>
-    );
+    return <LoadingScreen label="로그인 확인 중" />;
   }
 
   return children;

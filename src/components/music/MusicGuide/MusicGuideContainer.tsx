@@ -62,6 +62,7 @@ export default function MusicGuideContainer() {
         id={`guide-panel-${activeTab}`}
         role="tabpanel"
         aria-labelledby={`guide-tab-${activeTab}`}
+        className="mt-[12px]"
       >
         <ActiveGuide />
       </div>

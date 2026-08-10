@@ -51,10 +51,12 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  closeOnPointerDownOutside = false,
   onPointerDownOutside,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean
+  closeOnPointerDownOutside?: boolean
 }) {
   return (
     <DialogPortal data-slot="dialog-portal">
@@ -67,7 +69,9 @@ function DialogContent({
         )}
         onPointerDownOutside={(event) => {
           onPointerDownOutside?.(event)
-          event.preventDefault()
+          if (!closeOnPointerDownOutside) {
+            event.preventDefault()
+          }
         }}
         {...props}
       >
