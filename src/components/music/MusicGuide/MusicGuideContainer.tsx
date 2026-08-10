@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { ComponentType } from 'react';
+import { CategoryTabs } from '@/components/common/CategoryTabs';
 import MusicGuideStreaming from './MusicGuideStreaming';
 import MusicGuideDownload from './MusicGuideDownload';
 import MusicGuideReplay from './MusicGuideReplay';
@@ -46,33 +47,14 @@ export default function MusicGuideContainer() {
 
   return (
     <section>
-      <div className="sticky top-[calc(44px+env(safe-area-inset-top))] z-30 -mx-5 bg-background pt-[16px]">
-        <div className="scrollbar-hidden overflow-x-auto px-5 overscroll-x-contain">
-          <div className="flex w-max gap-[8px] mb-[12px]" role="tablist">
-            {GUIDE_TABS.map((tab) => {
-              const isActive = activeTab === tab.id;
-
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  id={`guide-tab-${tab.id}`}
-                  role="tab"
-                  aria-selected={isActive}
-                  aria-controls={`guide-panel-${tab.id}`}
-                  className={`shrink-0 rounded-[6px] px-[14px] py-[8px] text-body-12 ${
-                    isActive
-                      ? 'bg-secondary-1 font-bold text-secondary-950'
-                      : 'bg-secondary-800 font-normal text-secondary-400'
-                  }`}
-                  onClick={() => handleTabChange(tab.id)}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+      <div className="sticky top-[calc(44px+env(safe-area-inset-top))] z-30 -mx-5 bg-background pt-[16px] pb-[12px]">
+        <CategoryTabs
+          tabs={GUIDE_TABS}
+          value={activeTab}
+          onChange={handleTabChange}
+          idPrefix="guide-tab"
+          panelIdPrefix="guide-panel"
+        />
       </div>
 
       {/* 탭에 따른 내부 화면 렌더링 */}
@@ -80,7 +62,6 @@ export default function MusicGuideContainer() {
         id={`guide-panel-${activeTab}`}
         role="tabpanel"
         aria-labelledby={`guide-tab-${activeTab}`}
-        className="mt-[12px]"
       >
         <ActiveGuide />
       </div>

@@ -20,9 +20,42 @@ export const PLATFORM_LABEL = {
   spotify: '스포티파이',
   applemusic: '애플뮤직',
   youtubemusic: '유튜브 뮤직',
-  musicvideo: '뮤직비디오',
+  musicvideo: '유튜브 뮤직비디오',
 } satisfies Record<Platform, string>;
 
 // TODO: API 응답 확인 후 구체적인 DTO로 교체
-export type MusicStreamingResponse = Record<string, unknown>;
 export type MusicDetailResponse = Record<string, unknown>;
+
+export type MusicRegion = 'DOMESTIC' | 'GLOBAL';
+
+export type MusicOs = 'ANDROID' | 'IPHONE' | 'IPAD' | 'MAC' | 'WINDOWS';
+
+export type MusicStreamingUrgent = {
+  detailId: number;
+  urgentContent: string;
+};
+
+export type MusicStreamingLink = {
+  label: string;
+  url: string;
+};
+
+export type MusicStreamingOsGroup = {
+  os: MusicOs;
+  links: MusicStreamingLink[];
+};
+
+export type MusicStreamingPlatform = {
+  platformId: number;
+  name: Platform;
+  iconUrl: string | null;
+  region: MusicRegion;
+  osGroups: MusicStreamingOsGroup[];
+};
+
+export type MusicStreamingResponse = {
+  urgent: MusicStreamingUrgent | null;
+  platforms: MusicStreamingPlatform[];
+  streamingImageUrls: string[];
+  imagesUpdatedAt: string | null;
+};

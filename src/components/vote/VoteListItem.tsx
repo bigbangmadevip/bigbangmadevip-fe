@@ -21,7 +21,7 @@ const VoteListItem = ({
   href,
 }: VoteListItemProps) => {
   return (
-    <div className="pb-[20px] border-b border-secondary-800">
+    <div className="pb-[20px] border-b border-secondary-800 last:border-0">
       <div className="flex justify-between mb-[16px]">
         <div className="px-[8px] py-[2px] bg-[#1B6593] rounded-[4px] text-caption-10 font-medium">
           {badgeNm}

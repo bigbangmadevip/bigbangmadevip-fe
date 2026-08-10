@@ -1,22 +1,22 @@
-import MusicNoticeLinkBtn from './MusicNoticeLinkBtn';
-import MusicNoticeListItem from './MusicNoticeListItem';
-import { MUSIC_NOTICE_MOCK_DATA } from './mock';
+import VoteNoticeLinkBtn from './VoteNoticeLinkBtn';
+import VoteNoticeListItem from './VoteNoticeListItem';
+import { VOTE_NOTICE_MOCK_DATA } from './mock';
 import Image from 'next/image';
 
-export default function MusicNoticeContainer() {
+export default function VoteNoticeContainer() {
   return (
     <section className="mt-[24px]">
-      <MusicNoticeLinkBtn
+      <VoteNoticeLinkBtn
         iconSrc={'/icon/x-logo-circle.svg'}
-        title={'음원총공팀 X 바로가기'}
+        title={'투표총공팀 X 바로가기'}
         description={'실시간 공지와 긴급 안내를 확인하세요!'}
         href={'https://x.com/__vipwave__?s=11'}
       />
 
-      {MUSIC_NOTICE_MOCK_DATA ? (
+      {VOTE_NOTICE_MOCK_DATA ? (
         <div>
-          {MUSIC_NOTICE_MOCK_DATA.map(({ id, ...notice }) => (
-            <MusicNoticeListItem key={id} noticeId={id} {...notice} />
+          {VOTE_NOTICE_MOCK_DATA.map(({ id, ...notice }) => (
+            <VoteNoticeListItem key={id} noticeId={id} {...notice} />
           ))}
         </div>
       ) : (
