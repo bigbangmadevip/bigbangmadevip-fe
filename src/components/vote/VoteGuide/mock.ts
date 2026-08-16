@@ -1,3 +1,6 @@
+import type { StaticImageData } from 'next/image';
+import { VOTE_GUIDE_THUMBNAIL } from '@/constants/vote-guide';
+import { getVotePlatformIcon } from '@/constants/vote-platform';
 import type { VoteGuideCategory } from '@/types/vote';
 
 interface VoteGuideContentPlatform {
@@ -8,7 +11,8 @@ interface VoteGuideContentPlatform {
 
 export interface VoteGuideContent {
   title?: string;
-  thumbnailSrc: string;
+  href?: string;
+  thumbnailSrc: string | StaticImageData;
   caption?: string;
   description?: string;
   platform?: VoteGuideContentPlatform[];
@@ -29,75 +33,88 @@ export const VOTE_GUIDE_MOCK_DATA: VoteGuideItem[] = [
     content: [
       {
         title: '쇼! 음악중심',
-        thumbnailSrc: '',
+        href: '/vote/guide/musiccore',
+        thumbnailSrc: VOTE_GUIDE_THUMBNAIL.musiccore,
         caption: '뮤빗, 뮤니버스',
         platform: [
           {
-            iconSrc: '',
+            iconSrc: getVotePlatformIcon('mubeat') ?? '',
             title: '뮤빗',
           },
           {
-            iconSrc: '',
+            iconSrc: getVotePlatformIcon('muniverse') ?? '',
             title: '뮤니버스',
           },
         ],
       },
       {
         title: '뮤직뱅크',
-        thumbnailSrc: '',
+        href: '/vote/guide/musicbank',
+        thumbnailSrc: VOTE_GUIDE_THUMBNAIL.musicbank,
         caption: '쿠궁',
         platform: [
           {
-            iconSrc: '',
+            iconSrc: getVotePlatformIcon('kogoong') ?? '',
             title: '쿠궁',
           },
         ],
       },
       {
         title: '인기가요',
-        thumbnailSrc: '',
+        href: '/vote/guide/inkigayo',
+        thumbnailSrc: VOTE_GUIDE_THUMBNAIL.inkigayo,
         caption: '링크, 하이어',
         platform: [
           {
-            iconSrc: '',
+            iconSrc: getVotePlatformIcon('linc') ?? '',
             title: '링크',
           },
           {
-            iconSrc: '',
+            iconSrc: getVotePlatformIcon('higher') ?? '',
             title: '하이어',
           },
         ],
       },
       {
         title: '쇼챔피언',
-        thumbnailSrc: '',
+        href: '/vote/guide/showchampion',
+        thumbnailSrc: VOTE_GUIDE_THUMBNAIL.showchampion,
         caption: '아이돌챔프',
         platform: [
           {
-            iconSrc: '',
+            iconSrc: getVotePlatformIcon('idolchamp') ?? '',
             title: '아이돌챔프',
           },
         ],
       },
       {
         title: '엠카운트다운',
-        thumbnailSrc: '',
+        href: '/vote/guide/mcountdown',
+        thumbnailSrc: VOTE_GUIDE_THUMBNAIL.mcountdown,
         caption: '엠넷플러스',
         platform: [
           {
-            iconSrc: '',
+            iconSrc: getVotePlatformIcon('mnetplus') ?? '',
             title: '엠넷플러스',
           },
         ],
       },
       {
         title: '더쇼',
-        thumbnailSrc: '',
+        href: '/vote/guide/theshow',
+        thumbnailSrc: VOTE_GUIDE_THUMBNAIL.theshow,
         caption: '빅크',
+        platform: [
+          {
+            iconSrc: getVotePlatformIcon('bigc') ?? '',
+            title: '빅크',
+          },
+        ],
       },
       {
         title: '멜론 주간인기상',
-        thumbnailSrc: '',
+        href: '/vote/guide/melon-weekly',
+        thumbnailSrc: VOTE_GUIDE_THUMBNAIL.melonWeekly,
         caption: '멜론',
       },
     ],
@@ -109,12 +126,12 @@ export const VOTE_GUIDE_MOCK_DATA: VoteGuideItem[] = [
     content: [
       {
         title: 'MAMA',
-        thumbnailSrc: '',
+        thumbnailSrc: VOTE_GUIDE_THUMBNAIL.mama,
         description: '투표 비율 반영과 참여 방법 안내',
       },
       {
         title: 'MMA',
-        thumbnailSrc: '',
+        thumbnailSrc: VOTE_GUIDE_THUMBNAIL.mma,
         description: '투표 비율 반영과 참여 방법 안내',
       },
     ],
@@ -126,18 +143,18 @@ export const VOTE_GUIDE_MOCK_DATA: VoteGuideItem[] = [
     content: [
       {
         title: '포도알',
-        thumbnailSrc: '',
-        description: '더미더미더미더미더미더미',
+        thumbnailSrc: VOTE_GUIDE_THUMBNAIL.podoal,
+        description: '투표 비율 반영과 참여 방법 안내',
       },
       {
         title: '벅스',
-        thumbnailSrc: '',
-        description: '더미더미더미더미더미더미',
+        thumbnailSrc: VOTE_GUIDE_THUMBNAIL.bugs,
+        description: '투표 비율 반영과 참여 방법 안내',
       },
       {
         title: 'B.stage+',
-        thumbnailSrc: '',
-        description: '더미더미더미더미더미더미',
+        thumbnailSrc: VOTE_GUIDE_THUMBNAIL.bstage,
+        description: '투표 비율 반영과 참여 방법 안내',
       },
     ],
   },

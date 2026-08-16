@@ -1,4 +1,5 @@
 import type { VoteGuideCategory } from '@/types/vote';
+import Link from 'next/link';
 import { SectionTitle } from '@/components/common/SectionTitle';
 import { VOTE_GUIDE_MOCK_DATA } from './mock';
 import VoteGuideBox from './VoteGuideBox';
@@ -21,7 +22,13 @@ export default function VoteGuideContent({ category }: VoteGuideContentProps) {
 
           <div className="flex flex-col gap-[12px]">
             {guide.content.map((content, index) => (
-              <VoteGuideBox key={`${guide.id}-${index}`} {...content} />
+              content.href ? (
+                <Link key={`${guide.id}-${index}`} href={content.href}>
+                  <VoteGuideBox {...content} />
+                </Link>
+              ) : (
+                <VoteGuideBox key={`${guide.id}-${index}`} {...content} />
+              )
             ))}
           </div>
         </section>

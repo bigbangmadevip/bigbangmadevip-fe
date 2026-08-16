@@ -7,10 +7,11 @@ import { UnderlineTabs } from '@/components/common/UnderlineTabs';
 import MusicGuideContainer from '@/components/music/MusicGuide/MusicGuideContainer';
 import MusicNoticeContainer from '@/components/music/MusicNotice/MusicNoticeContainer';
 import MusicStreamingContainer from '@/components/music/MusicStreamingContainer';
+import ComingSoon from '@/components/common/ComingSoon';
 
 const MUSIC_TABS = [
   { id: 'streaming', label: '스트리밍' },
-  { id: 'album', label: '앨범 구매' },
+  { id: 'album', label: 'iii' },
   { id: 'guide', label: '음원 가이드' },
   { id: 'notice', label: '음총 공지' },
 ] as const;
@@ -62,6 +63,7 @@ function MusicPageContent() {
         >
           {/* 스트리밍 탭 화면 */}
           {activeTab === 'streaming' && <MusicStreamingContainer />}
+          {activeTab === 'album' && <ComingSoon />}
           {/* {activeTab === 'album' && <AlbumTab />} */}
           {activeTab === 'guide' && <MusicGuideContainer />}
           {activeTab === 'notice' && <MusicNoticeContainer />}

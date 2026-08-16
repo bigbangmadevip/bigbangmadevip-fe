@@ -8,7 +8,7 @@ interface TEMP_TYPE {
 }
 
 const STREAMING_NATIONAL_GUIDE_MOCK: TEMP_TYPE[] = [
-  { id: '0', platform: 'melon', link: '' },
+  { id: '0', platform: 'youtube', link: '' },
 ];
 
 const MusicGuideReplay = () => {

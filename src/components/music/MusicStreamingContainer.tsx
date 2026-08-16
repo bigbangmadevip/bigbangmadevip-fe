@@ -1,14 +1,26 @@
 'use client';
 
-import Image from 'next/image';
+import { useState } from 'react';
 import { SectionTitle } from '@/components/common/SectionTitle';
 import UrgentNoticeBanner from '@/components/common/UrgentNoticeBanner';
 import { useMusicStreamingQuery } from '@/hooks/queries/useMusicQuery';
+import type { MusicOs, MusicStreamingPlatform } from '@/types/music';
 import { formatDateTimeToMinute } from '@/utils/date';
 import OneClickBlock from './OneClickBlock';
+import OneClickStreamingSheet, {
+  detectMusicOs,
+} from './OneClickStreamingSheet';
 
 export default function MusicStreamingContainer() {
   const { data, isPending, isError } = useMusicStreamingQuery();
+  const [selectedPlatform, setSelectedPlatform] =
+    useState<MusicStreamingPlatform | null>(null);
+  const [currentOs, setCurrentOs] = useState<MusicOs | null>(null);
+
+  const openOneClickSheet = (platform: MusicStreamingPlatform) => {
+    setCurrentOs(detectMusicOs());
+    setSelectedPlatform(platform);
+  };
 
   if (isPending) {
     return (
@@ -28,7 +40,12 @@ export default function MusicStreamingContainer() {
 
   return (
     <>
-      <UrgentNoticeBanner title={data.urgent?.urgentContent ?? ''} link="" />
+      {data.urgent && (
+        <UrgentNoticeBanner
+          title={data.urgent.urgentContent}
+          link={`/urgent/${data.urgent.detailId}?menuType=MUSIC`}
+        />
+      )}
 
       <div className="mb-[32px]">
         <SectionTitle>원클릭 스트리밍</SectionTitle>
@@ -36,9 +53,8 @@ export default function MusicStreamingContainer() {
           {data.platforms.map((platform) => (
             <OneClickBlock
               key={platform.platformId}
-              id={platform.platformId.toString()}
-              platform={platform.name}
-              links={platform.osGroups}
+              platform={platform}
+              onClick={() => openOneClickSheet(platform)}
             />
           ))}
         </div>
@@ -63,17 +79,33 @@ export default function MusicStreamingContainer() {
           스트리밍 리스트
         </SectionTitle>
 
-        <div className="relative h-[440px] w-full overflow-hidden rounded-[16px]">
-          <Image
-            className="rounded-[16px] object-cover"
-            src="/streaming_list.png"
-            alt="streamingList"
-            fill
-            priority
-            sizes="(max-width: 430px) calc(100vw - 40px), 390px"
-          />
-        </div>
+        {data.streamingImageUrls.length > 0 ? (
+          <div className="scrollbar-hidden -mx-5 flex snap-x snap-mandatory gap-[12px] overflow-x-auto px-5">
+            {data.streamingImageUrls.map((imageUrl, index) => (
+              <div
+                key={`${imageUrl}-${index}`}
+                role="img"
+                aria-label={`스트리밍 리스트 ${index + 1}`}
+                className="aspect-[335/440] w-full shrink-0 snap-center rounded-[16px] bg-secondary-900 bg-contain bg-center bg-no-repeat"
+                style={{ backgroundImage: `url(${imageUrl})` }}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex aspect-[335/440] w-full items-center justify-center rounded-[16px] bg-secondary-900 text-body-13 text-secondary-500">
+            등록된 스트리밍 이미지가 없어요.
+          </div>
+        )}
       </div>
+
+      <OneClickStreamingSheet
+        open={selectedPlatform !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedPlatform(null);
+        }}
+        platform={selectedPlatform}
+        os={currentOs}
+      />
     </>
   );
 }

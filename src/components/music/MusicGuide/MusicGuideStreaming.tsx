@@ -15,12 +15,15 @@ const STREAMING_NATIONAL_GUIDE_MOCK: TEMP_TYPE[] = [
   { id: '3', platform: 'flo', link: '' },
   { id: '4', platform: 'vibe', link: '' },
   { id: '5', platform: 'samsungmusic', link: '' },
+  { id: '6', platform: 'kakaomusic', link: '' },
 ];
 
 const STREMING_INTERNATIONAL_GUIDE_MOCK: TEMP_TYPE[] = [
-  { id: '0', platform: 'melon', link: '' },
-  { id: '1', platform: 'melon', link: '' },
-  { id: '2', platform: 'melon', link: '' },
+  { id: '0', platform: 'spotify', link: '' },
+  { id: '1', platform: 'youtubemusic', link: '' },
+  { id: '2', platform: 'applemusic', link: '' },
+  { id: '3', platform: 'linemusic', link: '' },
+  { id: '4', platform: 'stationhead', link: '' },
 ];
 
 const MusicGuideStreaming = () => {

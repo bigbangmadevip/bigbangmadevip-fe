@@ -8,7 +8,10 @@ export type Platform =
   | 'spotify'
   | 'applemusic'
   | 'youtubemusic'
-  | 'musicvideo';
+  | 'linemusic'
+  | 'stationhead'
+  | 'kakaomusic'
+  | 'youtube';
 
 export const PLATFORM_LABEL = {
   melon: '멜론',
@@ -20,7 +23,10 @@ export const PLATFORM_LABEL = {
   spotify: '스포티파이',
   applemusic: '애플뮤직',
   youtubemusic: '유튜브 뮤직',
-  musicvideo: '유튜브 뮤직비디오',
+  linemusic: '라인뮤직',
+  stationhead: '스테이션헤드',
+  kakaomusic: '카카오뮤직',
+  youtube: '유튜브 뮤비',
 } satisfies Record<Platform, string>;
 
 // TODO: API 응답 확인 후 구체적인 DTO로 교체
@@ -47,7 +53,7 @@ export type MusicStreamingOsGroup = {
 
 export type MusicStreamingPlatform = {
   platformId: number;
-  name: Platform;
+  name: string;
   iconUrl: string | null;
   region: MusicRegion;
   osGroups: MusicStreamingOsGroup[];

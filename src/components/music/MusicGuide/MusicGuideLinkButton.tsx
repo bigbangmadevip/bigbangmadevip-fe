@@ -21,7 +21,8 @@ const MusicGuideLinkButton = ({
       >
         <div className="flex items-center gap-[12px]">
           <Image
-            src={`/icon/music/${platform}-circle.svg`}
+            className="rounded-full"
+            src={`/icon/guide/${platform}-filled.svg`}
             alt={`${platform}Logo`}
             width={40}
             height={40}

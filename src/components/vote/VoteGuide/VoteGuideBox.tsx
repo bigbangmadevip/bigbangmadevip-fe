@@ -82,31 +82,39 @@ const VoteGuideBox = ({
             {platform?.map((item, index) => (
               <div
                 key={`${item.title}-${index}`}
-                className="flex min-w-0 items-center gap-[8px] rounded-[12px] bg-secondary-800 p-[12px]"
+                className="flex justify-between min-w-0 items-center gap-[8px] rounded-[12px] bg-secondary-800 p-[12px]"
               >
-                {item.iconSrc ? (
-                  <Image
-                    src={item.iconSrc}
-                    alt=""
-                    width={34}
-                    height={34}
-                    className="h-[34px] w-[34px] shrink-0 rounded-full object-cover"
-                  />
-                ) : (
-                  <div
-                    aria-hidden="true"
-                    className="h-[34px] w-[34px] shrink-0 rounded-full bg-secondary-950"
-                  />
-                )}
+                <div className="flex gap-[8px]">
+                  {item.iconSrc ? (
+                    <Image
+                      src={item.iconSrc}
+                      alt=""
+                      width={34}
+                      height={34}
+                      className="h-[34px] w-[34px] shrink-0 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div
+                      aria-hidden="true"
+                      className="h-[34px] w-[34px] shrink-0 rounded-full bg-secondary-950"
+                    />
+                  )}
 
-                <div className="min-w-0">
-                  <p className="truncate text-body-13 font-bold text-secondary-1">
-                    {item.title}
-                  </p>
-                  <p className="truncate text-body-11 font-medium text-secondary-500">
-                    {item.caption ?? '투표 가이드'}
-                  </p>
+                  <div className="min-w-0">
+                    <p className="truncate text-body-13 font-bold text-secondary-1">
+                      {item.title}
+                    </p>
+                    <p className="truncate text-body-11 font-medium text-secondary-500">
+                      {item.caption ?? '투표 가이드'}
+                    </p>
+                  </div>
                 </div>
+                <Image
+                  src={'/icon/arrow-right_gray-24.svg'}
+                  alt="RightArrowIcon"
+                  width={24}
+                  height={24}
+                />
               </div>
             ))}
           </div>
