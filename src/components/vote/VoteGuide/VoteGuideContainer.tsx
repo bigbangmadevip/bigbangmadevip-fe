@@ -5,6 +5,10 @@ import { CategoryTabs } from '@/components/common/CategoryTabs';
 import type { VoteGuideCategory } from '@/types/vote';
 import VoteGuideContent from './VoteGuideContent';
 
+interface VoteGuideContainerProps {
+  stickyRenderKey?: number;
+}
+
 const GUIDE_TABS = [
   { id: 'all', label: '전체' },
   { id: 'music-show', label: '음악방송' },
@@ -16,7 +20,9 @@ function isVoteGuideCategory(value: string | null): value is VoteGuideCategory {
   return GUIDE_TABS.some((tab) => tab.id === value);
 }
 
-export default function VoteGuideContainer() {
+export default function VoteGuideContainer({
+  stickyRenderKey = 0,
+}: VoteGuideContainerProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -37,6 +43,7 @@ export default function VoteGuideContainer() {
     <section>
       <div className="sticky top-[calc(44px+env(safe-area-inset-top))] z-30 -mx-5 bg-background pt-[16px] pb-[12px]">
         <CategoryTabs
+          key={stickyRenderKey}
           tabs={GUIDE_TABS}
           value={activeCategory}
           onChange={handleTabChange}

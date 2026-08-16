@@ -202,7 +202,7 @@ export default function MyPageContainer() {
             <p className="text-body-13 text-secondary-400">
               <strong className="text-secondary-1">
                 {todayCheering?.completedCount ?? 0}
-              </strong>{' '}
+              </strong>
               <span className="pr-[4px]">
                 /{todayCheering?.totalCount ?? 0}
               </span>
@@ -239,16 +239,16 @@ export default function MyPageContainer() {
       <section className="mt-[40px]">
         <SectionTitle>내 응원 기록</SectionTitle>
 
-        <div className="mt-[23px] flex gap-[15px]">
-          <div className="flex items-start gap-[32px] justify-between border-t border-secondary-900 pt-[12px]">
+        <div className="mt-[23px] grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-[15px]">
+          <div className="flex min-w-0 items-start justify-between gap-[12px] border-t border-secondary-900 pt-[12px]">
             <strong className="font-suit text-[80px] leading-[66px] font-bold text-main">
               {cheeringRecord?.totalParticipationCount ?? 0}
             </strong>
             <span className="text-body-12 text-secondary-100">번 응원</span>
           </div>
 
-          <dl className="w-[52%] border-t border-secondary-900 pt-[12px]">
-            <div className="flex items-start justify-between border-b border-secondary-900 pb-[20px] px-[4px]">
+          <dl className="min-w-0 border-t border-secondary-900 pt-[12px]">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-[8px] border-b border-secondary-900 px-[4px] pb-[20px]">
               <dt className="text-body-11 text-secondary-400">응원한 날</dt>
               <dd className="font-suit text-[24px] leading-none font-bold text-secondary-1">
                 {cheeringRecord?.participatedDayCount ?? 0}
@@ -257,7 +257,7 @@ export default function MyPageContainer() {
                 </small>
               </dd>
             </div>
-            <div className="flex items-start justify-between border-b border-secondary-900 py-[20px] px-[4px]">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-[8px] border-b border-secondary-900 px-[4px] py-[20px]">
               <dt className="text-body-11 text-secondary-400">
                 이번 달 응원한 날
               </dt>
@@ -268,9 +268,9 @@ export default function MyPageContainer() {
                 </small>
               </dd>
             </div>
-            <div className="flex items-start justify-between pt-[14px] px-[4px]">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-[8px] px-[4px] pt-[14px]">
               <dt className="text-body-11 text-secondary-400">첫 응원</dt>
-              <dd className="font-suit text-[24px] leading-none font-bold text-secondary-1">
+              <dd className="whitespace-nowrap font-suit text-[24px] leading-none font-bold text-secondary-1">
                 {formatShortDate(cheeringRecord?.firstParticipatedDate)}
               </dd>
             </div>

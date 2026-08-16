@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { PageHeader } from '@/components/common/PageHeader';
 import { UnderlineTabs } from '@/components/common/UnderlineTabs';
@@ -26,8 +26,36 @@ function VotePageContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [stickyTabsRenderKey, setStickyTabsRenderKey] = useState(0);
   const tabParam = searchParams.get('tab');
   const activeTab: VoteTab = isVoteTab(tabParam) ? tabParam : 'daily';
+
+  useEffect(() => {
+    let firstFrame = 0;
+    let secondFrame = 0;
+
+    const remountStickyTabs = () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+
+      firstFrame = window.requestAnimationFrame(() => {
+        secondFrame = window.requestAnimationFrame(() => {
+          setStickyTabsRenderKey((key) => key + 1);
+        });
+      });
+    };
+
+    remountStickyTabs();
+    window.addEventListener('popstate', remountStickyTabs);
+    window.addEventListener('pageshow', remountStickyTabs);
+
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+      window.removeEventListener('popstate', remountStickyTabs);
+      window.removeEventListener('pageshow', remountStickyTabs);
+    };
+  }, []);
 
   const handleTabChange = (tab: VoteTab) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -50,6 +78,7 @@ function VotePageContent() {
       <PageHeader title="투표" />
 
       <UnderlineTabs
+        key={stickyTabsRenderKey}
         tabs={VOTE_TABS}
         value={activeTab}
         onChange={handleTabChange}
@@ -63,9 +92,13 @@ function VotePageContent() {
         role="tabpanel"
         aria-labelledby={`vote-tab-${activeTab}`}
       >
-        {activeTab === 'daily' && <VoteDailyContainer />}
+        {activeTab === 'daily' && (
+          <VoteDailyContainer stickyRenderKey={stickyTabsRenderKey} />
+        )}
         {activeTab === 'plan' && <VotePlanContainer />}
-        {activeTab === 'guide' && <VoteGuideContainer />}
+        {activeTab === 'guide' && (
+          <VoteGuideContainer stickyRenderKey={stickyTabsRenderKey} />
+        )}
         {activeTab === 'notice' && <VoteNoticeContainer />}
       </section>
     </main>

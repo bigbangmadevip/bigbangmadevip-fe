@@ -5,6 +5,10 @@ import { CategoryTabs } from '@/components/common/CategoryTabs';
 import type { VoteCategory } from '@/types/vote';
 import VoteCategoryContent from './VoteCategoryContent';
 
+interface VoteCategoryContainerProps {
+  stickyRenderKey?: number;
+}
+
 const VOTE_CATEGORY_TABS = [
   { id: 'all', label: '전체' },
   { id: 'awards', label: '시상식' },
@@ -17,7 +21,9 @@ function isVoteCategory(value: string | null): value is VoteCategory {
   return VOTE_CATEGORY_TABS.some((tab) => tab.id === value);
 }
 
-export default function VoteCategoryContainer() {
+export default function VoteCategoryContainer({
+  stickyRenderKey = 0,
+}: VoteCategoryContainerProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -37,6 +43,7 @@ export default function VoteCategoryContainer() {
     <section>
       <div className="sticky top-[calc(44px+env(safe-area-inset-top))] z-30 -mx-5 bg-background pt-[16px] pb-[12px]">
         <CategoryTabs
+          key={stickyRenderKey}
           tabs={VOTE_CATEGORY_TABS}
           value={activeCategory}
           onChange={handleCategoryChange}
