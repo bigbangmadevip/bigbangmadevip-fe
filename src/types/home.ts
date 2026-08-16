@@ -1,4 +1,6 @@
-export type CHEERING_CATEGORY =
+export type MenuType = 'MUSIC' | 'VOTE';
+
+export type CheeringCategory =
   | 'STREAMING'
   | 'DOWNLOAD'
   | 'VOTE'
@@ -7,17 +9,31 @@ export type CHEERING_CATEGORY =
   | 'REPORT'
   | 'HASHTAG';
 
-export type UrgentDetail = {
-  menuType: string;
+export type CHEERING_CATEGORY = CheeringCategory;
+
+type UrgentDetailBase = {
   detailId: number;
-  category: string;
+  category: CheeringCategory;
   title: string;
-  songName: string;
-  content: string | null;
-  platform: string;
-  checklist: string[];
-  imageUrl: string | null;
-  eventEndAt: string | null;
+  platformNames: string[];
+};
+
+export type UrgentDetail =
+  | (UrgentDetailBase & {
+      menuType: 'MUSIC';
+      eventEndAt: null;
+    })
+  | (UrgentDetailBase & {
+      menuType: 'VOTE';
+      eventEndAt: string;
+    });
+
+export type TodaySchedule = {
+  menuType: MenuType;
+  detailId: number;
+  title: string;
+  time: string;
+  platformNames: string[];
 };
 
 export type CheeringItem = {
@@ -33,5 +49,6 @@ export type HomeResponse = {
   totalCheeringCount: number;
   completedCheeringCount: number;
   urgentDetail: UrgentDetail | null;
+  todaySchedule: TodaySchedule[];
   cheeringItems: CheeringItem[];
 };

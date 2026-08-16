@@ -7,14 +7,25 @@ export function createKakaoLoginUrl(frontendUrl: string) {
   );
 }
 
-export type CurrentUser = Record<string, unknown>;
+export type CurrentUser = {
+  id: number;
+  name: string;
+  nickname: string;
+  provider: string;
+  role: string;
+  termsAgreed: boolean;
+};
+
+type CurrentUserResponse = {
+  data: CurrentUser;
+};
 
 export async function getCurrentUser(signal?: AbortSignal) {
-  const response = await api.get<CurrentUser>('/api/v1/me', {
+  const response = await api.get<CurrentUserResponse>('/api/v1/me', {
     signal,
   });
 
-  return response.data;
+  return response.data.data;
 }
 
 export { initializeCsrfToken };

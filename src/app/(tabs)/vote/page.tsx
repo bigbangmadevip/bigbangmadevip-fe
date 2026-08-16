@@ -2,6 +2,7 @@
 
 import { Suspense } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { PageHeader } from '@/components/common/PageHeader';
 import { UnderlineTabs } from '@/components/common/UnderlineTabs';
 import VoteGuideContainer from '@/components/vote/VoteGuide/VoteGuideContainer';
 import VotePlanContainer from '@/components/vote/VotePlan/VotePlanContainer';
@@ -46,9 +47,7 @@ function VotePageContent() {
 
   return (
     <main>
-      <div className="flex justify-center py-[14px] text-title-17 font-bold">
-        투표
-      </div>
+      <PageHeader title="투표" />
 
       <UnderlineTabs
         tabs={VOTE_TABS}

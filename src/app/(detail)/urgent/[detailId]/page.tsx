@@ -3,9 +3,13 @@
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { CategoryBadge } from '@/components/common/CategoryBadge';
+import FloatingShareButton from '@/components/common/FloatingShareButton';
+import { HeaderIconButton } from '@/components/common/HeaderIconButton';
+import { PageHeader } from '@/components/common/PageHeader';
 
 const URGENT_DETAIL_MOCK = {
-  category: '다운로드',
+  category: 'DOWNLOAD' as const,
   title: '오늘 저녁 8시 30분\n멜론 개별곡 다운로드 총공',
   songName: '타이틀 곡 <봄여름가을겨울>',
   platform: '멜론',
@@ -38,7 +42,7 @@ export default function UrgentDetailPage() {
 
     const observer = new IntersectionObserver(
       ([entry]) => setShowHeaderTitle(!entry.isIntersecting),
-      { rootMargin: '-52px 0px 0px' },
+      { rootMargin: '-56px 0px 0px' },
     );
 
     observer.observe(pageTitle);
@@ -72,36 +76,32 @@ export default function UrgentDetailPage() {
 
   return (
     <main data-detail-id={detailId} className="-mx-5">
-      <header className="sticky top-[env(safe-area-inset-top)] z-40 flex h-[52px] items-center bg-secondary-950 px-5">
-        <button
-          type="button"
-          className="z-10 flex h-[44px] w-[44px] shrink-0 items-center justify-start"
-          aria-label="뒤로가기"
-          onClick={() => router.back()}
-        >
-          <Image
-            src="/icon/arrow-left_white-24.svg"
-            alt=""
-            width={24}
-            height={24}
-            aria-hidden="true"
-          />
-        </button>
-
-        <p
-          aria-hidden={!showHeaderTitle}
-          className={`absolute right-[64px] left-[64px] truncate text-center text-title-17 font-bold text-secondary-1 transition-opacity duration-200 ${
-            showHeaderTitle ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          {URGENT_DETAIL_MOCK.title.replace('\n', ' ')}
-        </p>
-      </header>
+      <PageHeader
+        sticky
+        className="bg-secondary-950 px-5"
+        title={URGENT_DETAIL_MOCK.title.replace('\n', ' ')}
+        titleClassName={`transition-opacity duration-200 ${
+          showHeaderTitle ? 'opacity-100' : 'opacity-0'
+        }`}
+        leftAction={
+          <HeaderIconButton
+            label="뒤로가기"
+            align="start"
+            onClick={() => router.back()}
+          >
+            <Image
+              src="/icon/arrow-left_white-24.svg"
+              alt=""
+              width={24}
+              height={24}
+              aria-hidden="true"
+            />
+          </HeaderIconButton>
+        }
+      />
       <section className="bg-secondary-950 px-5 pb-[24px]">
         <div className="pt-[20px]">
-          <span className="inline-flex rounded-[4px] bg-[rgba(48,219,238,0.5)] px-[8px] py-[2px] text-caption-10 font-medium text-secondary-1">
-            {URGENT_DETAIL_MOCK.category}
-          </span>
+          <CategoryBadge category={URGENT_DETAIL_MOCK.category} />
 
           <h1
             ref={pageTitleRef}
@@ -237,6 +237,10 @@ export default function UrgentDetailPage() {
           </div>
         )}
       </section>
+
+      <FloatingShareButton
+        title={URGENT_DETAIL_MOCK.title.replace('\n', ' ')}
+      />
     </main>
   );
 }

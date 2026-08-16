@@ -1,3 +1,4 @@
+import { CategoryBadge } from '@/components/common/CategoryBadge';
 import { SectionTitle } from '@/components/common/SectionTitle';
 import UrgentNoticeBanner from '@/components/common/UrgentNoticeBanner';
 import type { VoteCategory } from '@/types/vote';
@@ -10,7 +11,7 @@ interface VoteCategoryContentProps {
 const VOTE_DEADLINE_LIST_MOCK: VoteListItemProps[] = [
   {
     id: '0',
-    badgeNm: '음악방송',
+    category: 'MUSIC_SHOW',
     title: '인기가요 [1317회] 핫스테이지...',
     deadLine: '1시간 8분',
     icon: 'icon',
@@ -19,7 +20,7 @@ const VOTE_DEADLINE_LIST_MOCK: VoteListItemProps[] = [
   },
   {
     id: '1',
-    badgeNm: '기념일',
+    category: 'ANNIVERSARY',
     title: '포도알 데뷔 카페 이벤트',
     deadLine: '16시간 18분',
     icon: 'icon',
@@ -40,7 +41,7 @@ export default function VoteCategoryContent({
       />
 
       <div className="mb-[32px]">
-        <div className="rounded-t-[16px] bg-[#371A1E] px-[12] py-[16px] text-body-12 font-medium text-[#FF5940]">
+        <div className="rounded-t-[16px] bg-[#371A1E] px-[12] py-[16px] text-body-12 font-medium text-accent-red">
           마감 임박! 지금 바로 투표해 주세요!
         </div>
         <div className="flex h-[240px] w-full flex-col gap-[20px] rounded-b-[16px] bg-secondary-900 p-[16px]">
@@ -55,9 +56,7 @@ export default function VoteCategoryContent({
         <div className="flex flex-col gap-[15px]">
           <div className="rounded-[16px] bg-secondary-900 p-[16px]">
             <div className="mb-[16px] flex justify-between">
-              <div className="rounded-[4px] bg-[#B6921C] px-[8px] py-[2px] text-caption-10 font-medium">
-                🏆 시상식
-              </div>
+              <CategoryBadge category="AWARDS" />
               <p className="text-body-12 font-medium text-[#8D8D8D]">
                 4일 남음
               </p>
@@ -80,9 +79,7 @@ export default function VoteCategoryContent({
 
           <div className="rounded-[16px] bg-secondary-900 p-[16px]">
             <div className="mb-[16px] flex justify-between">
-              <div className="rounded-[4px] bg-[#1DA794] px-[8px] py-[2px] text-caption-10 font-medium">
-                👑 기타
-              </div>
+              <CategoryBadge category="ETC" />
               <p className="text-body-12 font-medium text-[#8D8D8D]">
                 6일 남음
               </p>
@@ -105,9 +102,7 @@ export default function VoteCategoryContent({
 
           <div className="rounded-[16px] bg-secondary-900 p-[16px]">
             <div className="mb-[16px] flex justify-between">
-              <div className="rounded-[4px] bg-[#603587] px-[8px] py-[2px] text-caption-10 font-medium">
-                🎂 기념일
-              </div>
+              <CategoryBadge category="ANNIVERSARY" />
               <p className="text-body-12 font-medium text-[#8D8D8D]">
                 8일 남음
               </p>

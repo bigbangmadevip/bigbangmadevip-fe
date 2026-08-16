@@ -19,7 +19,12 @@ export function AuthGate({ children }: AuthGateProps) {
 
     const authenticate = async () => {
       try {
-        await getCurrentUser(controller.signal);
+        const user = await getCurrentUser(controller.signal);
+
+        if (!user.termsAgreed) {
+          router.replace('/agreement');
+          return;
+        }
       } catch (error: unknown) {
         if (!axios.isCancel(error)) {
           router.replace('/login');

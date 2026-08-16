@@ -1,10 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import { CategoryBadge } from '@/components/common/CategoryBadge';
+import type { CategoryBadgeType } from '@/constants/category-badge';
 
 export interface VoteListItemProps {
   id?: string;
-  badgeNm: string;
+  category: CategoryBadgeType;
   deadLine: string;
   icon: string;
   title: string;
@@ -13,7 +15,7 @@ export interface VoteListItemProps {
 }
 
 const VoteListItem = ({
-  badgeNm,
+  category,
   deadLine,
   icon,
   title,
@@ -23,10 +25,8 @@ const VoteListItem = ({
   return (
     <div className="pb-[20px] border-b border-secondary-800 last:border-0">
       <div className="flex justify-between mb-[16px]">
-        <div className="px-[8px] py-[2px] bg-[#1B6593] rounded-[4px] text-caption-10 font-medium">
-          {badgeNm}
-        </div>
-        <p className="text-[#FF5940] text-body-12 font-medium">
+        <CategoryBadge category={category} />
+        <p className="text-body-12 font-medium text-accent-red">
           {deadLine} 남음
         </p>
       </div>

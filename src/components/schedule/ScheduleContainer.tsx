@@ -321,7 +321,7 @@ export default function ScheduleContainer() {
           month_grid: 'w-full table-fixed border-collapse',
           weekdays: 'h-[48px]',
           weekday:
-            'p-0 text-center text-body-14 font-medium text-secondary-300 first:text-[#FF5940] last:text-[#3478FF]',
+            'p-0 text-center text-body-14 font-medium text-secondary-300 first:text-accent-red last:text-[#3478FF]',
           week: 'h-[64px]',
           day: 'h-[64px] w-auto p-0 align-top',
           day_button: 'h-[64px] w-full',

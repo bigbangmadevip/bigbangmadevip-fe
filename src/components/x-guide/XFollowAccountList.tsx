@@ -1,0 +1,82 @@
+import Image from 'next/image';
+import {
+  FOLLOW_ACCOUNT_SECTIONS,
+  type FollowAccountCategory,
+} from '@/constants/x-guide';
+
+type XFollowAccountListProps = {
+  category: FollowAccountCategory;
+};
+
+export default function XFollowAccountList({
+  category,
+}: XFollowAccountListProps) {
+  const sections =
+    category === 'all'
+      ? FOLLOW_ACCOUNT_SECTIONS
+      : FOLLOW_ACCOUNT_SECTIONS.filter(
+          (section) => section.category === category,
+        );
+
+  return (
+    <div
+      id={`x-follow-category-panel-${category}`}
+      role="tabpanel"
+      aria-labelledby={`x-follow-category-tab-${category}`}
+      className="mt-[12px]"
+    >
+      {sections.length > 0 ? (
+        <div className="flex flex-col gap-[32px]">
+          {sections.map((section) => (
+            <section key={section.id}>
+              <h2 className="text-title-17 font-bold text-secondary-1">
+                {section.title}
+              </h2>
+
+              <div className="mt-[16px] flex flex-col gap-[8px]">
+                {section.accounts.map((account) => (
+                  <a
+                    key={account.id}
+                    href={account.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${account.name} X 계정 열기`}
+                    className="flex min-h-[88px] w-full items-center rounded-[16px] bg-secondary-900 px-[16px] text-left"
+                  >
+                    <span
+                      aria-label={`${account.name} 프로필 이미지 영역`}
+                      role="img"
+                      className="h-[48px] w-[48px] shrink-0 rounded-full bg-secondary-800"
+                    />
+
+                    <span className="ml-[12px] min-w-0 flex-1">
+                      <strong className="line-clamp-2 text-body-15 font-bold text-secondary-1">
+                        {account.name}
+                      </strong>
+                      <span className="mt-[2px] block truncate text-body-13 text-secondary-400">
+                        {account.handle}
+                      </span>
+                    </span>
+
+                    <Image
+                      src="/icon/arrow-right_gray-24.svg"
+                      alt=""
+                      width={24}
+                      height={24}
+                      aria-hidden="true"
+                      className="ml-[12px] shrink-0"
+                    />
+                  </a>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : (
+        <div className="flex min-h-[240px] items-center justify-center text-body-13 text-secondary-500">
+          등록된 계정이 없어요.
+        </div>
+      )}
+    </div>
+  );
+}

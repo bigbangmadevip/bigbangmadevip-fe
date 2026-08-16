@@ -32,6 +32,7 @@
   --color-border: var(--border);
 
   --color-main: #fffb1f;
+  --color-accent-red: #ff5940;
   --color-secondary-1: #ffffff;
   --color-secondary-100: #e7e7e7;
   --color-secondary-200: #d1d1d1;
@@ -131,6 +132,36 @@ body {
   }
 }
 
+@keyframes full-page-dialog-open {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes full-page-dialog-close {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.full-page-dialog[data-state='open'] {
+  animation: full-page-dialog-open 320ms cubic-bezier(0.22, 1, 0.36, 1)
+    forwards !important;
+}
+
+.full-page-dialog[data-state='closed'] {
+  animation: full-page-dialog-close 240ms cubic-bezier(0.4, 0, 1, 1)
+    forwards !important;
+}
+
 .cheering-record-sheet[data-state='open'] {
   animation: cheering-sheet-open 320ms cubic-bezier(0.22, 1, 0.36, 1)
     forwards !important;
@@ -148,7 +179,8 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .marquee-track,
-  .cheering-record-sheet[data-state] {
+  .cheering-record-sheet[data-state],
+  .full-page-dialog[data-state] {
     animation: none !important;
   }
 }

@@ -3,7 +3,7 @@ import type { HomeResponse } from '@/types/home';
 
 type HomeApiResponse = {
   data: HomeResponse;
-  success: boolean;
+  success?: boolean;
 };
 
 export async function getHomeData(): Promise<HomeResponse> {

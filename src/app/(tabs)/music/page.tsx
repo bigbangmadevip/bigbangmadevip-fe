@@ -2,6 +2,7 @@
 
 import { Suspense } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { PageHeader } from '@/components/common/PageHeader';
 import { UnderlineTabs } from '@/components/common/UnderlineTabs';
 import MusicGuideContainer from '@/components/music/MusicGuide/MusicGuideContainer';
 import MusicNoticeContainer from '@/components/music/MusicNotice/MusicNoticeContainer';
@@ -42,10 +43,7 @@ function MusicPageContent() {
   return (
     <>
       <main>
-        {/* HEADER */}
-        <div className="flex justify-center py-[14px] text-title-17 font-bold">
-          음원
-        </div>
+        <PageHeader title="음원" />
         {/* TABS */}
         <UnderlineTabs
           tabs={MUSIC_TABS}

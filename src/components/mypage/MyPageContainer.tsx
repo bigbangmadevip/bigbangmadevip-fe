@@ -5,6 +5,8 @@ import { ko } from '@daypicker/react/locale';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { HeaderIconButton } from '@/components/common/HeaderIconButton';
+import { PageHeader } from '@/components/common/PageHeader';
 import { SectionTitle } from '@/components/common/SectionTitle';
 import { cn } from '@/lib/utils';
 import CheeringRecordSheet from './CheeringRecordSheet';
@@ -99,15 +101,19 @@ export default function MyPageContainer() {
 
   return (
     <main>
-      <header className="relative flex h-[52px] items-center justify-center">
-        <button
-          type="button"
-          aria-label="설정"
-          className="absolute right-0 flex h-[44px] w-[44px] items-center justify-end"
-        >
-          <Image src="/icon/setting.svg" alt="" width={24} height={24} />
-        </button>
-      </header>
+      <PageHeader
+        rightAction={
+          <HeaderIconButton label="설정" align="end">
+            <Image
+              src="/icon/setting.svg"
+              alt=""
+              width={24}
+              height={24}
+              aria-hidden="true"
+            />
+          </HeaderIconButton>
+        }
+      />
 
       <div className="-mx-5 overflow-hidden border-y border-[#3C3A11] bg-[rgba(255,251,31,0.03)] py-[10px]">
         <div className="marquee-track flex w-max whitespace-nowrap text-caption-10 font-medium text-secondary-600">

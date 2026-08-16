@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { HeaderIconButton } from '@/components/common/HeaderIconButton';
+import { PageHeader } from '@/components/common/PageHeader';
 import { VOTE_NOTICE_MOCK_DATA } from './mock';
 
 interface VoteNoticeDetailProps {
@@ -16,22 +18,23 @@ export default function VoteNoticeDetail({
 
   return (
     <main>
-      <header className="flex items-center py-[16px]">
-        <button
-          type="button"
-          className="flex items-center justify-start"
-          aria-label="뒤로가기"
-          onClick={() => router.back()}
-        >
-          <Image
-            src="/icon/arrow-left_white-24.svg"
-            alt="arrowIcon"
-            width={24}
-            height={24}
-            aria-hidden="true"
-          />
-        </button>
-      </header>
+      <PageHeader
+        leftAction={
+          <HeaderIconButton
+            label="뒤로가기"
+            align="start"
+            onClick={() => router.back()}
+          >
+            <Image
+              src="/icon/arrow-left_white-24.svg"
+              alt=""
+              width={24}
+              height={24}
+              aria-hidden="true"
+            />
+          </HeaderIconButton>
+        }
+      />
 
       <article className="mt-[20px]">
         <h1 className="text-[22px] font-bold text-secondary-1">
