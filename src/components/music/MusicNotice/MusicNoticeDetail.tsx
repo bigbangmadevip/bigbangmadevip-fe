@@ -2,9 +2,12 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import FloatingShareButton from '@/components/common/FloatingShareButton';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
+import LoadingScreen from '@/components/common/LoadingScreen';
 import { PageHeader } from '@/components/common/PageHeader';
-import { MUSIC_NOTICE_MOCK_DATA } from './mock';
+import { useMusicNoticeDetailQuery } from '@/hooks/queries/useMusicQuery';
+import { formatDate } from '@/utils/date';
 
 interface MusicNoticeDetailProps {
   noticeId: string;
@@ -14,7 +17,8 @@ export default function MusicNoticeDetail({
   noticeId,
 }: MusicNoticeDetailProps) {
   const router = useRouter();
-  const notice = MUSIC_NOTICE_MOCK_DATA.find((item) => item.id === noticeId);
+  const { data: notice, isPending, isError } =
+    useMusicNoticeDetailQuery(noticeId);
 
   return (
     <main>
@@ -36,32 +40,49 @@ export default function MusicNoticeDetail({
         }
       />
 
-      <article className="mt-[20px]">
-        <h1 className="text-[22px] font-bold text-secondary-1">
-          {notice?.title ?? '공지 상세'}
-        </h1>
-        <time className="mt-[12px] mb-[24px] block text-body-12 font-medium text-secondary-600">
-          {notice?.date ?? ''}
-        </time>
-
-        <div className="pt-[32px] border-t border-secondary-900 text-body-13 text-secondary-100">
-          <p>안녕하세요, 음원총공팀입니다.</p>
-          <p className="mt-[24px]">
-            스트리밍 리스트 일부 구성이 수정되어 ver.2로 업데이트 되었습니다.
-          </p>
-
-          <p className="mt-[24px]">
-            기존 리스트를 사용 중이셨던 VIP분들은 최신 리스트로 다시 확인 후
-            스트리밍에 참여해주세요.
-          </p>
-
-          <div
-            className="mt-[32px] aspect-[335/440] w-full rounded-[16px] bg-secondary-800"
-            role="img"
-            aria-label="공지 관련 이미지 영역"
-          />
+      {isPending ? (
+        <LoadingScreen label="음원 공지 상세 불러오는 중" />
+      ) : isError || !notice ? (
+        <div className="py-[64px] text-center text-body-13 text-secondary-500">
+          공지를 불러오지 못했어요.
         </div>
-      </article>
+      ) : (
+        <article className="mt-[20px]">
+          <h1 className="text-[22px] font-bold text-secondary-1">
+            {notice.title}
+          </h1>
+          <time className="mt-[12px] mb-[24px] block text-body-12 font-medium text-secondary-600">
+            {formatDate(notice.createdAt)}
+          </time>
+
+          <div className="border-t border-secondary-900 pt-[32px] text-body-13 text-secondary-100">
+            <p className="whitespace-pre-line leading-[1.7]">
+              {notice.content}
+            </p>
+
+            {notice.imageUrls.length > 0 && (
+              <div className="scrollbar-hidden -mx-5 mt-[32px] flex snap-x snap-mandatory gap-[12px] overflow-x-auto px-5">
+                {notice.imageUrls.map((imageUrl, index) => (
+                  <div
+                    key={`${imageUrl}-${index}`}
+                    className="w-full shrink-0 snap-center overflow-hidden rounded-[16px] bg-secondary-900"
+                  >
+                    {/* API 이미지의 원본 비율이 일정하지 않아 브라우저가 비율을 유지합니다. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imageUrl}
+                      alt={`공지 첨부 이미지 ${index + 1}`}
+                      className="h-auto w-full"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </article>
+      )}
+
+      {notice && <FloatingShareButton title={notice.title} />}
     </main>
   );
 }

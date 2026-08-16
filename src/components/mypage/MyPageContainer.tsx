@@ -6,42 +6,41 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
+import LoadingScreen from '@/components/common/LoadingScreen';
 import { PageHeader } from '@/components/common/PageHeader';
 import { SectionTitle } from '@/components/common/SectionTitle';
+import {
+  useCheeringCalendarQuery,
+  useCheeringRecordsQuery,
+  useMyPageQuery,
+} from '@/hooks/queries/useMyPageQuery';
 import { cn } from '@/lib/utils';
+import { formatShortDate } from '@/utils/date';
 import CheeringRecordSheet from './CheeringRecordSheet';
 import '@daypicker/react/style.css';
 
-const INITIAL_MONTH = new Date(2026, 7, 1);
-const INITIAL_SELECTED_DATE = new Date(2026, 7, 20);
+const FIRST_AVAILABLE_MONTH = new Date(2026, 7, 1);
 const MARQUEE_ITEM = '• 20 YEARS • BIGBANG IS VIP\u00A0';
 const MARQUEE_ITEMS = Array.from({ length: 6 }, (_, index) => index);
-const CHEERING_DATES = [
-  new Date(2026, 7, 20),
-  new Date(2026, 7, 21),
-  new Date(2026, 7, 22),
-  new Date(2026, 7, 24),
-  new Date(2026, 7, 26),
-  new Date(2026, 7, 29),
-];
-
-const CHEERING_RECORDS: Record<string, string[]> = {
-  '2026-08-20': [
-    '음원 스트리밍',
-    '인기가요 사전 투표',
-    '멜론 주간인기상 투표',
-    '유튜브 뮤직비디오 조회',
-    '네이버 기사 댓글 작성',
-    'SNS 해시태그 언급',
-  ],
-};
-
 function getDateKey(date: Date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
 
   return `${year}-${month}-${day}`;
+}
+
+function getYearMonth(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+
+  return `${year}-${month}`;
+}
+
+function parseLocalDate(value: string) {
+  const [year, month, day] = value.split('-').map(Number);
+
+  return new Date(year, month - 1, day);
 }
 
 function MyPageDayButton({
@@ -53,19 +52,20 @@ function MyPageDayButton({
   return (
     <button
       {...buttonProps}
-      className={`${className ?? ''} flex h-[40px] w-full items-center justify-center text-body-12 font-medium ${
+      className={`${className ?? ''} flex h-[40px] w-full items-center justify-center text-body-13 font-medium ${
         modifiers.selected
           ? 'text-secondary-950'
           : modifiers.cheered
-            ? 'text-secondary-100'
+            ? 'text-secondary-1'
             : 'text-secondary-600'
       }`}
     >
       <span
         className={cn(
-          'flex h-[28px] w-[28px] items-center justify-center rounded-full border border-transparent',
-          modifiers.cheered && 'border-[#C6C31B]',
-          modifiers.selected && 'border-main bg-main',
+          'flex h-[32px] w-[32px] items-center justify-center rounded-full border border-transparent',
+          modifiers.cheered &&
+            'border-[rgba(255,251,31,0.3)] bg-[rgba(255,251,31,0.08)]',
+          modifiers.selected && 'bg-main',
         )}
       >
         {day.date.getDate()}
@@ -75,27 +75,81 @@ function MyPageDayButton({
 }
 
 export default function MyPageContainer() {
-  const [month, setMonth] = useState(INITIAL_MONTH);
-  const [selectedDate, setSelectedDate] = useState<Date>(INITIAL_SELECTED_DATE);
+  const [lastAvailableMonth] = useState(() => {
+    const today = new Date();
+    const currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    return currentMonth < FIRST_AVAILABLE_MONTH
+      ? FIRST_AVAILABLE_MONTH
+      : currentMonth;
+  });
+  const [month, setMonth] = useState(lastAvailableMonth);
+  const [selectedDate, setSelectedDate] = useState<Date>(() => {
+    const today = new Date();
+
+    return today < FIRST_AVAILABLE_MONTH ? FIRST_AVAILABLE_MONTH : today;
+  });
   const [isRecordSheetOpen, setIsRecordSheetOpen] = useState(false);
-  const selectedRecords =
-    CHEERING_RECORDS[getDateKey(selectedDate)] ??
-    (CHEERING_DATES.some(
-      (date) => getDateKey(date) === getDateKey(selectedDate),
-    )
-      ? ['오늘의 응원']
-      : []);
+  const yearMonth = getYearMonth(month);
+  const selectedDateKey = getDateKey(selectedDate);
+  const {
+    data: myPageData,
+    isPending: isMyPagePending,
+    isError: isMyPageError,
+  } = useMyPageQuery();
+  const { data: calendarData } = useCheeringCalendarQuery(yearMonth);
+  const {
+    data: recordData,
+    isPending: isRecordPending,
+    isError: isRecordError,
+  } = useCheeringRecordsQuery(selectedDateKey, isRecordSheetOpen);
+  const cheeredDates =
+    calendarData?.participatedDates.map(parseLocalDate) ?? [];
+  const isFirstMonth =
+    month.getFullYear() === FIRST_AVAILABLE_MONTH.getFullYear() &&
+    month.getMonth() === FIRST_AVAILABLE_MONTH.getMonth();
+  const isLastMonth =
+    month.getFullYear() === lastAvailableMonth.getFullYear() &&
+    month.getMonth() === lastAvailableMonth.getMonth();
+  const todayCheering = myPageData?.todayCheering;
+  const cheeringRecord = myPageData?.cheeringRecord;
+  const cheeringProgress = todayCheering?.totalCount
+    ? Math.min(
+        100,
+        (todayCheering.completedCount / todayCheering.totalCount) * 100,
+      )
+    : 0;
+  const remainingCheeringCount = Math.max(
+    0,
+    (todayCheering?.totalCount ?? 0) - (todayCheering?.completedCount ?? 0),
+  );
 
   const moveMonth = (offset: number) => {
-    setMonth(
-      (currentMonth) =>
-        new Date(
-          currentMonth.getFullYear(),
-          currentMonth.getMonth() + offset,
-          1,
-        ),
-    );
+    setMonth((currentMonth) => {
+      const nextMonth = new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth() + offset,
+        1,
+      );
+
+      if (nextMonth < FIRST_AVAILABLE_MONTH) return FIRST_AVAILABLE_MONTH;
+      if (nextMonth > lastAvailableMonth) return lastAvailableMonth;
+
+      return nextMonth;
+    });
   };
+
+  if (isMyPagePending) {
+    return <LoadingScreen label="마이페이지 정보 불러오는 중" />;
+  }
+
+  if (isMyPageError || !myPageData) {
+    return (
+      <div className="py-[64px] text-center text-body-13 text-secondary-500">
+        마이페이지 정보를 불러오지 못했어요.
+      </div>
+    );
+  }
 
   return (
     <main>
@@ -105,15 +159,15 @@ export default function MyPageContainer() {
             <Image
               src="/icon/setting.svg"
               alt=""
-              width={24}
-              height={24}
+              width={28}
+              height={28}
               aria-hidden="true"
             />
           </HeaderIconButton>
         }
       />
 
-      <div className="-mx-5 overflow-hidden border-y border-[#3C3A11] bg-[rgba(255,251,31,0.03)] py-[10px]">
+      <div className="-mx-5 mt-[12px] overflow-hidden py-[16px] border-y border-[rgba(255,251,31,0.1)] bg-[rgba(255,251,31,0.04)] ">
         <div
           aria-label={MARQUEE_ITEM}
           className="marquee-track flex w-max whitespace-nowrap text-caption-10 font-medium text-secondary-600"
@@ -133,7 +187,7 @@ export default function MyPageContainer() {
 
       <section className="pt-[32px]">
         <h1 className="text-[36px] leading-[1.35] font-extralight tracking-[-0.04em] text-secondary-1">
-          ALWAYS <strong className="font-bold text-main">VIP👑</strong>
+          ALWAYS <strong className="font-bold text-main">VIP 👑</strong>
           <br />
           언제까지나
           <br />
@@ -146,17 +200,25 @@ export default function MyPageContainer() {
               오늘의 응원 현황
             </span>
             <p className="text-body-13 text-secondary-400">
-              <strong className="text-secondary-1">3</strong>{' '}
-              <span className="pr-[4px]">/8</span>완료
+              <strong className="text-secondary-1">
+                {todayCheering?.completedCount ?? 0}
+              </strong>{' '}
+              <span className="pr-[4px]">
+                /{todayCheering?.totalCount ?? 0}
+              </span>
+              완료
             </p>
           </div>
 
           <div className="mt-[24px] h-[8px] overflow-hidden rounded-full bg-secondary-700">
-            <div className="h-full w-[42%] rounded-full bg-main" />
+            <div
+              className="h-full rounded-full bg-main"
+              style={{ width: `${cheeringProgress}%` }}
+            />
           </div>
 
           <p className="mt-[8px] text-body-15 text-secondary-400">
-            5개 남았어요
+            {remainingCheeringCount}개 남았어요
           </p>
 
           <Link
@@ -180,7 +242,7 @@ export default function MyPageContainer() {
         <div className="mt-[23px] flex gap-[15px]">
           <div className="flex items-start gap-[32px] justify-between border-t border-secondary-900 pt-[12px]">
             <strong className="font-suit text-[80px] leading-[66px] font-bold text-main">
-              19
+              {cheeringRecord?.totalParticipationCount ?? 0}
             </strong>
             <span className="text-body-12 text-secondary-100">번 응원</span>
           </div>
@@ -189,7 +251,7 @@ export default function MyPageContainer() {
             <div className="flex items-start justify-between border-b border-secondary-900 pb-[20px] px-[4px]">
               <dt className="text-body-11 text-secondary-400">응원한 날</dt>
               <dd className="font-suit text-[24px] leading-none font-bold text-secondary-1">
-                12
+                {cheeringRecord?.participatedDayCount ?? 0}
                 <small className="ml-[4px] inline-block align-top text-body-11 leading-none">
                   일째
                 </small>
@@ -200,7 +262,7 @@ export default function MyPageContainer() {
                 이번 달 응원한 날
               </dt>
               <dd className="font-suit text-[24px] leading-none font-bold text-secondary-1">
-                10
+                {cheeringRecord?.participatedDayCountThisMonth ?? 0}
                 <small className="ml-[4px] inline-block align-top text-body-11 leading-none">
                   일
                 </small>
@@ -209,7 +271,7 @@ export default function MyPageContainer() {
             <div className="flex items-start justify-between pt-[14px] px-[4px]">
               <dt className="text-body-11 text-secondary-400">첫 응원</dt>
               <dd className="font-suit text-[24px] leading-none font-bold text-secondary-1">
-                26.08.19
+                {formatShortDate(cheeringRecord?.firstParticipatedDate)}
               </dd>
             </div>
           </dl>
@@ -220,21 +282,43 @@ export default function MyPageContainer() {
             <button
               type="button"
               aria-label="이전 달"
+              disabled={isFirstMonth}
               onClick={() => moveMonth(-1)}
-              className="flex h-[36px] w-[36px] items-center justify-center text-[24px] font-extralight text-secondary-500"
+              className="flex h-[36px] w-[36px] items-center justify-center disabled:cursor-not-allowed"
             >
-              ‹
+              <Image
+                src={
+                  isFirstMonth
+                    ? '/icon/arrow-left_gray-24.svg'
+                    : '/icon/arrow-left_white-24.svg'
+                }
+                alt=""
+                width={24}
+                height={24}
+                aria-hidden="true"
+              />
             </button>
-            <p className="min-w-[100px] text-center text-body-13 font-bold text-secondary-1">
+            <p className="text-center text-body-15 font-medium text-secondary-1">
               {month.getFullYear()}년 {month.getMonth() + 1}월
             </p>
             <button
               type="button"
               aria-label="다음 달"
+              disabled={isLastMonth}
               onClick={() => moveMonth(1)}
-              className="flex h-[36px] w-[36px] items-center justify-center text-[24px] font-extralight text-secondary-500"
+              className="flex h-[36px] w-[36px] items-center justify-center disabled:cursor-not-allowed"
             >
-              ›
+              <Image
+                src={
+                  isLastMonth
+                    ? '/icon/arrow-right_gray-24.svg'
+                    : '/icon/arrow-right_white-24.svg'
+                }
+                alt=""
+                width={24}
+                height={24}
+                aria-hidden="true"
+              />
             </button>
           </div>
 
@@ -245,12 +329,14 @@ export default function MyPageContainer() {
             timeZone="Asia/Seoul"
             month={month}
             onMonthChange={setMonth}
+            startMonth={FIRST_AVAILABLE_MONTH}
+            endMonth={lastAvailableMonth}
             selected={selectedDate}
             onSelect={(date) => {
               setSelectedDate(date);
               setIsRecordSheetOpen(true);
             }}
-            modifiers={{ cheered: CHEERING_DATES }}
+            modifiers={{ cheered: cheeredDates }}
             showOutsideDays={false}
             fixedWeeks
             hideNavigation
@@ -267,9 +353,9 @@ export default function MyPageContainer() {
               month_grid: 'w-full table-fixed border-collapse',
               weekdays: 'h-[40px]',
               weekday:
-                'p-0 text-center text-caption-10 font-medium text-secondary-400',
+                'p-0 text-center text-body-12 font-medium text-secondary-200',
               week: 'h-[40px]',
-              day: 'h-[40px] w-auto p-0',
+              day: 'h-[46px] w-auto p-0',
               day_button: 'h-[40px] w-full',
               outside: 'invisible',
               selected: 'font-normal text-inherit',
@@ -283,7 +369,10 @@ export default function MyPageContainer() {
         open={isRecordSheetOpen}
         onOpenChange={setIsRecordSheetOpen}
         date={selectedDate}
-        records={selectedRecords}
+        completedCount={recordData?.completedCount ?? 0}
+        items={recordData?.items ?? []}
+        isPending={isRecordPending}
+        isError={isRecordError}
       />
     </main>
   );

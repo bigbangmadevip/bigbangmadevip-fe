@@ -14,6 +14,9 @@ export type FollowAccountSection = {
   accounts: FollowAccount[];
 };
 
+export const getXAccountIconSrc = (handle: string) =>
+  `/icon/xaccount/${handle.replace(/^@/, '').toLowerCase()}.svg`;
+
 export const FOLLOW_ACCOUNT_SECTIONS: FollowAccountSection[] = [
   {
     id: 'artist-official',

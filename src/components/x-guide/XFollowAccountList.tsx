@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import {
   FOLLOW_ACCOUNT_SECTIONS,
+  getXAccountIconSrc,
   type FollowAccountCategory,
 } from '@/constants/x-guide';
 
@@ -43,10 +44,12 @@ export default function XFollowAccountList({
                     aria-label={`${account.name} X 계정 열기`}
                     className="flex min-h-[88px] w-full items-center rounded-[16px] bg-secondary-900 px-[16px] text-left"
                   >
-                    <span
-                      aria-label={`${account.name} 프로필 이미지 영역`}
-                      role="img"
-                      className="h-[48px] w-[48px] shrink-0 rounded-full bg-secondary-800"
+                    <Image
+                      src={getXAccountIconSrc(account.handle)}
+                      alt={`${account.name} 프로필`}
+                      width={40}
+                      height={40}
+                      className="h-[40px] w-[40px] shrink-0 rounded-full object-cover"
                     />
 
                     <span className="ml-[12px] min-w-0 flex-1">

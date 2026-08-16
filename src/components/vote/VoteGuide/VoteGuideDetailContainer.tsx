@@ -54,6 +54,19 @@ export default function VoteGuideDetailContainer({
   useEffect(() => {
     if (guide.sections.length === 0) return;
 
+    const scrollToHash = () => {
+      const targetId = decodeURIComponent(window.location.hash.slice(1));
+      const target = targetId ? document.getElementById(targetId) : null;
+
+      if (!target) return;
+
+      const sectionId = targetId.replace('vote-guide-', '');
+      setActiveTab(sectionId);
+      window.requestAnimationFrame(() => {
+        target.scrollIntoView({ behavior: 'auto', block: 'start' });
+      });
+    };
+
     const handleScroll = () => {
       const activationLine =
         Number.parseFloat(
@@ -73,9 +86,14 @@ export default function VoteGuideDetailContainer({
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('hashchange', scrollToHash);
+    scrollToHash();
     handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('hashchange', scrollToHash);
+    };
   }, [guide.sections]);
 
   return (
@@ -163,6 +181,7 @@ export default function VoteGuideDetailContainer({
                       key={image.src}
                       src={image}
                       alt={`${section.label} ${index + 1}`}
+                      loading="lazy"
                       unoptimized
                       className="h-auto w-full rounded-[12px]"
                     />

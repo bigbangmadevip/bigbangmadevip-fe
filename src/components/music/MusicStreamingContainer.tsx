@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { SectionTitle } from '@/components/common/SectionTitle';
+import LoadingScreen from '@/components/common/LoadingScreen';
 import UrgentNoticeBanner from '@/components/common/UrgentNoticeBanner';
 import { useMusicStreamingQuery } from '@/hooks/queries/useMusicQuery';
 import type { MusicOs, MusicStreamingPlatform } from '@/types/music';
@@ -23,11 +24,7 @@ export default function MusicStreamingContainer() {
   };
 
   if (isPending) {
-    return (
-      <div className="py-[64px] text-center text-body-13 text-secondary-500">
-        스트리밍 정보를 불러오는 중...
-      </div>
-    );
+    return <LoadingScreen label="스트리밍 정보 불러오는 중" />;
   }
 
   if (isError) {

@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import guideImage from '@/assets/guides/muniverse-vote-guide.png';
+import FloatingShareButton from '@/components/common/FloatingShareButton';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import { PageHeader } from '@/components/common/PageHeader';
 
@@ -38,6 +39,8 @@ export default function GuideDetailPage() {
           className="h-auto w-full"
         />
       </div>
+
+      <FloatingShareButton title="멜론 스트리밍 가이드" />
     </main>
   );
 }

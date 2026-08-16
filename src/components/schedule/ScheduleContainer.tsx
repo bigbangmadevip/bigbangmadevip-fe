@@ -2,22 +2,28 @@
 
 import { DayPicker, type DayButtonProps } from '@daypicker/react';
 import { ko } from '@daypicker/react/locale';
+import Image from 'next/image';
 import { useState } from 'react';
-import NavigationListItem, {
-  type NavigationListItemProps,
-} from '@/components/common/NavigationListItem';
+import LoadingScreen from '@/components/common/LoadingScreen';
+import NavigationListItem from '@/components/common/NavigationListItem';
+import {
+  useInitialScheduleQuery,
+  useScheduleDayQuery,
+  useScheduleMonthQuery,
+} from '@/hooks/queries/useScheduleQuery';
 import { cn } from '@/lib/utils';
+import type {
+  ScheduleCategory as ApiScheduleCategory,
+  ScheduleMonthDay,
+  ScheduleRequestOptions,
+} from '@/types/schedule';
 import '@daypicker/react/style.css';
 
 const FIRST_AVAILABLE_MONTH = new Date(2026, 7, 1);
-const INITIAL_SELECTED_DATE = new Date(2026, 7, 9);
+const VOTE_DISPLAY = 'EVERY_DAY' as const;
 
 type ScheduleCategory = 'all' | 'music' | 'vote';
 type EventCategory = Exclude<ScheduleCategory, 'all'>;
-type ScheduleListItem = NavigationListItemProps & {
-  id: string;
-  category: EventCategory;
-};
 
 const CATEGORY_TABS = [
   { id: 'all', label: '전체' },
@@ -25,63 +31,8 @@ const CATEGORY_TABS = [
   { id: 'vote', label: '투표 총공' },
 ] as const;
 
-const SCHEDULE_MOCK: Record<string, EventCategory[]> = {
-  '2026-08-03': ['vote', 'vote'],
-  '2026-08-04': ['vote', 'vote'],
-  '2026-08-06': ['music', 'vote'],
-  '2026-08-09': ['music', 'music', 'vote'],
-  '2026-08-10': ['music', 'music', 'vote'],
-  '2026-08-11': ['music', 'music', 'vote', 'vote', 'vote'],
-  '2026-08-12': ['music', 'music', 'music'],
-  '2026-08-15': ['music', 'vote', 'vote', 'vote'],
-  '2026-08-16': ['vote'],
-  '2026-08-17': ['music', 'vote'],
-  '2026-08-19': ['music', 'music', 'vote', 'vote', 'music', 'vote'],
-  '2026-08-20': ['music', 'vote', 'vote', 'music', 'vote'],
-  '2026-08-21': ['music', 'music', 'music', 'vote'],
-  '2026-08-22': ['music'],
-  '2026-08-23': ['music', 'vote'],
-  '2026-08-24': ['music', 'vote', 'vote'],
-  '2026-08-25': ['vote'],
-  '2026-08-28': ['music', 'music', 'vote', 'vote'],
-  '2026-08-29': ['music', 'vote'],
-  '2026-08-30': ['vote'],
-};
-
 const SPECIAL_DATE_ICONS: Record<string, string> = {
   '2026-08-19': '👑',
-};
-
-const SCHEDULE_LIST_MOCK: Record<string, ScheduleListItem[]> = {
-  '2026-08-09': [
-    {
-      id: '2026-08-09-melon',
-      category: 'music',
-      icon: '',
-      title: '멜론 다운로드 총공',
-      time: '19:00',
-      platform: '멜론 (Melon)',
-      href: '/urgent/1',
-    },
-    {
-      id: '2026-08-09-bugs',
-      category: 'music',
-      icon: '',
-      title: '벅스 다운로드 총공',
-      time: '20:00',
-      platform: '벅스 (Bugs)',
-      href: '/urgent/2',
-    },
-    {
-      id: '2026-08-09-vote',
-      category: 'vote',
-      icon: '',
-      title: '최애돌 생일 이벤트 화력 지원',
-      time: '23:50',
-      platform: '최애돌',
-      href: '/urgent/3',
-    },
-  ],
 };
 
 function getDateKey(date: Date) {
@@ -92,32 +43,24 @@ function getDateKey(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
-function getEvents(date: Date, category: ScheduleCategory) {
-  const events = SCHEDULE_MOCK[getDateKey(date)] ?? [];
+function getYearMonth(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
 
-  return category === 'all'
-    ? events
-    : events.filter((event) => event === category);
+  return `${year}-${month}`;
 }
 
-function getScheduleItems(date: Date, category: ScheduleCategory) {
-  const dateKey = getDateKey(date);
-  const savedItems = SCHEDULE_LIST_MOCK[dateKey];
-  const items =
-    savedItems ??
-    (SCHEDULE_MOCK[dateKey] ?? []).map((eventCategory, index) => ({
-      id: `${dateKey}-${eventCategory}-${index}`,
-      category: eventCategory,
-      icon: '',
-      title: eventCategory === 'music' ? '음원 총공 일정' : '투표 총공 일정',
-      time: eventCategory === 'music' ? '19:00' : '23:50',
-      platform: eventCategory === 'music' ? '음원 플랫폼' : '투표 플랫폼',
-      href: `/urgent/${index + 1}`,
-    }));
+function getApiCategory(category: ScheduleCategory): ApiScheduleCategory {
+  if (category === 'music') return 'MUSIC';
+  if (category === 'vote') return 'VOTE';
 
-  return category === 'all'
-    ? items
-    : items.filter((item) => item.category === category);
+  return 'ALL';
+}
+
+function formatScheduleTime(value: string) {
+  const matched = value.match(/[T ](\d{2}):(\d{2})/);
+
+  return matched ? `${matched[1]}:${matched[2]}` : '';
 }
 
 function formatSelectedDate(date: Date) {
@@ -135,19 +78,24 @@ function formatSelectedDate(date: Date) {
 }
 
 interface ScheduleDayButtonProps extends DayButtonProps {
-  category: ScheduleCategory;
+  dayCounts: Map<string, ScheduleMonthDay>;
 }
 
 function ScheduleDayButton({
   day,
   modifiers,
-  category,
+  dayCounts,
   className,
   ...buttonProps
 }: ScheduleDayButtonProps) {
-  const events = getEvents(day.date, category);
-  const visibleEvents = events.slice(0, 4);
-  const hiddenEventCount = events.length - visibleEvents.length;
+  const counts = dayCounts.get(getDateKey(day.date));
+  const musicCount = counts?.musicCount ?? 0;
+  const voteCount = counts?.voteCount ?? 0;
+  const visibleEvents: EventCategory[] = [
+    ...Array.from({ length: Math.min(musicCount, 2) }, () => 'music' as const),
+    ...Array.from({ length: Math.min(voteCount, 2) }, () => 'vote' as const),
+  ];
+  const hiddenEventCount = musicCount + voteCount - visibleEvents.length;
   const specialIcon = SPECIAL_DATE_ICONS[getDateKey(day.date)];
 
   return (
@@ -177,7 +125,7 @@ function ScheduleDayButton({
         {day.date.getDate()}
       </span>
 
-      {events.length > 0 && (
+      {visibleEvents.length > 0 && (
         <span className="flex h-[8px] items-center justify-center gap-[3px]">
           {visibleEvents.map((event, index) => (
             <span
@@ -210,30 +158,75 @@ export default function ScheduleContainer() {
       currentDate.getDate(),
     );
   });
-  const [month, setMonth] = useState(FIRST_AVAILABLE_MONTH);
+  const [initialDate] = useState(() =>
+    today < FIRST_AVAILABLE_MONTH ? FIRST_AVAILABLE_MONTH : today,
+  );
+  const [month, setMonth] = useState(
+    () => new Date(initialDate.getFullYear(), initialDate.getMonth(), 1),
+  );
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    INITIAL_SELECTED_DATE,
+    initialDate,
   );
   const [category, setCategory] = useState<ScheduleCategory>('all');
-  const selectedScheduleItems = selectedDate
-    ? getScheduleItems(selectedDate, category)
-    : [];
+  const initialYearMonth = getYearMonth(initialDate);
+  const initialDateKey = getDateKey(initialDate);
+  const yearMonth = getYearMonth(month);
+  const selectedDateKey = selectedDate ? getDateKey(selectedDate) : '';
+  const requestOptions: ScheduleRequestOptions = {
+    category: getApiCategory(category),
+    voteDisplay: VOTE_DISPLAY,
+  };
+  const {
+    data: initialSchedule,
+    isPending: isInitialPending,
+    isError: isInitialError,
+  } = useInitialScheduleQuery();
+  const canUseInitialMonth =
+    category === 'all' && yearMonth === initialYearMonth;
+  const canUseInitialDay =
+    category === 'all' && selectedDateKey === initialDateKey;
+  const monthQuery = useScheduleMonthQuery(
+    yearMonth,
+    requestOptions,
+    !canUseInitialMonth || isInitialError,
+  );
+  const dayQuery = useScheduleDayQuery(
+    selectedDateKey,
+    requestOptions,
+    !canUseInitialDay || isInitialError,
+  );
+  const monthData =
+    canUseInitialMonth && initialSchedule
+      ? initialSchedule.month
+      : monthQuery.data;
+  const dayData =
+    canUseInitialDay && initialSchedule ? initialSchedule.day : dayQuery.data;
+  const isMonthPending = canUseInitialMonth
+    ? isInitialPending
+    : monthQuery.isPending;
+  const isDayPending = canUseInitialDay
+    ? isInitialPending
+    : dayQuery.isPending;
+  const isDayError = canUseInitialDay ? isInitialError : dayQuery.isError;
+  const dayCounts = new Map(
+    (monthData?.days ?? []).map((item) => [item.date, item]),
+  );
+  const selectedScheduleItems = dayData?.items ?? [];
   const isFirstMonth =
     month.getFullYear() === FIRST_AVAILABLE_MONTH.getFullYear() &&
     month.getMonth() === FIRST_AVAILABLE_MONTH.getMonth();
 
   const moveMonth = (offset: number) => {
-    setMonth((currentMonth) => {
-      const nextMonth = new Date(
-        currentMonth.getFullYear(),
-        currentMonth.getMonth() + offset,
-        1,
-      );
+    const nextMonth = new Date(
+      month.getFullYear(),
+      month.getMonth() + offset,
+      1,
+    );
 
-      return nextMonth < FIRST_AVAILABLE_MONTH
-        ? FIRST_AVAILABLE_MONTH
-        : nextMonth;
-    });
+    if (nextMonth < FIRST_AVAILABLE_MONTH) return;
+
+    setMonth(nextMonth);
+    setSelectedDate(nextMonth);
   };
 
   return (
@@ -244,9 +237,19 @@ export default function ScheduleContainer() {
           aria-label="이전 달"
           disabled={isFirstMonth}
           onClick={() => moveMonth(-1)}
-          className="flex h-[40px] w-[40px] items-center justify-center text-[32px] font-extralight text-secondary-400 disabled:text-secondary-800"
+          className="flex h-[40px] w-[40px] items-center justify-center disabled:cursor-not-allowed"
         >
-          ‹
+          <Image
+            src={
+              isFirstMonth
+                ? '/icon/arrow-left_gray-24.svg'
+                : '/icon/arrow-left_white-24.svg'
+            }
+            alt=""
+            width={24}
+            height={24}
+            aria-hidden="true"
+          />
         </button>
 
         <p className="min-w-[120px] text-center text-title-17 font-bold text-secondary-1">
@@ -257,9 +260,15 @@ export default function ScheduleContainer() {
           type="button"
           aria-label="다음 달"
           onClick={() => moveMonth(1)}
-          className="flex h-[40px] w-[40px] items-center justify-center text-[32px] font-extralight text-secondary-400"
+          className="flex h-[40px] w-[40px] items-center justify-center"
         >
-          ›
+          <Image
+            src="/icon/arrow-right_white-24.svg"
+            alt=""
+            width={24}
+            height={24}
+            aria-hidden="true"
+          />
         </button>
       </div>
 
@@ -298,7 +307,9 @@ export default function ScheduleContainer() {
         onMonthChange={setMonth}
         startMonth={FIRST_AVAILABLE_MONTH}
         selected={selectedDate}
-        onSelect={setSelectedDate}
+        onSelect={(date) => {
+          if (date) setSelectedDate(date);
+        }}
         today={today}
         modifiers={{ past: { before: today } }}
         showOutsideDays={false}
@@ -310,7 +321,7 @@ export default function ScheduleContainer() {
         }}
         components={{
           DayButton: (props) => (
-            <ScheduleDayButton {...props} category={category} />
+            <ScheduleDayButton {...props} dayCounts={dayCounts} />
           ),
         }}
         classNames={{
@@ -358,16 +369,22 @@ export default function ScheduleContainer() {
           </p>
         </div>
 
-        {selectedScheduleItems.length > 0 ? (
+        {isDayPending ? (
+          <LoadingScreen label="일정 불러오는 중" />
+        ) : isDayError ? (
+          <div className="flex min-h-[120px] items-center justify-center text-body-13 text-secondary-500">
+            일정을 불러오지 못했어요.
+          </div>
+        ) : selectedScheduleItems.length > 0 ? (
           <div className="flex flex-col gap-[8px]">
             {selectedScheduleItems.map((schedule) => (
               <NavigationListItem
-                key={schedule.id}
-                icon={schedule.icon}
+                key={`${schedule.menuType}-${schedule.detailId}-${schedule.time}`}
+                icon=""
                 title={schedule.title}
-                time={schedule.time}
-                platform={schedule.platform}
-                href={schedule.href}
+                time={formatScheduleTime(schedule.time)}
+                platform={schedule.platformNames.join(', ')}
+                href={`/urgent/${schedule.detailId}?menuType=${schedule.menuType}`}
               />
             ))}
           </div>
@@ -377,6 +394,12 @@ export default function ScheduleContainer() {
           </div>
         )}
       </div>
+
+      {isMonthPending && (
+        <p className="sr-only" role="status">
+          월간 일정을 불러오는 중입니다.
+        </p>
+      )}
     </section>
   );
 }

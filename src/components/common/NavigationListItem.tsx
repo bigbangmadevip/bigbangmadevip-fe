@@ -21,9 +21,9 @@ const NavigationListItem = ({
 }: NavigationListItemProps) => {
   return (
     <>
-      <div className="flex p-[16px] justify-between items-center rounded-[16px] bg-[#1B1B1B]">
-        <div className="flex flex-row gap-[12px] items-center">
-          <div className="flex items-center justify-center w-[48px] h-[48px] rounded-[12px] bg-secondary-800">
+      <div className="flex items-center justify-between gap-[12px] rounded-[16px] bg-[#1B1B1B] p-[16px]">
+        <div className="flex min-w-0 flex-1 flex-row items-center gap-[12px]">
+          <div className="flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-[12px] bg-secondary-800">
             {icon && (
               <Image
                 src={`/icon/${icon}-yellow.svg`}
@@ -33,8 +33,8 @@ const NavigationListItem = ({
               />
             )}
           </div>
-          <div>
-            <p className="text-body-15 font-bold">{title}</p>
+          <div className="min-w-0 flex-1">
+            <p className="line-clamp-1 text-body-15 font-bold">{title}</p>
             <span className="text-body-13 text-secondary-400">{time} 예정</span>
             <span className="text-body-13 px-[6px] font-bold text-secondary-700">
               |
@@ -43,7 +43,7 @@ const NavigationListItem = ({
           </div>
         </div>
 
-        <Link href={href}>
+        <Link href={href} className="shrink-0">
           <Image
             src={'/icon/arrow-right_gray-24.svg'}
             alt="arrowIconGray"

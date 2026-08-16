@@ -5,6 +5,7 @@ import type { VoteGuideCategory } from '@/types/vote';
 
 interface VoteGuideContentPlatform {
   iconSrc: string;
+  anchorId?: string;
   title: string;
   caption?: string;
 }
@@ -39,10 +40,12 @@ export const VOTE_GUIDE_MOCK_DATA: VoteGuideItem[] = [
         platform: [
           {
             iconSrc: getVotePlatformIcon('mubeat') ?? '',
+            anchorId: 'mubeat',
             title: '뮤빗',
           },
           {
             iconSrc: getVotePlatformIcon('muniverse') ?? '',
+            anchorId: 'muniverse',
             title: '뮤니버스',
           },
         ],
@@ -54,7 +57,8 @@ export const VOTE_GUIDE_MOCK_DATA: VoteGuideItem[] = [
         caption: '쿠궁',
         platform: [
           {
-            iconSrc: getVotePlatformIcon('kogoong') ?? '',
+            iconSrc: getVotePlatformIcon('coogoong') ?? '',
+            anchorId: 'coogoong',
             title: '쿠궁',
           },
         ],
@@ -67,10 +71,12 @@ export const VOTE_GUIDE_MOCK_DATA: VoteGuideItem[] = [
         platform: [
           {
             iconSrc: getVotePlatformIcon('linc') ?? '',
+            anchorId: 'linc',
             title: '링크',
           },
           {
             iconSrc: getVotePlatformIcon('higher') ?? '',
+            anchorId: 'higher',
             title: '하이어',
           },
         ],
@@ -83,6 +89,7 @@ export const VOTE_GUIDE_MOCK_DATA: VoteGuideItem[] = [
         platform: [
           {
             iconSrc: getVotePlatformIcon('idolchamp') ?? '',
+            anchorId: 'idolchamp',
             title: '아이돌챔프',
           },
         ],
@@ -95,6 +102,7 @@ export const VOTE_GUIDE_MOCK_DATA: VoteGuideItem[] = [
         platform: [
           {
             iconSrc: getVotePlatformIcon('mnetplus') ?? '',
+            anchorId: 'mnetplus',
             title: '엠넷플러스',
           },
         ],
@@ -107,6 +115,7 @@ export const VOTE_GUIDE_MOCK_DATA: VoteGuideItem[] = [
         platform: [
           {
             iconSrc: getVotePlatformIcon('bigc') ?? '',
+            anchorId: 'bigc',
             title: '빅크',
           },
         ],

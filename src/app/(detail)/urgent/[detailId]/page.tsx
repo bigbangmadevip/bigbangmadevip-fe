@@ -1,44 +1,62 @@
 'use client';
 
 import Image from 'next/image';
-import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { CategoryBadge } from '@/components/common/CategoryBadge';
+import CommonErrorScreen from '@/components/common/CommonErrorScreen';
 import FloatingShareButton from '@/components/common/FloatingShareButton';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
+import LoadingScreen from '@/components/common/LoadingScreen';
 import { PageHeader } from '@/components/common/PageHeader';
+import { getMusicGuideLinks } from '@/constants/music-guide';
+import { useMusicDetailQuery } from '@/hooks/queries/useMusicQuery';
+import { useVoteDetailQuery } from '@/hooks/queries/useVoteQuery';
+import type { MusicDetailResponse } from '@/types/music';
+import type { VoteDetailResponse } from '@/types/vote';
+import { formatDateTimeToMinute } from '@/utils/date';
 
-const URGENT_DETAIL_MOCK = {
-  category: 'DOWNLOAD' as const,
-  title: '오늘 저녁 8시 30분\n멜론 개별곡 다운로드 총공',
-  songName: '타이틀 곡 <봄여름가을겨울>',
-  platform: '멜론',
-  eventAt: '2026. 07. 14 20:30',
-  guides: [
-    { id: 'melon', title: '멜론', description: '다운로드 가이드' },
-    { id: 'genie', title: '지니', description: '다운로드 가이드' },
-    { id: 'bugs', title: '벅스', description: '다운로드 가이드' },
-    { id: 'flo', title: 'FLO', description: '다운로드 가이드' },
-  ],
-  checklist: [
-    'Too Bad, Home sweet Home, Live Fast Die Slow 스트리밍 필수',
-    '다운로드 파일 삭제 확인 후 진행',
-  ],
-  images: ['', '', ''],
-};
+type MenuType = 'MUSIC' | 'VOTE';
+
+function isMenuType(value: string | null): value is MenuType {
+  return value === 'MUSIC' || value === 'VOTE';
+}
+
+function isMusicDetailData(
+  menuType: MenuType,
+  detail: MusicDetailResponse | VoteDetailResponse,
+): detail is MusicDetailResponse {
+  return menuType === 'MUSIC' && 'songName' in detail;
+}
 
 export default function UrgentDetailPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { detailId } = useParams<{ detailId: string }>();
+  const menuTypeParam = searchParams.get('menuType')?.toUpperCase() ?? null;
+  const menuType = isMenuType(menuTypeParam) ? menuTypeParam : null;
+  const musicDetailQuery = useMusicDetailQuery(
+    detailId,
+    menuType === 'MUSIC',
+  );
+  const voteDetailQuery = useVoteDetailQuery(detailId, menuType === 'VOTE');
   const carouselRef = useRef<HTMLDivElement>(null);
   const pageTitleRef = useRef<HTMLHeadingElement>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [showHeaderTitle, setShowHeaderTitle] = useState(false);
+  const activeQuery =
+    menuType === 'MUSIC'
+      ? musicDetailQuery
+      : menuType === 'VOTE'
+        ? voteDetailQuery
+        : null;
+  const detail = activeQuery?.data;
 
   useEffect(() => {
     const pageTitle = pageTitleRef.current;
 
-    if (!pageTitle) return;
+    if (!pageTitle || !detail) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => setShowHeaderTitle(!entry.isIntersecting),
@@ -48,7 +66,41 @@ export default function UrgentDetailPage() {
     observer.observe(pageTitle);
 
     return () => observer.disconnect();
-  }, []);
+  }, [detail]);
+
+  if (!menuType) {
+    return <CommonErrorScreen message="잘못된 상세 경로예요." />;
+  }
+
+  if (activeQuery?.isPending) {
+    return <LoadingScreen label="총공 상세 불러오는 중" />;
+  }
+
+  if (activeQuery?.isError || !detail) {
+    return <CommonErrorScreen />;
+  }
+
+  const isMusicDetail = isMusicDetailData(menuType, detail);
+  const imageUrls = detail.imageUrls;
+  const musicGuideLinks = isMusicDetail
+    ? getMusicGuideLinks(detail.category, detail.platformNames).filter(
+        (guide) =>
+          detail.guides.some((registeredGuide) =>
+            registeredGuide.title
+              .toLowerCase()
+              .includes(guide.title.toLowerCase()),
+          ),
+      )
+    : [];
+  const voteGuideLinks = !isMusicDetail
+    ? detail.guides.map((guide) => ({
+        id: String(guide.guideId),
+        title: guide.title,
+        description: '투표 가이드',
+        href: `/vote/guide/${guide.guideId}`,
+      }))
+    : [];
+  const hasGuides = musicGuideLinks.length > 0 || voteGuideLinks.length > 0;
 
   const handleImageScroll = () => {
     const carousel = carouselRef.current;
@@ -58,9 +110,7 @@ export default function UrgentDetailPage() {
     const slideWidth = carousel.clientWidth + 12;
     const nextIndex = Math.round(carousel.scrollLeft / slideWidth);
 
-    setActiveImageIndex(
-      Math.min(nextIndex, URGENT_DETAIL_MOCK.images.length - 1),
-    );
+    setActiveImageIndex(Math.min(nextIndex, imageUrls.length - 1));
   };
 
   const handleIndicatorClick = (index: number) => {
@@ -75,11 +125,11 @@ export default function UrgentDetailPage() {
   };
 
   return (
-    <main data-detail-id={detailId} className="-mx-5">
+    <main data-detail-id={detailId} data-menu-type={menuType} className="-mx-5">
       <PageHeader
         sticky
         className="bg-secondary-950 px-5"
-        title={URGENT_DETAIL_MOCK.title.replace('\n', ' ')}
+        title={detail.title}
         titleClassName={`transition-opacity duration-200 ${
           showHeaderTitle ? 'opacity-100' : 'opacity-0'
         }`}
@@ -90,157 +140,287 @@ export default function UrgentDetailPage() {
             onClick={() => router.back()}
           >
             <Image
-              src="/icon/arrow-left_white-24.svg"
+              src="/icon/arrow-left_white-28.svg"
               alt=""
-              width={24}
-              height={24}
+              width={28}
+              height={28}
               aria-hidden="true"
             />
           </HeaderIconButton>
         }
       />
+
       <section className="bg-secondary-950 px-5 pb-[24px]">
         <div className="pt-[20px]">
-          <CategoryBadge category={URGENT_DETAIL_MOCK.category} />
+          <CategoryBadge category={detail.category} />
 
           <h1
             ref={pageTitleRef}
             className="mt-[20px] whitespace-pre-line text-[22px] font-bold tracking-[-0.04em] text-secondary-1"
           >
-            {URGENT_DETAIL_MOCK.title}
+            {detail.title}
           </h1>
 
-          <dl className="mt-[20px] grid grid-cols-[56px_minmax(0,1fr)] gap-x-[16px] gap-y-[10px] text-body-13">
-            <dt className="text-secondary-300">곡명</dt>
-            <dd className="font-bold text-secondary-100">
-              {URGENT_DETAIL_MOCK.songName}
-            </dd>
+          <dl className="mt-[20px] grid grid-cols-[72px_minmax(0,1fr)] gap-x-[16px] gap-y-[10px] text-body-13">
+            {isMusicDetail ? (
+              <>
+                {detail.songName && (
+                  <>
+                    <dt className="text-secondary-300">곡명</dt>
+                    <dd className="font-bold text-secondary-100">
+                      {detail.songName}
+                    </dd>
+                  </>
+                )}
 
-            <dt className="text-secondary-300">플랫폼</dt>
-            <dd className="font-medium text-secondary-100">
-              {URGENT_DETAIL_MOCK.platform}
-            </dd>
+                <dt className="text-secondary-300">플랫폼</dt>
+                <dd className="font-medium text-secondary-100">
+                  {detail.platformNames.join(', ')}
+                </dd>
 
-            <dt className="text-secondary-300">총공 시간</dt>
-            <dd className="font-medium text-secondary-100">
-              {URGENT_DETAIL_MOCK.eventAt}
-            </dd>
+                {detail.eventAt && (
+                  <>
+                    <dt className="text-secondary-300">총공 시간</dt>
+                    <dd className="font-medium text-secondary-100">
+                      {formatDateTimeToMinute(detail.eventAt)}
+                    </dd>
+                  </>
+                )}
+              </>
+            ) : (
+              <>
+                {detail.rewardDescription && (
+                  <>
+                    <dt className="text-secondary-300">리워드</dt>
+                    <dd className="font-bold text-secondary-100">
+                      {detail.rewardDescription}
+                    </dd>
+                  </>
+                )}
+
+                <dt className="text-secondary-300">플랫폼</dt>
+                <dd className="font-medium text-secondary-100">
+                  {detail.platformNames.join(', ')}
+                </dd>
+
+                {detail.eventStartAt && (
+                  <>
+                    <dt className="text-secondary-300">시작 시간</dt>
+                    <dd className="font-medium text-secondary-100">
+                      {formatDateTimeToMinute(detail.eventStartAt)}
+                    </dd>
+                  </>
+                )}
+
+                {detail.eventEndAt && (
+                  <>
+                    <dt className="text-secondary-300">마감 시간</dt>
+                    <dd className="font-medium text-secondary-100">
+                      {formatDateTimeToMinute(detail.eventEndAt)}
+                    </dd>
+                  </>
+                )}
+              </>
+            )}
           </dl>
+
+          {isMusicDetail && detail.description && (
+            <p className="mt-[20px] whitespace-pre-line text-body-13 text-secondary-200">
+              {detail.description}
+            </p>
+          )}
+
+          {!isMusicDetail && detail.platformUrl && (
+            <a
+              href={detail.platformUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-[20px] flex w-full items-center justify-center rounded-[12px] bg-main py-[14px] text-body-15 font-bold text-secondary-950"
+            >
+              {detail.ctaButtonLabel || '투표하러 가기'}
+            </a>
+          )}
         </div>
       </section>
-      <div className="w-full h-[6px] bg-secondary-900" />
-      <section className="bg-secondary-950 px-5 py-[24px]">
-        <div className="mb-[16px] flex items-baseline gap-[8px]">
-          <h2 className="text-title-15 font-bold text-secondary-1">
-            바로 가기
-          </h2>
-          <p className="text-body-11 font-medium text-secondary-300">
-            처음 참여하는 VIP라면 가이드를 먼저 확인해주세요!
-          </p>
-        </div>
 
-        <div className="grid grid-cols-2 gap-x-[7px] gap-y-[8px]">
-          {URGENT_DETAIL_MOCK.guides.map((guide) => (
-            <button
-              key={guide.id}
-              type="button"
-              className="flex min-w-0 items-center rounded-[12px] border border-[rgba(255,255,255,0.08)] bg-secondary-900 py-[16px] pr-[8px] pl-[12px] text-left"
-            >
-              <span
-                aria-label={`${guide.title} 플랫폼 아이콘 영역`}
-                className="h-[40px] w-[40px] shrink-0 rounded-full bg-secondary-700"
-              />
+      <div className="h-[6px] w-full bg-secondary-900" />
 
-              <span className="ml-[8px] min-w-0 flex-1">
-                <strong className="block truncate text-body-13 font-bold text-secondary-1">
-                  {guide.title}
-                </strong>
-                <span className="block truncate text-body-11 text-secondary-300">
-                  {guide.description}
-                </span>
-              </span>
+      {hasGuides && (
+        <>
+          <section className="bg-secondary-950 px-5 py-[24px]">
+            <div className="mb-[16px] flex items-baseline gap-[8px]">
+              <h2 className="shrink-0 text-title-15 font-bold text-secondary-1">
+                가이드 바로 가기
+              </h2>
+              <p className="text-body-11 font-medium text-secondary-300">
+                처음 참여하는 VIP라면 가이드를 먼저 확인해주세요!
+              </p>
+            </div>
 
-              <Image
-                src="/icon/arrow-right_gray-24.svg"
-                alt=""
-                width={20}
-                height={20}
-                aria-hidden="true"
-                className="shrink-0"
-              />
-            </button>
-          ))}
-        </div>
-      </section>
-      <div className="w-full h-[6px] bg-secondary-900" />
-
-      <section className="bg-secondary-950 px-5 py-[24px]">
-        <h2 className="text-title-15 font-bold text-secondary-1">체크 사항</h2>
-
-        <ul className="mt-[12px] flex flex-col gap-[6px] rounded-[16px] bg-secondary-900 p-[16px]">
-          {URGENT_DETAIL_MOCK.checklist.map((item) => (
-            <li
-              key={item}
-              className="flex items-center gap-[8px] text-body-12 text-secondary-200"
-            >
-              <span
-                aria-hidden="true"
-                className="mt-[1px] text-body-13 font-medium text-secondary-500"
-              >
-                ✔️
-              </span>
-              <span className="text-body-13 font-medium text-secondary-200">
-                {item}
-              </span>
-            </li>
-          ))}
-        </ul>
-
-        <h2 className="mt-[24px] text-title-15 font-bold text-secondary-1">
-          관련 이미지
-        </h2>
-
-        <div
-          ref={carouselRef}
-          onScroll={handleImageScroll}
-          className="scrollbar-hidden mt-[16px] flex snap-x snap-mandatory gap-[12px] overflow-x-auto overscroll-x-contain"
-        >
-          {URGENT_DETAIL_MOCK.images.map((_, index) => (
-            <div
-              key={index}
-              role="img"
-              aria-label={`관련 이미지 ${index + 1}`}
-              className="aspect-square w-full shrink-0 snap-center rounded-[16px] bg-secondary-800"
-            />
-          ))}
-        </div>
-
-        {URGENT_DETAIL_MOCK.images.length > 1 && (
-          <div
-            className="mt-[12px] flex justify-center gap-[6px]"
-            aria-label="관련 이미지 페이지"
-          >
-            {URGENT_DETAIL_MOCK.images.map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                aria-label={`${index + 1}번 이미지 보기`}
-                aria-current={activeImageIndex === index ? 'true' : undefined}
-                onClick={() => handleIndicatorClick(index)}
-                className={`h-[6px] rounded-full transition-[width,background-color] ${
-                  activeImageIndex === index
-                    ? 'w-[24px] bg-secondary-100'
-                    : 'w-[6px] bg-secondary-600'
+            {isMusicDetail ? (
+              <div
+                className={`grid gap-[8px] ${
+                  musicGuideLinks.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
                 }`}
-              />
-            ))}
-          </div>
-        )}
-      </section>
+              >
+                {musicGuideLinks.map((guide) => (
+                  <Link
+                    key={guide.id}
+                    href={guide.href}
+                    className="flex min-w-0 items-center rounded-[12px] border border-[rgba(255,255,255,0.08)] bg-secondary-900 py-[16px] pr-[8px] pl-[12px] text-left"
+                  >
+                    <Image
+                      src={guide.iconSrc}
+                      alt=""
+                      width={40}
+                      height={40}
+                      aria-hidden="true"
+                      className="h-[40px] w-[40px] shrink-0 rounded-full"
+                    />
+                    <span className="ml-[8px] min-w-0 flex-1">
+                      <strong className="block truncate text-body-13 font-bold text-secondary-1">
+                        {guide.title}
+                      </strong>
+                      <span className="block truncate text-body-11 text-secondary-300">
+                        {guide.description}
+                      </span>
+                    </span>
+                    <Image
+                      src="/icon/arrow-right_gray-24.svg"
+                      alt=""
+                      width={24}
+                      height={24}
+                      aria-hidden="true"
+                      className="shrink-0"
+                    />
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div
+                className={`grid gap-[8px] ${
+                  voteGuideLinks.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
+                }`}
+              >
+                {voteGuideLinks.map((guide) => (
+                  <Link
+                    key={guide.id}
+                    href={guide.href}
+                    className="flex min-w-0 items-center rounded-[12px] border border-[rgba(255,255,255,0.08)] bg-secondary-900 p-[16px] text-left"
+                  >
+                    <span className="min-w-0 flex-1">
+                      <strong className="block line-clamp-2 text-body-13 font-bold text-secondary-1">
+                        {guide.title}
+                      </strong>
+                      <span className="block text-body-11 text-secondary-300">
+                        {guide.description}
+                      </span>
+                    </span>
+                    <Image
+                      src="/icon/arrow-right_gray-24.svg"
+                      alt=""
+                      width={24}
+                      height={24}
+                      aria-hidden="true"
+                      className="shrink-0"
+                    />
+                  </Link>
+                ))}
+              </div>
+            )}
+          </section>
+          <div className="h-[6px] w-full bg-secondary-900" />
+        </>
+      )}
 
-      <FloatingShareButton
-        title={URGENT_DETAIL_MOCK.title.replace('\n', ' ')}
-      />
+      {(detail.checklist.length > 0 || imageUrls.length > 0) && (
+        <section className="bg-secondary-950 px-5 py-[24px]">
+          {detail.checklist.length > 0 && (
+            <>
+              <h2 className="text-title-15 font-bold text-secondary-1">
+                체크 사항
+              </h2>
+              <ul className="mt-[12px] flex flex-col gap-[6px] rounded-[16px] bg-secondary-900 p-[16px]">
+                {detail.checklist.map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-center gap-[8px] text-body-12 text-secondary-200"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="mt-[1px] text-body-13 font-medium text-secondary-500"
+                    >
+                      ✓
+                    </span>
+                    <span className="text-body-13 font-medium text-secondary-200">
+                      {item}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+
+          {imageUrls.length > 0 && (
+            <>
+              <h2
+                className={`${
+                  detail.checklist.length > 0 ? 'mt-[24px]' : ''
+                } text-title-15 font-bold text-secondary-1`}
+              >
+                관련 이미지
+              </h2>
+              <div
+                ref={carouselRef}
+                onScroll={handleImageScroll}
+                className="scrollbar-hidden mt-[16px] flex snap-x snap-mandatory gap-[12px] overflow-x-auto overscroll-x-contain"
+              >
+                {imageUrls.map((imageUrl, index) => (
+                  <div
+                    key={imageUrl}
+                    className="relative aspect-square w-full shrink-0 snap-center overflow-hidden rounded-[16px] bg-secondary-800"
+                  >
+                    <Image
+                      src={imageUrl}
+                      alt={`관련 이미지 ${index + 1}`}
+                      fill
+                      unoptimized
+                      sizes="(max-width: 430px) 100vw, 390px"
+                      className="object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              {imageUrls.length > 1 && (
+                <div
+                  className="mt-[12px] flex justify-center gap-[6px]"
+                  aria-label="관련 이미지 페이지"
+                >
+                  {imageUrls.map((imageUrl, index) => (
+                    <button
+                      key={imageUrl}
+                      type="button"
+                      aria-label={`${index + 1}번 이미지 보기`}
+                      aria-current={
+                        activeImageIndex === index ? 'true' : undefined
+                      }
+                      onClick={() => handleIndicatorClick(index)}
+                      className={`h-[6px] rounded-full transition-[width,background-color] ${
+                        activeImageIndex === index
+                          ? 'w-[24px] bg-secondary-100'
+                          : 'w-[6px] bg-secondary-600'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </section>
+      )}
+
+      <FloatingShareButton title={detail.title} />
     </main>
   );
 }

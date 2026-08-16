@@ -4,6 +4,7 @@ import { Check, ChevronRight, X } from 'lucide-react';
 import { useState } from 'react';
 import FullPageDialog from '@/components/common/FullPageDialog';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
+import LoadingScreen from '@/components/common/LoadingScreen';
 import { PageHeader } from '@/components/common/PageHeader';
 import {
   AGREEMENTS,
@@ -128,7 +129,7 @@ export default function AgreementContainer() {
               : 'cursor-not-allowed bg-secondary-800 text-secondary-600'
           }`}
         >
-          {isPending ? '처리 중' : '다음'}
+          다음
         </button>
       </div>
       </main>
@@ -144,6 +145,8 @@ export default function AgreementContainer() {
           {activeAgreementContent?.detailContent}
         </p>
       </FullPageDialog>
+
+      {isPending && <LoadingScreen label="약관 동의 처리 중" />}
     </>
   );
 }

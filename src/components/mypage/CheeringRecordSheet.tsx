@@ -7,12 +7,18 @@ import {
   DialogDescription,
   DialogTitle,
 } from '@/components/ui/dialog';
+import Image from 'next/image';
+import LoadingScreen from '@/components/common/LoadingScreen';
+import type { CheeringRecordItem } from '@/types/mypage';
 
 interface CheeringRecordSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   date: Date;
-  records: string[];
+  completedCount: number;
+  items: CheeringRecordItem[];
+  isPending?: boolean;
+  isError?: boolean;
 }
 
 const WEEKDAYS = [
@@ -29,17 +35,20 @@ export default function CheeringRecordSheet({
   open,
   onOpenChange,
   date,
-  records,
+  completedCount,
+  items,
+  isPending = false,
+  isError = false,
 }: CheeringRecordSheetProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
         closeOnPointerDownOutside
-        className="cheering-record-sheet inset-x-0 top-auto bottom-0 mx-auto grid max-h-[calc(100dvh-env(safe-area-inset-top))] w-full max-w-[430px] translate-x-0 translate-y-0 gap-0 overflow-y-auto rounded-t-[24px] rounded-b-none border-none bg-secondary-900 px-[24px] pt-[28px] pb-[calc(40px+env(safe-area-inset-bottom))] shadow-none"
+        className="cheering-record-sheet inset-x-0 top-auto bottom-0 mx-auto grid max-h-[calc(100dvh-env(safe-area-inset-top))] w-full max-w-[430px] translate-x-0 translate-y-0 gap-0 overflow-y-auto rounded-t-[16px] rounded-b-none border-none bg-secondary-900 px-[24px] pt-[28px] pb-[calc(40px+env(safe-area-inset-bottom))] shadow-none"
       >
         <div className="flex items-center justify-between">
-          <DialogTitle className="text-[22px] font-bold leading-[1.4] text-secondary-1">
+          <DialogTitle className="text-[17px] font-bold leading-[1.4] text-secondary-1">
             {date.getDate()}일 {WEEKDAYS[date.getDay()]}
           </DialogTitle>
 
@@ -49,28 +58,39 @@ export default function CheeringRecordSheet({
               aria-label="응원 기록 닫기"
               className="flex h-[44px] w-[44px] items-center justify-end text-[34px] font-extralight leading-none text-secondary-1"
             >
-              ×
+              <Image
+                src={'/icon/close-white_24.svg'}
+                alt="CloseIcon"
+                width={24}
+                height={24}
+              />
             </button>
           </DialogClose>
         </div>
 
-        <DialogDescription className="mt-[16px] text-body-15 text-secondary-500">
-          {records.length}개의 응원을 완료했어요!
+        <DialogDescription className="mt-[28px] text-body-14 text-secondary-400">
+          {completedCount}개의 응원을 완료했어요!
         </DialogDescription>
 
-        {records.length > 0 ? (
-          <ul className="mt-[28px] flex flex-col gap-[20px]">
-            {records.map((record) => (
+        {isPending ? (
+          <LoadingScreen label="응원 기록 불러오는 중" />
+        ) : isError ? (
+          <div className="flex min-h-[160px] items-center justify-center text-body-13 text-secondary-500">
+            응원 기록을 불러오지 못했어요.
+          </div>
+        ) : items.length > 0 ? (
+          <ul className="mt-[24px] flex flex-col gap-[20px]">
+            {items.map((item) => (
               <li
-                key={record}
+                key={item.id}
                 className="flex items-center gap-[12px] text-body-15 text-secondary-100"
               >
-                <span aria-hidden="true" className="text-[18px]">
-                  👑
-                </span>
+                <span aria-hidden="true">👑</span>
                 <p>
-                  <strong className="font-bold">{record}</strong>
-                  <span className="ml-[6px] font-normal">참여 완료</span>
+                  <strong className="font-bold">
+                    {item.title.replace(/\n/g, ' ')}
+                  </strong>
+                  <span className="ml-[4px]">참여 완료</span>
                 </p>
               </li>
             ))}

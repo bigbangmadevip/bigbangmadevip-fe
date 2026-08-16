@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { AppDialog } from '@/components/common/AppDialog';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
+import LoadingScreen from '@/components/common/LoadingScreen';
 import NavigationListItem from '@/components/common/NavigationListItem';
 import { PageHeader } from '@/components/common/PageHeader';
 import { SectionTitle } from '@/components/common/SectionTitle';
@@ -260,7 +261,7 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
                 platform={schedule.platformNames
                   .map(getPlatformLabel)
                   .join(', ')}
-                href={`/urgent/${schedule.detailId}`}
+                href={`/urgent/${schedule.detailId}?menuType=${schedule.menuType}`}
               />
             ))}
           </div>
@@ -317,9 +318,7 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
                   onClick: handleCloseDialog,
                 },
                 {
-                  label: participateCheeringMutation.isPending
-                    ? '처리 중...'
-                    : (currentDialogConfig?.buttonLabel ?? '참여완료'),
+                  label: currentDialogConfig?.buttonLabel ?? '참여완료',
                   disabled: participateCheeringMutation.isPending,
                   onClick: handleParticipate,
                 },
@@ -332,6 +331,10 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
               ]
         }
       />
+
+      {participateCheeringMutation.isPending && (
+        <LoadingScreen label="응원 참여 처리 중" />
+      )}
     </main>
   );
 }

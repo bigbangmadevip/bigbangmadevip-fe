@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { CategoryTabs } from '@/components/common/CategoryTabs';
+import FloatingShareButton from '@/components/common/FloatingShareButton';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import { PageHeader } from '@/components/common/PageHeader';
 import { UnderlineTabs } from '@/components/common/UnderlineTabs';
@@ -56,8 +57,11 @@ export default function XGuideContainer() {
   )
     ? categoryParam
     : 'create';
-  const activeFollowCategory: FollowAccountCategory =
-    isFollowAccountCategory(categoryParam) ? categoryParam : 'all';
+  const activeFollowCategory: FollowAccountCategory = isFollowAccountCategory(
+    categoryParam,
+  )
+    ? categoryParam
+    : 'all';
 
   const updateSearchParams = (
     nextTab: XGuideTab,
@@ -69,10 +73,7 @@ export default function XGuideContainer() {
     params.set('tab', nextTab);
 
     if (nextTab === 'account') {
-      params.set(
-        'category',
-        isAccountCategory(category) ? category : 'create',
-      );
+      params.set('category', isAccountCategory(category) ? category : 'create');
     } else if (nextTab === 'follow') {
       params.set(
         'category',
@@ -96,10 +97,10 @@ export default function XGuideContainer() {
             onClick={() => router.back()}
           >
             <Image
-              src="/icon/arrow-left_white-24.svg"
+              src="/icon/arrow-left_white-28.svg"
               alt=""
-              width={24}
-              height={24}
+              width={28}
+              height={28}
               aria-hidden="true"
             />
           </HeaderIconButton>
@@ -164,6 +165,8 @@ export default function XGuideContainer() {
           />
         )}
       </section>
+
+      <FloatingShareButton title="X 활동 가이드" />
     </main>
   );
 }

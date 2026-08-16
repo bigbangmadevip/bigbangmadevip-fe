@@ -29,8 +29,25 @@ export const PLATFORM_LABEL = {
   youtube: '유튜브 뮤비',
 } satisfies Record<Platform, string>;
 
-// TODO: API 응답 확인 후 구체적인 DTO로 교체
-export type MusicDetailResponse = Record<string, unknown>;
+export type MusicDetailGuide = {
+  guideId: number;
+  guideType: string;
+  title: string;
+};
+
+export type MusicDetailResponse = {
+  id: number;
+  category: 'DOWNLOAD' | 'STREAMING' | 'ETC';
+  title: string;
+  songName: string | null;
+  platformNames: string[];
+  platformUrl: string | null;
+  eventAt: string | null;
+  description: string | null;
+  checklist: string[];
+  imageUrls: string[];
+  guides: MusicDetailGuide[];
+};
 
 export type MusicRegion = 'DOMESTIC' | 'GLOBAL';
 
@@ -64,4 +81,15 @@ export type MusicStreamingResponse = {
   platforms: MusicStreamingPlatform[];
   streamingImageUrls: string[];
   imagesUpdatedAt: string | null;
+};
+
+export type MusicNoticeListItem = {
+  id: number;
+  title: string;
+  createdAt: string;
+};
+
+export type MusicNoticeDetail = MusicNoticeListItem & {
+  content: string;
+  imageUrls: string[];
 };
