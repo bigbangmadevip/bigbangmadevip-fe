@@ -169,7 +169,7 @@ function ScheduleDayButton({
         {specialIcon && (
           <span
             aria-hidden="true"
-            className="absolute -top-[8px] text-[14px] leading-none"
+            className="absolute -top-[10px] text-[14px] leading-none"
           >
             {specialIcon}
           </span>

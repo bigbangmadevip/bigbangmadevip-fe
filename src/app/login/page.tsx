@@ -14,7 +14,7 @@ export default function LoginPage() {
     setIsPending(true);
 
     window.setTimeout(() => {
-      window.location.href = createKakaoLoginUrl(window.location.origin);
+      window.location.href = createKakaoLoginUrl();
     }, 50);
   };
 

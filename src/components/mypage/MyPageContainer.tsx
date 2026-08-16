@@ -14,8 +14,8 @@ import '@daypicker/react/style.css';
 
 const INITIAL_MONTH = new Date(2026, 7, 1);
 const INITIAL_SELECTED_DATE = new Date(2026, 7, 20);
-const MARQUEE_TEXT =
-  '• 20 YEARS • BIGBANG IS VIP • 20 YEARS • BIGBANG IS VIP • 20 YEARS • BIGBANG IS VIP';
+const MARQUEE_ITEM = '• 20 YEARS • BIGBANG IS VIP\u00A0';
+const MARQUEE_ITEMS = Array.from({ length: 6 }, (_, index) => index);
 const CHEERING_DATES = [
   new Date(2026, 7, 20),
   new Date(2026, 7, 21),
@@ -76,9 +76,7 @@ function MyPageDayButton({
 
 export default function MyPageContainer() {
   const [month, setMonth] = useState(INITIAL_MONTH);
-  const [selectedDate, setSelectedDate] = useState<Date>(
-    INITIAL_SELECTED_DATE,
-  );
+  const [selectedDate, setSelectedDate] = useState<Date>(INITIAL_SELECTED_DATE);
   const [isRecordSheetOpen, setIsRecordSheetOpen] = useState(false);
   const selectedRecords =
     CHEERING_RECORDS[getDateKey(selectedDate)] ??
@@ -116,51 +114,61 @@ export default function MyPageContainer() {
       />
 
       <div className="-mx-5 overflow-hidden border-y border-[#3C3A11] bg-[rgba(255,251,31,0.03)] py-[10px]">
-        <div className="marquee-track flex w-max whitespace-nowrap text-caption-10 font-medium text-secondary-600">
-          <span className="pr-[32px]">{MARQUEE_TEXT}</span>
-          <span aria-hidden="true" className="pr-[32px]">
-            {MARQUEE_TEXT}
-          </span>
+        <div
+          aria-label={MARQUEE_ITEM}
+          className="marquee-track flex w-max whitespace-nowrap text-caption-10 font-medium text-secondary-600"
+        >
+          <div className="flex shrink-0" aria-hidden="true">
+            {MARQUEE_ITEMS.map((item) => (
+              <span key={`marquee-first-${item}`}>{MARQUEE_ITEM}</span>
+            ))}
+          </div>
+          <div className="flex shrink-0" aria-hidden="true">
+            {MARQUEE_ITEMS.map((item) => (
+              <span key={`marquee-second-${item}`}>{MARQUEE_ITEM}</span>
+            ))}
+          </div>
         </div>
       </div>
 
       <section className="pt-[32px]">
-        <h1 className="text-[30px] leading-[1.35] font-extralight tracking-[-0.04em] text-secondary-1">
+        <h1 className="text-[36px] leading-[1.35] font-extralight tracking-[-0.04em] text-secondary-1">
           ALWAYS <strong className="font-bold text-main">VIP👑</strong>
           <br />
           언제까지나
           <br />
-          FOREVER WITH BB
+          FOREVER WITH <strong className="font-bold">BiiiG</strong>
         </h1>
 
-        <div className="mt-[28px] rounded-[16px] bg-secondary-900 p-[16px]">
+        <div className="mt-[40px] rounded-[16px] bg-secondary-900 p-[16px]">
           <div className="flex items-center justify-between">
-            <span className="rounded-[6px] border border-secondary-800 px-[10px] py-[6px] text-caption-10 text-secondary-300">
+            <span className="rounded-[8px] border border-secondary-800 px-[12px] py-[6px] text-body-12 font-medium text-secondary-300">
               오늘의 응원 현황
             </span>
-            <p className="text-body-11 text-secondary-400">
-              <strong className="text-secondary-1">3</strong> /8 완료
+            <p className="text-body-13 text-secondary-400">
+              <strong className="text-secondary-1">3</strong>{' '}
+              <span className="pr-[4px]">/8</span>완료
             </p>
           </div>
 
-          <div className="mt-[20px] h-[8px] overflow-hidden rounded-full bg-secondary-700">
+          <div className="mt-[24px] h-[8px] overflow-hidden rounded-full bg-secondary-700">
             <div className="h-full w-[42%] rounded-full bg-main" />
           </div>
 
-          <p className="mt-[8px] text-body-11 text-secondary-500">
-            3개 남았어요
+          <p className="mt-[8px] text-body-15 text-secondary-400">
+            5개 남았어요
           </p>
 
           <Link
             href="/"
-            className="mt-[20px] flex items-center justify-between rounded-full bg-secondary-800 px-[16px] py-[13px] text-body-12 font-medium text-secondary-1"
+            className="mt-[16px] flex items-center justify-between rounded-full bg-secondary-800 pl-[20px] pr-[12px] py-[12px] text-body-13 font-medium text-secondary-1"
           >
             오늘의 응원 하러 가기
             <Image
               src="/icon/arrow-right_gray-24.svg"
-              alt=""
-              width={18}
-              height={18}
+              alt="ArrowIcon"
+              width={24}
+              height={24}
             />
           </Link>
         </div>
@@ -169,41 +177,45 @@ export default function MyPageContainer() {
       <section className="mt-[40px]">
         <SectionTitle>내 응원 기록</SectionTitle>
 
-        <div className="flex border-t border-secondary-900 py-[16px]">
-          <div className="flex flex-1 items-start gap-[4px]">
-            <strong className="text-[64px] leading-[0.9] font-medium tracking-[-0.04em] text-main">
+        <div className="mt-[23px] flex gap-[15px]">
+          <div className="flex items-start gap-[32px] justify-between border-t border-secondary-900 pt-[12px]">
+            <strong className="font-suit text-[80px] leading-[66px] font-bold text-main">
               19
             </strong>
-            <span className="mt-[5px] text-caption-10 text-secondary-300">
-              번 응원
-            </span>
+            <span className="text-body-12 text-secondary-100">번 응원</span>
           </div>
 
-          <dl className="w-[52%]">
-            <div className="flex items-end justify-between border-b border-secondary-900 pb-[14px]">
-              <dt className="text-caption-10 text-secondary-600">응원한 날</dt>
-              <dd className="text-title-17 font-medium text-secondary-1">
-                12<small className="ml-[3px] text-body-11">일째</small>
+          <dl className="w-[52%] border-t border-secondary-900 pt-[12px]">
+            <div className="flex items-start justify-between border-b border-secondary-900 pb-[20px] px-[4px]">
+              <dt className="text-body-11 text-secondary-400">응원한 날</dt>
+              <dd className="font-suit text-[24px] leading-none font-bold text-secondary-1">
+                12
+                <small className="ml-[4px] inline-block align-top text-body-11 leading-none">
+                  일째
+                </small>
               </dd>
             </div>
-            <div className="flex items-end justify-between border-b border-secondary-900 py-[14px]">
-              <dt className="text-caption-10 text-secondary-600">
+            <div className="flex items-start justify-between border-b border-secondary-900 py-[20px] px-[4px]">
+              <dt className="text-body-11 text-secondary-400">
                 이번 달 응원한 날
               </dt>
-              <dd className="text-title-17 font-medium text-secondary-1">
-                10<small className="ml-[3px] text-body-11">일</small>
+              <dd className="font-suit text-[24px] leading-none font-bold text-secondary-1">
+                10
+                <small className="ml-[4px] inline-block align-top text-body-11 leading-none">
+                  일
+                </small>
               </dd>
             </div>
-            <div className="flex items-end justify-between pt-[14px]">
-              <dt className="text-caption-10 text-secondary-600">첫 응원</dt>
-              <dd className="text-title-17 font-medium text-secondary-1">
+            <div className="flex items-start justify-between pt-[14px] px-[4px]">
+              <dt className="text-body-11 text-secondary-400">첫 응원</dt>
+              <dd className="font-suit text-[24px] leading-none font-bold text-secondary-1">
                 26.08.19
               </dd>
             </div>
           </dl>
         </div>
 
-        <div className="rounded-[16px] bg-secondary-900 px-[12px] pt-[16px] pb-[20px]">
+        <div className="rounded-[16px] mt-[32px] bg-secondary-900 px-[12px] pt-[16px] pb-[20px]">
           <div className="flex h-[40px] items-center justify-center gap-[20px]">
             <button
               type="button"
