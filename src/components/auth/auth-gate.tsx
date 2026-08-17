@@ -1,10 +1,10 @@
 'use client';
 
-import axios from 'axios';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import LoadingScreen from '@/components/common/LoadingScreen';
-import { getCurrentUser, initializeCsrfToken } from '@/lib/auth';
+import { useCurrentUserQuery } from '@/hooks/queries/useAuthQuery';
+import { initializeCsrfToken } from '@/lib/auth';
 
 type AuthGateProps = {
   children: React.ReactNode;
@@ -18,28 +18,33 @@ export function AuthGate({ children }: AuthGateProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const canBypassAuth =
     process.env.NODE_ENV === 'development' &&
-    LOCAL_AUTH_BYPASS_PATHS.includes(pathname);
+    LOCAL_AUTH_BYPASS_PATHS.some(
+      (path) => pathname === path || pathname.startsWith(`${path}/`),
+    );
+  const {
+    data: currentUser,
+    isPending,
+    isError,
+  } = useCurrentUserQuery(!canBypassAuth);
 
   useEffect(() => {
     if (canBypassAuth) return;
 
-    const controller = new AbortController();
+    if (isError) {
+      router.replace('/login');
+      return;
+    }
 
-    const authenticate = async () => {
-      try {
-        const user = await getCurrentUser(controller.signal);
+    if (!currentUser) return;
 
-        if (!user.termsAgreed) {
-          router.replace('/agreement');
-          return;
-        }
-      } catch (error: unknown) {
-        if (!axios.isCancel(error)) {
-          router.replace('/login');
-        }
+    if (!currentUser.termsAgreed) {
+      router.replace('/agreement');
+      return;
+    }
 
-        return;
-      }
+    let cancelled = false;
+
+    const initializeAuth = async () => {
 
       try {
         await initializeCsrfToken();
@@ -47,21 +52,23 @@ export function AuthGate({ children }: AuthGateProps) {
         console.error('[GET /api/v1/csrf-token] 요청 실패', error);
       }
 
-      if (!controller.signal.aborted) {
+      if (!cancelled) {
         setIsAuthenticated(true);
       }
     };
 
-    void authenticate();
+    void initializeAuth();
 
-    return () => controller.abort();
-  }, [canBypassAuth, router]);
+    return () => {
+      cancelled = true;
+    };
+  }, [canBypassAuth, currentUser, isError, router]);
 
   if (canBypassAuth) {
     return children;
   }
 
-  if (!isAuthenticated) {
+  if (isPending || !isAuthenticated) {
     return <LoadingScreen label="로그인 확인 중" />;
   }
 

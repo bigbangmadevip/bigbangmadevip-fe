@@ -11,6 +11,8 @@ import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import LoadingScreen from '@/components/common/LoadingScreen';
 import { PageHeader } from '@/components/common/PageHeader';
 import { getMusicGuideLinks } from '@/constants/music-guide';
+import { getPlatformLabel } from '@/constants/platform';
+import { getVotePlatformLabel } from '@/constants/vote-platform';
 import { useMusicDetailQuery } from '@/hooks/queries/useMusicQuery';
 import { useVoteDetailQuery } from '@/hooks/queries/useVoteQuery';
 import type { MusicDetailResponse } from '@/types/music';
@@ -80,14 +82,7 @@ export default function UrgentDetailPage() {
   const isMusicDetail = isMusicDetailData(menuType, detail);
   const imageUrls = detail.imageUrls;
   const musicGuideLinks = isMusicDetail
-    ? getMusicGuideLinks(detail.category, detail.platformNames).filter(
-        (guide) =>
-          detail.guides.some((registeredGuide) =>
-            registeredGuide.title
-              .toLowerCase()
-              .includes(guide.title.toLowerCase()),
-          ),
-      )
+    ? getMusicGuideLinks(detail.category, detail.platformNames)
     : [];
   const voteGuideLinks = !isMusicDetail
     ? detail.guides.map((guide) => ({
@@ -172,7 +167,7 @@ export default function UrgentDetailPage() {
 
                 <dt className="text-secondary-300">플랫폼</dt>
                 <dd className="font-medium text-secondary-100">
-                  {detail.platformNames.join(', ')}
+                  {detail.platformNames.map(getPlatformLabel).join(', ')}
                 </dd>
 
                 {detail.eventAt && (
@@ -197,7 +192,7 @@ export default function UrgentDetailPage() {
 
                 <dt className="text-secondary-300">플랫폼</dt>
                 <dd className="font-medium text-secondary-100">
-                  {detail.platformNames.join(', ')}
+                  {detail.platformNames.map(getVotePlatformLabel).join(', ')}
                 </dd>
 
                 {detail.eventStartAt && (

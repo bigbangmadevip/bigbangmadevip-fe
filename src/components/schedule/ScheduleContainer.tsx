@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { useState } from 'react';
 import LoadingScreen from '@/components/common/LoadingScreen';
 import NavigationListItem from '@/components/common/NavigationListItem';
+import { getPlatformLabel } from '@/constants/platform';
+import { getVotePlatformLabel } from '@/constants/vote-platform';
 import {
   useInitialScheduleQuery,
   useScheduleDayQuery,
@@ -75,6 +77,16 @@ function formatSelectedDate(date: Date) {
   ];
 
   return `${date.getMonth() + 1}월 ${date.getDate()}일 ${weekdays[date.getDay()]}`;
+}
+
+function getSchedulePlatformLabel(
+  menuType: 'MUSIC' | 'VOTE',
+  platformNames: string[],
+) {
+  const getLabel =
+    menuType === 'MUSIC' ? getPlatformLabel : getVotePlatformLabel;
+
+  return platformNames.map(getLabel).join(', ');
 }
 
 interface ScheduleDayButtonProps extends DayButtonProps {
@@ -378,10 +390,13 @@ export default function ScheduleContainer() {
             {selectedScheduleItems.map((schedule) => (
               <NavigationListItem
                 key={`${schedule.menuType}-${schedule.detailId}-${schedule.time}`}
-                icon=""
+                icon={`${schedule.menuType.toLowerCase()}-schedule`}
                 title={schedule.title}
                 time={formatScheduleTime(schedule.time)}
-                platform={schedule.platformNames.join(', ')}
+                platform={getSchedulePlatformLabel(
+                  schedule.menuType,
+                  schedule.platformNames,
+                )}
                 href={`/urgent/${schedule.detailId}?menuType=${schedule.menuType}`}
               />
             ))}

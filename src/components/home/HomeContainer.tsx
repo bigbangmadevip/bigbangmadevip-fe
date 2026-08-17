@@ -10,6 +10,7 @@ import NavigationListItem from '@/components/common/NavigationListItem';
 import { PageHeader } from '@/components/common/PageHeader';
 import { SectionTitle } from '@/components/common/SectionTitle';
 import { getPlatformLabel } from '@/constants/platform';
+import { getVotePlatformLabel } from '@/constants/vote-platform';
 import { useParticipateCheeringMutation } from '@/hooks/mutations/useParticipateCheeringMutation';
 import type { HomeResponse } from '@/types/home';
 import CheeringGrid from './CheeringGrid';
@@ -25,6 +26,16 @@ function formatScheduleTime(value: string) {
   const matched = value.match(/T(\d{2}):(\d{2})/);
 
   return matched ? `${matched[1]}:${matched[2]}` : '';
+}
+
+function getSchedulePlatformLabel(
+  menuType: 'MUSIC' | 'VOTE',
+  platformNames: string[],
+) {
+  const getLabel =
+    menuType === 'MUSIC' ? getPlatformLabel : getVotePlatformLabel;
+
+  return platformNames.map(getLabel).join(', ');
 }
 
 function formatRemainingTime(eventEndAt: string, now: number | null) {
@@ -130,13 +141,14 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
       <PageHeader
         rightAction={
           <HeaderIconButton label="알림" align="end">
-            <Image
+            <div className="h-[24px] w-[24px]"></div>
+            {/* <Image
               src="/icon/line/alarm_white-24.svg"
               alt=""
               width={24}
               height={24}
               aria-hidden="true"
-            />
+            /> */}
           </HeaderIconButton>
         }
       />
@@ -255,12 +267,13 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
             {initialData.todaySchedule.map((schedule) => (
               <NavigationListItem
                 key={`${schedule.menuType}-${schedule.detailId}`}
-                icon={schedule.menuType === 'MUSIC' ? 'music' : 'vote'}
+                icon={`${schedule.menuType.toLowerCase()}-yellow`}
                 title={schedule.title}
                 time={formatScheduleTime(schedule.time)}
-                platform={schedule.platformNames
-                  .map(getPlatformLabel)
-                  .join(', ')}
+                platform={getSchedulePlatformLabel(
+                  schedule.menuType,
+                  schedule.platformNames,
+                )}
                 href={`/urgent/${schedule.detailId}?menuType=${schedule.menuType}`}
               />
             ))}

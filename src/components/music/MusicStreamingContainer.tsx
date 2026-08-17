@@ -79,12 +79,15 @@ export default function MusicStreamingContainer() {
         {data.streamingImageUrls.length > 0 ? (
           <div className="scrollbar-hidden -mx-5 flex snap-x snap-mandatory gap-[12px] overflow-x-auto px-5">
             {data.streamingImageUrls.map((imageUrl, index) => (
-              <div
+              // 원격 이미지마다 비율이 달라 원본 비율을 그대로 사용합니다.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
                 key={`${imageUrl}-${index}`}
-                role="img"
-                aria-label={`스트리밍 리스트 ${index + 1}`}
-                className="aspect-[335/440] w-full shrink-0 snap-center rounded-[16px] bg-secondary-900 bg-contain bg-center bg-no-repeat"
-                style={{ backgroundImage: `url(${imageUrl})` }}
+                src={imageUrl}
+                alt={`스트리밍 리스트 ${index + 1}`}
+                loading="lazy"
+                decoding="async"
+                className="h-auto w-full shrink-0 snap-center rounded-[16px]"
               />
             ))}
           </div>

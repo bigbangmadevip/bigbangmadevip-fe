@@ -33,13 +33,15 @@ export function AppDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="gap-0 box-border w-[calc(100vw_-_64px)] max-w-[386px] rounded-[16px] border-none bg-secondary-900 pt-[28px] pb-[20px] px-[24px] sm:max-w-[386px]"
+        className="gap-0 box-border w-[calc(100vw_-_64px)] max-w-[386px] rounded-[20px] border-none bg-secondary-800 pt-[28px] pb-[20px] px-[24px] sm:max-w-[386px]"
       >
         <div className="text-center">
-          <DialogTitle className="text-title-17 font-bold">{title}</DialogTitle>
+          <DialogTitle className="text-title-17 font-bold text-secondary-1">
+            {title}
+          </DialogTitle>
 
           {description && (
-            <DialogDescription className="mt-[8px] whitespace-pre-line text-body-13 text-secondary-400">
+            <DialogDescription className="mt-[8px] whitespace-pre-line text-body-13 text-secondary-300">
               {description}
             </DialogDescription>
           )}
@@ -57,8 +59,8 @@ export function AppDialog({
               disabled={action.disabled}
               className={
                 action.variant === 'secondary'
-                  ? 'h-[48px] rounded-[16px] bg-secondary-400 font-bold text-secondary-700'
-                  : 'h-[48px] rounded-[16px] bg-main font-bold text-secondary-950'
+                  ? 'py-[14px] rounded-[12px] bg-secondary-400 font-bold text-secondary-700'
+                  : 'py-[14px] rounded-[12px] bg-main font-bold text-[#161619]'
               }
               onClick={action.onClick}
             >

@@ -96,6 +96,18 @@ export default function VoteGuideDetailContainer({
     };
   }, [guide.sections]);
 
+  const tabs = [
+    { id: ALL_TAB_ID, label: '전체' },
+    ...guide.sections.map((section) => ({
+      id: section.id,
+      label: section.label,
+    })),
+  ];
+  const activeTabIndex = Math.max(
+    tabs.findIndex((tab) => tab.id === activeTab),
+    0,
+  );
+
   return (
     <main>
       <PageHeader
@@ -104,10 +116,10 @@ export default function VoteGuideDetailContainer({
         leftAction={
           <HeaderIconButton label="뒤로가기" align="start" onClick={handleBack}>
             <Image
-              src="/icon/line/arrow-left_white-24.svg"
+              src="/icon/line/arrow-left_white-28.svg"
               alt=""
-              width={24}
-              height={24}
+              width={28}
+              height={28}
               aria-hidden="true"
             />
           </HeaderIconButton>
@@ -119,31 +131,33 @@ export default function VoteGuideDetailContainer({
           aria-label="투표 가이드 바로가기"
           className="sticky top-[calc(56px+env(safe-area-inset-top))] z-30 -mx-5 bg-background px-5 py-[12px]"
         >
-          <div className="flex rounded-full bg-secondary-800 p-[4px]">
-            <button
-              type="button"
-              onClick={() => handleTabClick(ALL_TAB_ID)}
-              className={`min-w-0 flex-1 rounded-full px-[10px] py-[10px] text-body-13 ${
-                activeTab === ALL_TAB_ID
-                  ? 'bg-secondary-950 font-bold text-secondary-1'
-                  : 'font-normal text-secondary-400'
-              }`}
-            >
-              전체
-            </button>
+          <div
+            className="relative grid rounded-full bg-secondary-800 p-[4px]"
+            style={{
+              gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`,
+            }}
+          >
+            <div
+              aria-hidden="true"
+              className="absolute bottom-[4px] left-[4px] top-[4px] rounded-full bg-secondary-950 transition-transform duration-300 ease-out"
+              style={{
+                width: `calc((100% - 8px) / ${tabs.length})`,
+                transform: `translateX(${activeTabIndex * 100}%)`,
+              }}
+            />
 
-            {guide.sections.map((section) => (
+            {tabs.map((tab) => (
               <button
-                key={section.id}
+                key={tab.id}
                 type="button"
-                onClick={() => handleTabClick(section.id)}
-                className={`min-w-0 flex-1 rounded-full px-[10px] py-[10px] text-body-13 ${
-                  activeTab === section.id
-                    ? 'bg-secondary-950 font-bold text-secondary-1'
+                onClick={() => handleTabClick(tab.id)}
+                className={`relative z-10 min-w-0 rounded-full px-[10px] py-[10px] text-body-13 transition-colors duration-300 ${
+                  activeTab === tab.id
+                    ? 'font-bold text-secondary-1'
                     : 'font-normal text-secondary-400'
                 }`}
               >
-                {section.label}
+                {tab.label}
               </button>
             ))}
           </div>

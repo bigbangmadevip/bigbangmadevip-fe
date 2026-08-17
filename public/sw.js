@@ -1,5 +1,13 @@
-const CACHE_NAME = "bigbangmadevip-v2";
-const APP_SHELL = ["/", "/manifest.webmanifest", "/favicon.ico"];
+const CACHE_NAME = "bigbangmadevip-v3";
+const APP_SHELL = [
+  "/",
+  "/manifest.webmanifest",
+  "/favicon.ico",
+  "/icon-192.png",
+  "/icon-512.png",
+  "/icon-maskable-512.png",
+  "/apple-touch-icon.png",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));

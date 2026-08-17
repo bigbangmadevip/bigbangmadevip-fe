@@ -7,43 +7,44 @@ import voteCoinImage from '@/assets/voteplan/votecoin.png';
 import FloatingShareButton from '@/components/common/FloatingShareButton';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import { PageHeader } from '@/components/common/PageHeader';
+import { SectionTitle } from '@/components/common/SectionTitle';
 
 const CURRENCY_GUIDES = [
   {
     id: 'idolchamp',
     label: '아이돌챔프',
-    iconSrc: '/icon/vote/voteplan/idolchamp.svg',
-    href: '/vote/guide/idolchamp',
+    iconSrc: '/icon/vote/idolchamp.svg',
+    href: '/vote/guide/showchampion#vote-guide-idolchamp',
   },
   {
     id: 'coogoong',
     label: '쿠궁',
     iconSrc: '/icon/vote/coogoong.svg',
-    href: '/vote/guide/coogoong',
+    href: '/vote/guide/musicbank#vote-guide-coogoong',
   },
   {
     id: 'mubeat',
     label: '뮤빗',
-    iconSrc: '/icon/vote/voteplan/mubeat.svg',
-    href: '/vote/guide/mubeat',
+    iconSrc: '/icon/vote/mubeat.svg',
+    href: '/vote/guide/musiccore#vote-guide-mubeat',
   },
   {
     id: 'muniverse',
     label: '뮤니버스',
-    iconSrc: '/icon/vote/voteplan/muniverse.svg',
-    href: '/vote/guide/muniverse',
+    iconSrc: '/icon/vote/muniverse.svg',
+    href: '/vote/guide/musiccore#vote-guide-muniverse',
   },
   {
     id: 'linc',
     label: '링크',
-    iconSrc: '/icon/vote/voteplan/linc.svg',
-    href: '/vote/guide/linc',
+    iconSrc: '/icon/vote/linc.svg',
+    href: '/vote/guide/inkigayo#vote-guide-linc',
   },
   {
     id: 'higher',
     label: '하이어',
-    iconSrc: '/icon/vote/voteplan/higher.svg',
-    href: '/vote/guide/higher',
+    iconSrc: '/icon/vote/higher.svg',
+    href: '/vote/guide/inkigayo#vote-guide-higher',
   },
 ] as const;
 
@@ -62,10 +63,10 @@ export default function VoteCurrencyPlanDetail() {
             onClick={() => router.back()}
           >
             <Image
-              src="/icon/line/arrow-left_white-24.svg"
+              src="/icon/line/arrow-left_white-28.svg"
               alt=""
-              width={24}
-              height={24}
+              width={28}
+              height={28}
               aria-hidden="true"
             />
           </HeaderIconButton>
@@ -81,25 +82,23 @@ export default function VoteCurrencyPlanDetail() {
       />
 
       <section className="mt-[40px]">
-        <h2 className="text-title-17 font-bold text-secondary-1">
-          재화 적립하러 가기
-        </h2>
+        <SectionTitle>재화 적립하러 가기</SectionTitle>
 
-        <div className="mt-[16px] grid grid-cols-3 gap-[8px]">
+        <div className="mt-[12px] grid grid-cols-3 gap-[8px]">
           {CURRENCY_GUIDES.map((guide) => (
             <Link
               key={guide.id}
               href={guide.href}
-              className="flex aspect-square min-w-0 flex-col items-center justify-center gap-[10px] rounded-[16px] bg-secondary-900 p-[12px]"
+              className="flex flex-col items-center justify-center gap-[2px] rounded-[16px] bg-secondary-900 px-[21px] py-[14px]"
             >
-              <span className="relative h-[40px] w-[40px] shrink-0 overflow-hidden rounded-full">
+              <span className="flex h-[40px] w-[40px] shrink-0 items-center justify-center">
                 <Image
                   src={guide.iconSrc}
                   alt=""
-                  fill
-                  sizes="40px"
+                  width={28}
+                  height={28}
                   aria-hidden="true"
-                  className="object-contain"
+                  className="h-[28px] w-[28px] rounded-full object-contain"
                 />
               </span>
               <span className="w-full truncate text-center text-body-13 font-medium text-secondary-100">

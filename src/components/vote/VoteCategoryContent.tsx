@@ -6,6 +6,7 @@ import LoadingScreen from '@/components/common/LoadingScreen';
 import { SectionTitle } from '@/components/common/SectionTitle';
 import UrgentNoticeBanner from '@/components/common/UrgentNoticeBanner';
 import type { CategoryBadgeType } from '@/constants/category-badge';
+import { getVotePlatformLabel } from '@/constants/vote-platform';
 import { useVoteTodayQuery } from '@/hooks/queries/useVoteQuery';
 import type { VoteCategory } from '@/types/vote';
 import DeadlineVoteListItem from './DeadlineVoteListItem';
@@ -95,18 +96,17 @@ export default function VoteCategoryContent({
 
       {deadlineVotes.length > 0 && (
         <div className="mb-[32px]">
-          <div className="flex items-center gap-[4px] rounded-t-[16px] bg-[#371A1E] px-[12px] py-[16px] text-body-12 font-medium text-accent-red">
+          <div className="flex items-center gap-[4px] rounded-t-[16px] bg-[#371A1E] px-[18px] py-[12px] text-body-12 font-medium text-accent-red">
             <Image
               src="/icon/line/clock_red-16.svg"
               alt=""
               width={16}
               height={16}
-              className="m-[2px]"
               aria-hidden="true"
             />
             마감 임박! 지금 바로 투표해 주세요!
           </div>
-          <div className="flex w-full flex-col gap-[20px] rounded-b-[16px] bg-secondary-900 p-[16px]">
+          <div className="flex w-full flex-col gap-[20px] rounded-b-[16px] bg-secondary-900 p-[16px] last:pb-0">
             {deadlineVotes.map((item) => (
               <DeadlineVoteListItem
                 key={item.detailId}
@@ -114,7 +114,9 @@ export default function VoteCategoryContent({
                 category={item.category}
                 remainingTime={formatRemainingTime(item.eventEndAt, now)}
                 title={item.title}
-                platform={item.platformNames.join(', ')}
+                platform={item.platformNames
+                  .map(getVotePlatformLabel)
+                  .join(', ')}
                 imageUrl={item.imageUrl}
                 href={`/urgent/${item.detailId}?menuType=VOTE`}
               />
@@ -134,7 +136,9 @@ export default function VoteCategoryContent({
                 category={item.category}
                 remainingTime={formatRemainingTime(item.eventEndAt, now)}
                 title={item.title}
-                platform={item.platformNames.join(', ')}
+                platform={item.platformNames
+                  .map(getVotePlatformLabel)
+                  .join(', ')}
                 imageUrl={item.imageUrl}
                 href={`/urgent/${item.detailId}?menuType=VOTE`}
               />

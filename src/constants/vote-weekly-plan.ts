@@ -1,6 +1,4 @@
-import {
-  type VoteWeeklySchedule,
-} from '@/components/vote/VotePlan/VoteWeeklyScheduleCard';
+import { type VoteWeeklySchedule } from '@/components/vote/VotePlan/VoteWeeklyScheduleCard';
 
 const COMBINED_DESCRIPTION =
   '사전 투표와 생방송 투표 점수가 합산되어 차트에 반영됩니다.';
@@ -61,7 +59,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
         id: 'bigc',
         title: '빅크 투표 가이드',
         iconSrc: '/icon/vote/bigc.svg',
-        href: '/vote/guide/bigc',
+        href: '/vote/guide/theshow#vote-guide-bigc',
       },
     ],
   },
@@ -98,7 +96,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
         id: 'idolchamp',
         title: '아이돌챔프 투표 가이드',
         iconSrc: '/icon/vote/voteplan/idolchamp.svg',
-        href: '/vote/guide/idolchamp',
+        href: '/vote/guide/showchampion#vote-guide-idolchamp',
       },
     ],
   },
@@ -168,7 +166,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
         id: 'mnetplus',
         title: '엠넷 플러스 투표 가이드',
         iconSrc: '/icon/vote/mnetplus.svg',
-        href: '/vote/guide/mnetplus',
+        href: '/vote/guide/mcountdown#vote-guide-mnetplus',
       },
     ],
   },
@@ -211,7 +209,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
         id: 'coogoong',
         title: '쿠궁 투표 가이드',
         iconSrc: '/icon/vote/coogoong.svg',
-        href: '/vote/guide/coogoong',
+        href: '/vote/guide/musicbank#vote-guide-coogoong',
       },
     ],
   },
@@ -353,13 +351,13 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
         id: 'muniverse',
         title: '뮤니버스 투표 가이드',
         iconSrc: '/icon/vote/voteplan/muniverse.svg',
-        href: '/vote/guide/muniverse',
+        href: '/vote/guide/musiccore#vote-guide-muniverse',
       },
       {
         id: 'mubeat',
         title: '뮤빗 투표 가이드',
         iconSrc: '/icon/vote/voteplan/mubeat.svg',
-        href: '/vote/guide/mubeat',
+        href: '/vote/guide/musiccore#vote-guide-mubeat',
       },
     ],
   },
@@ -447,13 +445,13 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
         id: 'linc',
         title: '링크 투표 가이드',
         iconSrc: '/icon/vote/voteplan/linc.svg',
-        href: '/vote/guide/linc',
+        href: '/vote/guide/inkigayo#vote-guide-linc',
       },
       {
         id: 'higher',
         title: '하이어 투표 가이드',
         iconSrc: '/icon/vote/voteplan/higher.svg',
-        href: '/vote/guide/higher',
+        href: '/vote/guide/inkigayo#vote-guide-higher',
       },
     ],
   },

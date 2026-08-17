@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { CategoryTabs } from '@/components/common/CategoryTabs';
+import ComingSoon from '@/components/common/ComingSoon';
 import FloatingShareButton from '@/components/common/FloatingShareButton';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import { PageHeader } from '@/components/common/PageHeader';
@@ -16,11 +17,6 @@ const X_GUIDE_TABS = [
   { id: 'follow', label: '필수 팔로우 계정' },
 ] as const;
 
-const ACCOUNT_CATEGORY_TABS = [
-  { id: 'create', label: '계정 생성' },
-  { id: 'search-ban', label: '서치벤 탈출' },
-] as const;
-
 const FOLLOW_CATEGORY_TABS = [
   { id: 'all', label: '전체' },
   { id: 'official', label: '공식 계정' },
@@ -29,14 +25,9 @@ const FOLLOW_CATEGORY_TABS = [
 ] as const;
 
 type XGuideTab = (typeof X_GUIDE_TABS)[number]['id'];
-type AccountCategory = (typeof ACCOUNT_CATEGORY_TABS)[number]['id'];
 
 function isXGuideTab(value: string | null): value is XGuideTab {
   return X_GUIDE_TABS.some((tab) => tab.id === value);
-}
-
-function isAccountCategory(value: string | null): value is AccountCategory {
-  return ACCOUNT_CATEGORY_TABS.some((tab) => tab.id === value);
 }
 
 function isFollowAccountCategory(
@@ -52,11 +43,6 @@ export default function XGuideContainer() {
   const tabParam = searchParams.get('tab');
   const categoryParam = searchParams.get('category');
   const activeTab: XGuideTab = isXGuideTab(tabParam) ? tabParam : 'account';
-  const activeAccountCategory: AccountCategory = isAccountCategory(
-    categoryParam,
-  )
-    ? categoryParam
-    : 'create';
   const activeFollowCategory: FollowAccountCategory = isFollowAccountCategory(
     categoryParam,
   )
@@ -65,16 +51,14 @@ export default function XGuideContainer() {
 
   const updateSearchParams = (
     nextTab: XGuideTab,
-    nextCategory?: AccountCategory | FollowAccountCategory,
+    nextCategory?: FollowAccountCategory,
   ) => {
     const params = new URLSearchParams(searchParams.toString());
     const category = nextCategory ?? null;
 
     params.set('tab', nextTab);
 
-    if (nextTab === 'account') {
-      params.set('category', isAccountCategory(category) ? category : 'create');
-    } else if (nextTab === 'follow') {
+    if (nextTab === 'follow') {
       params.set(
         'category',
         isFollowAccountCategory(category) ? category : 'all',
@@ -121,18 +105,6 @@ export default function XGuideContainer() {
         role="tabpanel"
         aria-labelledby={`x-guide-tab-${activeTab}`}
       >
-        {activeTab === 'account' && (
-          <div className="sticky top-[calc(44px+env(safe-area-inset-top))] z-30 -mx-5 bg-background pt-[16px] pb-[12px]">
-            <CategoryTabs
-              tabs={ACCOUNT_CATEGORY_TABS}
-              value={activeAccountCategory}
-              onChange={(category) => updateSearchParams('account', category)}
-              idPrefix="x-account-category-tab"
-              panelIdPrefix="x-account-category-panel"
-            />
-          </div>
-        )}
-
         {activeTab === 'follow' && (
           <div className="sticky top-[calc(44px+env(safe-area-inset-top))] z-30 -mx-5 bg-background pt-[16px] pb-[12px]">
             <CategoryTabs
@@ -148,20 +120,8 @@ export default function XGuideContainer() {
         {activeTab === 'follow' ? (
           <XFollowAccountList category={activeFollowCategory} />
         ) : (
-          <div
-            id={
-              activeTab === 'account'
-                ? `x-account-category-panel-${activeAccountCategory}`
-                : undefined
-            }
-            role={activeTab === 'account' ? 'tabpanel' : undefined}
-            aria-labelledby={
-              activeTab === 'account'
-                ? `x-account-category-tab-${activeAccountCategory}`
-                : undefined
-            }
-            aria-label={`${X_GUIDE_TABS.find(({ id }) => id === activeTab)?.label} 이미지 영역`}
-            className="mt-[12px] min-h-[440px] w-full rounded-[16px] bg-secondary-900"
+          <ComingSoon
+            description={`조금만 기다려주세요\nVIP가 더 쉽게 응원할 수 있도록 안내를 준비하고 있어요.`}
           />
         )}
       </section>

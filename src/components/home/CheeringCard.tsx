@@ -38,7 +38,7 @@ export function CheeringCard({
 
       <button
         type="button"
-        className={`flex gap-[2px] mt-[6px] rounded-[16px] px-[10px] py-[4px] text-body-11 ${
+        className={`flex items-center gap-[2px] mt-[6px] rounded-[16px] px-[10px] py-[4px] text-body-11 ${
           completed
             ? 'bg-secondary-800 text-secondary-500 border border-[rgba(255,255,255,0.08)]'
             : 'bg-main text-secondary-950 text-body-11 font-bold'

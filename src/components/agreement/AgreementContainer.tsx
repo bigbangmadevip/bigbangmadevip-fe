@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import FullPageDialog from '@/components/common/FullPageDialog';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import LoadingScreen from '@/components/common/LoadingScreen';
@@ -33,6 +34,7 @@ function CheckCircle({ checked }: { checked: boolean }) {
 }
 
 export default function AgreementContainer() {
+  const router = useRouter();
   const { mutate: agreeToTerms, isPending } = useAgreeToTermsMutation();
   const [activeAgreement, setActiveAgreement] = useState<AgreementKey | null>(
     null,
@@ -69,7 +71,12 @@ export default function AgreementContainer() {
         <PageHeader
           className="-mx-[8px] bg-secondary-950"
           rightAction={
-            <HeaderIconButton label="동의 화면 닫기" align="end">
+            <HeaderIconButton
+              label="동의 화면 닫기"
+              align="end"
+              disabled={isPending}
+              onClick={() => router.replace('/login')}
+            >
               <Image
                 src={'/icon/line/close-white_28.svg'}
                 alt="CloseIcon"

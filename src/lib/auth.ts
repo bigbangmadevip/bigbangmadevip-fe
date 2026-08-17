@@ -40,6 +40,7 @@ export type CurrentUser = {
   id: number;
   name: string;
   nickname: string;
+  email: string;
   provider: string;
   role: string;
   termsAgreed: boolean;

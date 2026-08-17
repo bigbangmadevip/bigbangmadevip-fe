@@ -41,6 +41,12 @@ export function initializeCsrfToken() {
   return csrfTokenRequest;
 }
 
+export function resetCsrfToken() {
+  csrfHeaderName = null;
+  csrfToken = null;
+  csrfTokenRequest = null;
+}
+
 api.interceptors.request.use(async (config) => {
   const method = config.method?.toLowerCase() ?? '';
 

@@ -14,16 +14,16 @@ const STREAMING_NATIONAL_GUIDE_MOCK: TEMP_TYPE[] = [
   { id: '2', platform: 'bugs', link: '' },
   { id: '3', platform: 'flo', link: '' },
   { id: '4', platform: 'vibe', link: '' },
-  { id: '5', platform: 'samsungmusic', link: '' },
-  { id: '6', platform: 'kakaomusic', link: '' },
+  // { id: '5', platform: 'samsungmusic', link: '' },
+  // { id: '6', platform: 'kakaomusic', link: '' },
 ];
 
 const STREMING_INTERNATIONAL_GUIDE_MOCK: TEMP_TYPE[] = [
-  { id: '0', platform: 'spotify', link: '' },
-  { id: '1', platform: 'youtubemusic', link: '' },
-  { id: '2', platform: 'applemusic', link: '' },
-  { id: '3', platform: 'linemusic', link: '' },
-  { id: '4', platform: 'stationhead', link: '' },
+  // { id: '0', platform: 'spotify', link: '' },
+  // { id: '1', platform: 'youtubemusic', link: '' },
+  // { id: '2', platform: 'applemusic', link: '' },
+  // { id: '3', platform: 'linemusic', link: '' },
+  // { id: '4', platform: 'stationhead', link: '' },
 ];
 
 const MusicGuideStreaming = () => {
@@ -40,7 +40,7 @@ const MusicGuideStreaming = () => {
           />
         ))}
       </div>
-      <SectionTitle>해외 음원 사이트</SectionTitle>
+      {/* <SectionTitle>해외 음원 사이트</SectionTitle> */}
       <div className="flex flex-col gap-[8px] mb-[32px]">
         {STREMING_INTERNATIONAL_GUIDE_MOCK.map((item) => (
           <MusicGuideLinkButton

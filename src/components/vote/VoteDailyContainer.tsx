@@ -41,7 +41,7 @@ export default function VoteCategoryContainer({
 
   return (
     <section>
-      <div className="sticky top-[calc(44px+env(safe-area-inset-top))] z-30 -mx-5 bg-background pt-[16px] pb-[12px]">
+      <div className="sticky top-[calc(44px+env(safe-area-inset-top))] z-30 -mx-5 bg-background py-[16px]">
         <CategoryTabs
           key={stickyRenderKey}
           tabs={VOTE_CATEGORY_TABS}

@@ -48,12 +48,7 @@ const PLATFORM_ALIASES: Partial<Record<Platform, string[]>> = {
     '유튜브 뮤직',
     '유튜브 뮤직(youtube music)',
   ],
-  linemusic: [
-    'linemusic',
-    'line music',
-    '라인뮤직',
-    '라인뮤직(line music)',
-  ],
+  linemusic: ['linemusic', 'line music', '라인뮤직', '라인뮤직(line music)'],
   stationhead: ['stationhead', '스테이션헤드'],
   kakaomusic: [
     'kakaomusic',
