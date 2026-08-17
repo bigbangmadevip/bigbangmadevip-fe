@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import 'pretendard/dist/web/variable/pretendardvariable.css';
 import './globals.css';
+import { ChunkLoadRecovery } from '@/components/ChunkLoadRecovery';
 import { PwaRegister } from '@/components/pwa-register';
 import { QueryProvider } from '@/providers/QueryProvider';
 
@@ -46,6 +47,7 @@ export default function RootLayout({
         <QueryProvider>
           <div className="app-shell">{children}</div>
         </QueryProvider>
+        <ChunkLoadRecovery />
         <PwaRegister />
       </body>
     </html>

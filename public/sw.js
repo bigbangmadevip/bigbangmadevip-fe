@@ -1,6 +1,5 @@
-const CACHE_NAME = "bigbangmadevip-v4";
+const CACHE_NAME = "bigbangmadevip-v5";
 const APP_SHELL = [
-  "/",
   "/manifest.webmanifest",
   "/favicon.ico",
   "/icon-192.png",
@@ -34,7 +33,7 @@ self.addEventListener("fetch", (event) => {
   if (!shouldCache) return;
 
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, { cache: "no-store" })
       .then((response) => {
         if (response.ok) {
           const copy = response.clone();
