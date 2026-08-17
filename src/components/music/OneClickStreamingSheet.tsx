@@ -1,6 +1,5 @@
 'use client';
 
-import { X } from 'lucide-react';
 import { getPlatformKoreanLabel } from '@/constants/platform';
 import {
   Dialog,
@@ -63,7 +62,7 @@ export default function OneClickStreamingSheet({
             className="flex h-[40px] w-[40px] pr-[8px] items-center justify-end text-secondary-1"
           >
             <Image
-              src={'/icon/close-white_24.svg'}
+              src={'/icon/line/close-white_24.svg'}
               alt="CloseIcon"
               width={24}
               height={24}
@@ -81,7 +80,7 @@ export default function OneClickStreamingSheet({
                 >
                   <span>{`${index + 1}번 ${platformLabel} 원클릭 스트리밍`}</span>
                   <Image
-                    src={'/icon/arrow-right_gray-24.svg'}
+                    src={'/icon/line/arrow-right_gray-24.svg'}
                     alt="RigntArrowIcon"
                     aria-hidden="true"
                     className="shrink-0 text-secondary-400"

@@ -13,12 +13,13 @@ interface VoteNoticeDetailProps {
   noticeId: string;
 }
 
-export default function VoteNoticeDetail({
-  noticeId,
-}: VoteNoticeDetailProps) {
+export default function VoteNoticeDetail({ noticeId }: VoteNoticeDetailProps) {
   const router = useRouter();
-  const { data: notice, isPending, isError } =
-    useVoteNoticeDetailQuery(noticeId);
+  const {
+    data: notice,
+    isPending,
+    isError,
+  } = useVoteNoticeDetailQuery(noticeId);
 
   return (
     <main>
@@ -30,7 +31,7 @@ export default function VoteNoticeDetail({
             onClick={() => router.back()}
           >
             <Image
-              src="/icon/arrow-left_white-24.svg"
+              src="/icon/line/arrow-left_white-24.svg"
               alt=""
               width={24}
               height={24}

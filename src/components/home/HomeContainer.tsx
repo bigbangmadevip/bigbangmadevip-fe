@@ -131,7 +131,7 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
         rightAction={
           <HeaderIconButton label="알림" align="end">
             <Image
-              src="/icon/alarm.svg"
+              src="/icon/line/alarm_white-24.svg"
               alt=""
               width={24}
               height={24}
@@ -172,7 +172,7 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
               <div className="flex min-w-0 items-center gap-[2px]">
                 {urgentDetail.menuType === 'VOTE' && (
                   <Image
-                    src="/icon/time-red.svg"
+                    src="/icon/line/clock_red-16.svg"
                     alt=""
                     width={16}
                     height={16}
@@ -193,7 +193,7 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
             </div>
 
             <Image
-              src="/icon/arrow-right_yellow-bg.svg"
+              src="/icon/line/arrow-right_yellow-bg.svg"
               alt=""
               width={32}
               height={32}

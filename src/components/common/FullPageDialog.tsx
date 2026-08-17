@@ -1,6 +1,5 @@
 'use client';
 
-import { X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import {
   Dialog,
@@ -8,6 +7,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '@/components/ui/dialog';
+import Image from 'next/image';
 
 type FullPageDialogProps = {
   open: boolean;
@@ -41,7 +41,12 @@ export default function FullPageDialog({
               aria-label="상세 약관 닫기"
               className="flex h-[44px] w-[44px] items-center justify-end text-secondary-1"
             >
-              <X aria-hidden="true" size={28} strokeWidth={2} />
+              <Image
+                src={'/icon/line/close-white_28.svg'}
+                alt="CloseIcon"
+                width={28}
+                height={28}
+              />
             </DialogClose>
           </header>
 

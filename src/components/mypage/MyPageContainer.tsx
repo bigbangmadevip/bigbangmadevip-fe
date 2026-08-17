@@ -5,7 +5,6 @@ import { ko } from '@daypicker/react/locale';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import LoadingScreen from '@/components/common/LoadingScreen';
 import { PageHeader } from '@/components/common/PageHeader';
 import { SectionTitle } from '@/components/common/SectionTitle';
@@ -155,15 +154,19 @@ export default function MyPageContainer() {
     <main>
       <PageHeader
         rightAction={
-          <HeaderIconButton label="설정" align="end">
+          <Link
+            href="/mypage/settings"
+            aria-label="설정"
+            className="flex h-[44px] w-[44px] items-center justify-end"
+          >
             <Image
-              src="/icon/setting.svg"
+              src="/icon/line/setting.svg"
               alt=""
               width={28}
               height={28}
               aria-hidden="true"
             />
-          </HeaderIconButton>
+          </Link>
         }
       />
 
@@ -227,7 +230,7 @@ export default function MyPageContainer() {
           >
             오늘의 응원 하러 가기
             <Image
-              src="/icon/arrow-right_gray-24.svg"
+              src="/icon/line/arrow-right_gray-24.svg"
               alt="ArrowIcon"
               width={24}
               height={24}
@@ -289,8 +292,8 @@ export default function MyPageContainer() {
               <Image
                 src={
                   isFirstMonth
-                    ? '/icon/arrow-left_gray-24.svg'
-                    : '/icon/arrow-left_white-24.svg'
+                    ? '/icon/line/arrow-left_gray-24.svg'
+                    : '/icon/line/arrow-left_white-24.svg'
                 }
                 alt=""
                 width={24}
@@ -311,8 +314,8 @@ export default function MyPageContainer() {
               <Image
                 src={
                   isLastMonth
-                    ? '/icon/arrow-right_gray-24.svg'
-                    : '/icon/arrow-right_white-24.svg'
+                    ? '/icon/line/arrow-right_gray-24.svg'
+                    : '/icon/line/arrow-right_white-24.svg'
                 }
                 alt=""
                 width={24}

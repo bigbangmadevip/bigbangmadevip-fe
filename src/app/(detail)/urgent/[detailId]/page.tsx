@@ -36,10 +36,7 @@ export default function UrgentDetailPage() {
   const { detailId } = useParams<{ detailId: string }>();
   const menuTypeParam = searchParams.get('menuType')?.toUpperCase() ?? null;
   const menuType = isMenuType(menuTypeParam) ? menuTypeParam : null;
-  const musicDetailQuery = useMusicDetailQuery(
-    detailId,
-    menuType === 'MUSIC',
-  );
+  const musicDetailQuery = useMusicDetailQuery(detailId, menuType === 'MUSIC');
   const voteDetailQuery = useVoteDetailQuery(detailId, menuType === 'VOTE');
   const carouselRef = useRef<HTMLDivElement>(null);
   const pageTitleRef = useRef<HTMLHeadingElement>(null);
@@ -140,7 +137,7 @@ export default function UrgentDetailPage() {
             onClick={() => router.back()}
           >
             <Image
-              src="/icon/arrow-left_white-28.svg"
+              src="/icon/line/arrow-left_white-28.svg"
               alt=""
               width={28}
               height={28}
@@ -286,7 +283,7 @@ export default function UrgentDetailPage() {
                       </span>
                     </span>
                     <Image
-                      src="/icon/arrow-right_gray-24.svg"
+                      src="/icon/line/arrow-right_gray-24.svg"
                       alt=""
                       width={24}
                       height={24}
@@ -317,7 +314,7 @@ export default function UrgentDetailPage() {
                       </span>
                     </span>
                     <Image
-                      src="/icon/arrow-right_gray-24.svg"
+                      src="/icon/line/arrow-right_gray-24.svg"
                       alt=""
                       width={24}
                       height={24}

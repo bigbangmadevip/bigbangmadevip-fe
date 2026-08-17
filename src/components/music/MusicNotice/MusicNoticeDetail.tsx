@@ -17,8 +17,11 @@ export default function MusicNoticeDetail({
   noticeId,
 }: MusicNoticeDetailProps) {
   const router = useRouter();
-  const { data: notice, isPending, isError } =
-    useMusicNoticeDetailQuery(noticeId);
+  const {
+    data: notice,
+    isPending,
+    isError,
+  } = useMusicNoticeDetailQuery(noticeId);
 
   return (
     <main>
@@ -30,7 +33,7 @@ export default function MusicNoticeDetail({
             onClick={() => router.back()}
           >
             <Image
-              src="/icon/arrow-left_white-24.svg"
+              src="/icon/line/arrow-left_white-24.svg"
               alt=""
               width={24}
               height={24}

@@ -21,7 +21,7 @@ export function PageHeader({
   return (
     <header
       className={cn(
-        'grid h-[56px] shrink-0 grid-cols-[44px_minmax(0,1fr)_44px] items-center bg-background',
+        'grid h-[56px] shrink-0 grid-cols-[40px_minmax(0,1fr)_40px] items-center bg-background',
         sticky && 'sticky top-[env(safe-area-inset-top)] z-40',
         className,
       )}

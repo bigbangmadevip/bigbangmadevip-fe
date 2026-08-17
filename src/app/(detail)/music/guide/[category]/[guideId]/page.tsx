@@ -21,7 +21,7 @@ export default function GuideDetailPage() {
             onClick={() => router.back()}
           >
             <Image
-              src="/icon/arrow-left_white-24.svg"
+              src="/icon/line/arrow-left_white-24.svg"
               alt=""
               width={24}
               height={24}

@@ -1,8 +1,8 @@
 'use client';
 
-import { Share2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 type ShareStatus = 'idle' | 'copied' | 'failed';
 
@@ -85,7 +85,7 @@ export default function FloatingShareButton({
   return (
     <div
       className={cn(
-        'pointer-events-none fixed right-0 bottom-[calc(20px+env(safe-area-inset-bottom))] left-0 z-40 mx-auto flex w-full max-w-[430px] justify-end px-[20px]',
+        'pointer-events-none fixed right-0 bottom-[calc(20px+env(safe-area-inset-bottom))] left-0 z-40 mx-auto flex w-full max-w-[430px] justify-end px-[18px] py-[64px]',
         className,
       )}
     >
@@ -105,9 +105,14 @@ export default function FloatingShareButton({
           type="button"
           aria-label={`${title} 공유하기`}
           onClick={handleShare}
-          className="flex h-[56px] w-[56px] items-center justify-center rounded-full border border-secondary-700 bg-secondary-950/90 text-secondary-1 shadow-[0_8px_24px_rgba(0,0,0,0.32)] backdrop-blur-sm"
+          className="flex p-[12px] items-center justify-center rounded-full border border-secondary-700 bg-secondary-900 text-secondary-1 shadow-[0_6px_10px_0_#111111] backdrop-blur-sm"
         >
-          <Share2 aria-hidden="true" size={24} strokeWidth={2} />
+          <Image
+            src={'/icon/line/share.svg'}
+            alt="ShareIcon"
+            width={24}
+            height={24}
+          />
         </button>
       </div>
     </div>

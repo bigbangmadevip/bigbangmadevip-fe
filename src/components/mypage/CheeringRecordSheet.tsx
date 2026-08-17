@@ -59,7 +59,7 @@ export default function CheeringRecordSheet({
               className="flex h-[44px] w-[44px] items-center justify-end text-[34px] font-extralight leading-none text-secondary-1"
             >
               <Image
-                src={'/icon/close-white_24.svg'}
+                src={'/icon/line/close-white_24.svg'}
                 alt="CloseIcon"
                 width={24}
                 height={24}

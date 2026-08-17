@@ -62,7 +62,7 @@ export default function XFollowAccountList({
                     </span>
 
                     <Image
-                      src="/icon/arrow-right_gray-24.svg"
+                      src="/icon/line/arrow-right_gray-24.svg"
                       alt=""
                       width={24}
                       height={24}

@@ -6,7 +6,6 @@ interface VotePlanContentBoxProps {
   id: string;
   caption: string;
   title: string;
-  imgSrc: string;
   ctaText: string;
   ctaLink: string;
 }
@@ -16,24 +15,21 @@ const PLAN_MOCK: VotePlanContentBoxProps[] = [
     id: '0',
     caption: '놓치면 안되는',
     title: 'VIP 주간 투표 일정',
-    imgSrc: '',
     ctaText: '이번 주 일정 보기',
-    ctaLink: '',
+    ctaLink: '/vote/plan/weekly',
   },
   {
     id: '1',
     caption: '투표를 위한 첫 걸음!',
     title: '음악방송 재화 모으기 가이드',
-    imgSrc: '',
     ctaText: '가이드 보기',
-    ctaLink: '',
+    ctaLink: '/vote/plan/currency',
   },
 ];
 
 const VotePlanContentBox = ({
   caption,
   title,
-  imgSrc,
   ctaText,
   ctaLink,
 }: VotePlanContentBoxProps) => {
@@ -54,7 +50,7 @@ const VotePlanContentBox = ({
       />
       <Link
         href={ctaLink}
-        className="flex w-ful justify-center items-center mt-[16px] -mx-[4px] py-[12px] border border-[rgba(255,255,255,0.6)] rounded-full bg-[rgba(255,255,255,0.12)] text-body-13 font-bold"
+        className="mt-[16px] -mx-[4px] flex w-full items-center justify-center rounded-full border border-[rgba(255,255,255,0.6)] bg-[rgba(255,255,255,0.12)] py-[12px] text-body-13 font-bold"
       >
         {ctaText}
       </Link>

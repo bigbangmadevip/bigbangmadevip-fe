@@ -34,14 +34,16 @@ export default function NotificationPermissionDialog({
             알림 권한 안내
           </DialogTitle>
           <DialogDescription className="mt-[12px] whitespace-pre-line text-body-13 leading-[1.55] text-secondary-400">
-            {'총공 시작, 투표 마감, 긴급 변경 소식을\n놓치지 않도록 알림을 받아보세요.'}
+            {
+              '총공 시작, 투표 마감, 긴급 변경 소식을\n놓치지 않도록 알림을 받아보세요.'
+            }
           </DialogDescription>
         </div>
 
         <div className="mt-[24px] flex items-center gap-[16px] px-[8px]">
           <div className="flex h-[44px] w-[44px] shrink-0 items-center justify-center">
             <Image
-              src="/icon/alarm.svg"
+              src="/icon/line/alarm_white-32.svg"
               alt=""
               width={32}
               height={32}

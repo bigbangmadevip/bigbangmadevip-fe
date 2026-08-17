@@ -95,12 +95,12 @@ export default function VoteCategoryContent({
 
       {deadlineVotes.length > 0 && (
         <div className="mb-[32px]">
-          <div className="flex gap-[4px] rounded-t-[16px] bg-[#371A1E] px-[12px] py-[16px] text-body-12 font-medium text-accent-red">
+          <div className="flex items-center gap-[4px] rounded-t-[16px] bg-[#371A1E] px-[12px] py-[16px] text-body-12 font-medium text-accent-red">
             <Image
-              src="/icon/time-red.svg"
+              src="/icon/line/clock_red-16.svg"
               alt=""
-              width={12}
-              height={12}
+              width={16}
+              height={16}
               className="m-[2px]"
               aria-hidden="true"
             />

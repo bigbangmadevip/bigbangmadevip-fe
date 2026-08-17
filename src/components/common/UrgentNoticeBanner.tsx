@@ -26,7 +26,7 @@ const UrgentNoticeBanner = ({
         <p className="font-bold text-body-13">{title}</p>
       </div>
       <Image
-        src={'/icon/arrow-right_gray-24.svg'}
+        src={'/icon/line/arrow-right_gray-24.svg'}
         alt="arrowIcon"
         width={18}
         height={18}

@@ -204,9 +204,7 @@ export default function ScheduleContainer() {
   const isMonthPending = canUseInitialMonth
     ? isInitialPending
     : monthQuery.isPending;
-  const isDayPending = canUseInitialDay
-    ? isInitialPending
-    : dayQuery.isPending;
+  const isDayPending = canUseInitialDay ? isInitialPending : dayQuery.isPending;
   const isDayError = canUseInitialDay ? isInitialError : dayQuery.isError;
   const dayCounts = new Map(
     (monthData?.days ?? []).map((item) => [item.date, item]),
@@ -242,8 +240,8 @@ export default function ScheduleContainer() {
           <Image
             src={
               isFirstMonth
-                ? '/icon/arrow-left_gray-24.svg'
-                : '/icon/arrow-left_white-24.svg'
+                ? '/icon/line/arrow-left_gray-24.svg'
+                : '/icon/line/arrow-left_white-24.svg'
             }
             alt=""
             width={24}
@@ -263,7 +261,7 @@ export default function ScheduleContainer() {
           className="flex h-[40px] w-[40px] items-center justify-center"
         >
           <Image
-            src="/icon/arrow-right_white-24.svg"
+            src="/icon/line/arrow-right_white-24.svg"
             alt=""
             width={24}
             height={24}

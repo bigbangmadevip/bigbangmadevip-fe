@@ -97,7 +97,7 @@ export default function XGuideContainer() {
             onClick={() => router.back()}
           >
             <Image
-              src="/icon/arrow-left_white-28.svg"
+              src="/icon/line/arrow-left_white-28.svg"
               alt=""
               width={28}
               height={28}
