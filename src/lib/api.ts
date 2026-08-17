@@ -12,6 +12,8 @@ type ApiResponse<T> = {
 
 const CSRF_METHODS = ['post', 'put', 'patch', 'delete'];
 
+export const IS_CSRF_ENABLED = process.env.NODE_ENV === 'development';
+
 let csrfHeaderName: string | null = null;
 let csrfToken: string | null = null;
 let csrfTokenRequest: Promise<void> | null = null;
@@ -25,6 +27,10 @@ export const api = axios.create({
 });
 
 export function initializeCsrfToken() {
+  if (!IS_CSRF_ENABLED) {
+    return Promise.resolve();
+  }
+
   if (!csrfTokenRequest) {
     csrfTokenRequest = api
       .get<ApiResponse<CsrfTokenResponse>>('/api/v1/csrf-token')
@@ -50,7 +56,7 @@ export function resetCsrfToken() {
 api.interceptors.request.use(async (config) => {
   const method = config.method?.toLowerCase() ?? '';
 
-  if (CSRF_METHODS.includes(method)) {
+  if (IS_CSRF_ENABLED && CSRF_METHODS.includes(method)) {
     if (!csrfHeaderName || !csrfToken) {
       await initializeCsrfToken();
     }
