@@ -227,6 +227,21 @@ body {
   background: var(--background);
 }
 
+.app-shell::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 60;
+  width: 100%;
+  max-width: 430px;
+  height: env(safe-area-inset-top);
+  margin: 0 auto;
+  pointer-events: none;
+  background: var(--background);
+}
+
 @media (min-width: 480px) {
   body {
     background: var(--muted);

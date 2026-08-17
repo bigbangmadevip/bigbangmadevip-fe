@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: 'BIGBANG MADE VIP',
-    statusBarStyle: 'black-translucent',
+    statusBarStyle: 'black',
   },
 };
 
