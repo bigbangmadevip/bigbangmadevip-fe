@@ -54,7 +54,16 @@ export function AuthGate({ children }: AuthGateProps) {
     return children;
   }
 
-  if (isPending || isError || !currentUser?.termsAgreed) {
+  if (isPending) {
+    return (
+      <>
+        {children}
+        <LoadingScreen label="로그인 확인 중" />
+      </>
+    );
+  }
+
+  if (isError || !currentUser?.termsAgreed) {
     return <LoadingScreen label="로그인 확인 중" />;
   }
 
