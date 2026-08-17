@@ -10,9 +10,9 @@ interface TEMP_TYPE {
 
 const STREAMING_NATIONAL_GUIDE_MOCK: TEMP_TYPE[] = [
   { id: '0', platform: 'melon', link: '/music/guide/streaming/melon' },
-  { id: '1', platform: 'genie', link: '' },
-  { id: '2', platform: 'bugs', link: '' },
-  { id: '3', platform: 'flo', link: '' },
+  { id: '1', platform: 'genie', link: '/music/guide/streaming/genie' },
+  { id: '2', platform: 'bugs', link: '/music/guide/streaming/bugs' },
+  { id: '3', platform: 'flo', link: '/music/guide/streaming/flo' },
   { id: '4', platform: 'vibe', link: '' },
   // { id: '5', platform: 'samsungmusic', link: '' },
   // { id: '6', platform: 'kakaomusic', link: '' },

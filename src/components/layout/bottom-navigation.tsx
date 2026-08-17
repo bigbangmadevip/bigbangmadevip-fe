@@ -14,9 +14,16 @@ const tabs = [
 
 export function BottomNavigation() {
   const pathname = usePathname();
+  const isSchedulePage = pathname.startsWith('/schedule');
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-[430px] bg-secondary-950 text-secondary-1 pb-[30px] pt-[12px] border-t border-t-[rgba(255,255,255,0.08)]">
+    <nav
+      className={`fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-[430px] border-t pb-[30px] pt-[12px] text-secondary-1 ${
+        isSchedulePage
+          ? 'border-secondary-700 bg-secondary-800'
+          : 'border-[rgba(255,255,255,0.08)] bg-secondary-950'
+      }`}
+    >
       <div className="grid h-16 grid-cols-5 items-center text-center">
         {tabs.map((tab) => {
           const isActive =

@@ -7,6 +7,10 @@ export default function SchedulePage() {
       <PageHeader title="VIP 총공 일정" />
 
       <ScheduleContainer />
+      <div
+        aria-hidden="true"
+        className="-mx-5 -mb-[146px] h-[146px] bg-secondary-800"
+      />
     </main>
   );
 }

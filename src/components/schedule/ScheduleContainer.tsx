@@ -240,7 +240,7 @@ export default function ScheduleContainer() {
   };
 
   return (
-    <section className="-mx-5 mt-[8px] overflow-hidden rounded-t-[20px] bg-secondary-800 px-[20px] pt-[24px] pb-[20px]">
+    <section className="-mx-5 mt-[8px] overflow-hidden rounded-t-[20px] bg-secondary-800 px-[20px] pt-[24px]">
       <div className="flex h-[44px] items-center justify-center gap-[24px]">
         <button
           type="button"
@@ -398,6 +398,7 @@ export default function ScheduleContainer() {
                   schedule.platformNames,
                 )}
                 href={`/urgent/${schedule.detailId}?menuType=${schedule.menuType}`}
+                variant="schedule"
               />
             ))}
           </div>

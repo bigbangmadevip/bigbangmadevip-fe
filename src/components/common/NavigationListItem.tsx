@@ -10,6 +10,7 @@ export interface NavigationListItemProps {
   time: string;
   platform: string;
   href: string;
+  variant?: 'default' | 'schedule';
 }
 
 const NavigationListItem = ({
@@ -18,12 +19,23 @@ const NavigationListItem = ({
   time,
   platform,
   href,
+  variant = 'default',
 }: NavigationListItemProps) => {
   return (
     <>
-      <div className="flex items-center justify-between gap-[12px] rounded-[16px] bg-[#1B1B1B] p-[16px]">
+      <div
+        className={`flex items-center justify-between gap-[12px] rounded-[16px] p-[16px] ${
+          variant === 'schedule' ? 'bg-[#333333]' : 'bg-[#1B1B1B]'
+        }`}
+      >
         <div className="flex min-w-0 flex-1 flex-row items-center gap-[12px]">
-          <div className="flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-[12px] bg-secondary-800">
+          <div
+            className={`flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-[12px] ${
+              variant === 'schedule'
+                ? 'bg-secondary-700'
+                : 'bg-secondary-800'
+            }`}
+          >
             {icon && (
               <Image
                 src={`/icon/${icon}.svg`}
