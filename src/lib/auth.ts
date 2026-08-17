@@ -36,13 +36,15 @@ export function createKakaoLoginUrl() {
   );
 }
 
+export type UserRole = 'MASTER' | 'MUSIC_ADMIN' | 'VOTE_ADMIN' | 'USER';
+
 export type CurrentUser = {
   id: number;
   name: string;
   nickname: string;
   email: string;
   provider: string;
-  role: string;
+  role: UserRole;
   termsAgreed: boolean;
 };
 

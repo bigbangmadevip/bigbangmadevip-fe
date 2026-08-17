@@ -92,6 +92,50 @@ export default function LoginInfoContainer() {
               value={currentUser.email}
             />
           </section>
+
+          {currentUser.role !== 'USER' && (
+            <section>
+              <h2 className="text-body-13 font-medium text-secondary-400">
+                권한
+              </h2>
+              <div className="mt-[20px] flex items-center justify-between gap-[16px]">
+                <span className="text-body-15 text-secondary-1">역할</span>
+                <strong className="min-w-0 truncate text-body-15 font-bold text-secondary-1">
+                  {currentUser.role}
+                </strong>
+              </div>
+
+              <div
+                className={`mt-[20px] grid gap-[8px] ${
+                  currentUser.role === 'MASTER'
+                    ? 'grid-cols-2'
+                    : 'grid-cols-1'
+                }`}
+              >
+                {(currentUser.role === 'MASTER' ||
+                  currentUser.role === 'MUSIC_ADMIN') && (
+                  <button
+                    type="button"
+                    onClick={() => router.push('/musicadmin')}
+                    className="flex items-center justify-center rounded-[12px] bg-secondary-900 px-[16px] py-[14px] text-body-14 font-bold text-secondary-1"
+                  >
+                    음총 관리
+                  </button>
+                )}
+
+                {(currentUser.role === 'MASTER' ||
+                  currentUser.role === 'VOTE_ADMIN') && (
+                  <button
+                    type="button"
+                    onClick={() => router.push('/voteadmin')}
+                    className="flex items-center justify-center rounded-[12px] bg-secondary-900 px-[16px] py-[14px] text-body-14 font-bold text-secondary-1"
+                  >
+                    투총 관리
+                  </button>
+                )}
+              </div>
+            </section>
+          )}
         </div>
       )}
     </main>

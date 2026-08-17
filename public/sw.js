@@ -1,4 +1,4 @@
-const CACHE_NAME = "bigbangmadevip-v3";
+const CACHE_NAME = "bigbangmadevip-v4";
 const APP_SHELL = [
   "/",
   "/manifest.webmanifest",
@@ -25,13 +25,29 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+
+  const requestUrl = new URL(event.request.url);
+  const shouldCache =
+    requestUrl.origin === self.location.origin &&
+    APP_SHELL.includes(requestUrl.pathname);
+
+  if (!shouldCache) return;
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        if (response.ok) {
+          const copy = response.clone();
+
+          event.waitUntil(
+            caches
+              .open(CACHE_NAME)
+              .then((cache) => cache.put(event.request, copy)),
+          );
+        }
+
         return response;
       })
-      .catch(() => caches.match(event.request).then((cached) => cached || caches.match("/"))),
+      .catch(() => caches.match(event.request)),
   );
 });
