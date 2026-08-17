@@ -69,16 +69,6 @@ function formDataStringList(formData: FormData, name: string) {
     .filter(Boolean);
 }
 
-function dateTimeOrNull(value: FormDataEntryValue | null) {
-  const result = String(value ?? '').trim();
-  if (!result) return null;
-  return result.length === 16 ? `${result}:00` : result;
-}
-
-function toDateTimeInput(value?: string | null) {
-  return value ? value.slice(0, 16) : '';
-}
-
 function combineDateAndTime(
   dateValue: FormDataEntryValue | null,
   timeValue: FormDataEntryValue | null,
@@ -123,31 +113,26 @@ function TextAreaField({
   name,
   defaultValue,
   placeholder,
+  required = false,
 }: {
   label: string;
   name: string;
   defaultValue?: string | string[] | null;
   placeholder?: string;
+  required?: boolean;
 }) {
   return (
     <label className="block text-body-12 text-secondary-300">
       {label}
+      {required && <span className="ml-[3px] text-accent-red">*</span>}
       <textarea
         name={name}
         rows={4}
         defaultValue={Array.isArray(defaultValue) ? defaultValue.join('\n') : defaultValue ?? ''}
         placeholder={placeholder}
+        required={required}
         className={`${INPUT_CLASS} resize-y`}
       />
-    </label>
-  );
-}
-
-function CheckboxField({ label, name, defaultChecked }: { label: string; name: string; defaultChecked?: boolean }) {
-  return (
-    <label className="flex items-center justify-between rounded-[10px] border border-secondary-800 bg-secondary-900 px-[13px] py-[12px] text-body-13 text-secondary-100">
-      {label}
-      <input name={name} type="checkbox" defaultChecked={defaultChecked} className="h-[20px] w-[20px] accent-[#FFFB1F]" />
     </label>
   );
 }
@@ -196,7 +181,7 @@ function SelectField({
   );
 }
 
-function MusicImageUpload({
+function DetailImageUpload({
   existingUrls,
   files,
   onFilesChange,
@@ -287,8 +272,14 @@ function MusicImageUpload({
   );
 }
 
-function MusicUrgentSetting({ initial }: { initial?: AdminMusicDetail }) {
-  const [enabled, setEnabled] = useState(initial?.menuUrgent ?? false);
+function UrgentSetting({
+  menuUrgent,
+  urgentContent,
+}: {
+  menuUrgent?: boolean;
+  urgentContent?: string | null;
+}) {
+  const [enabled, setEnabled] = useState(menuUrgent ?? false);
 
   return (
     <div className="flex flex-col gap-[10px]">
@@ -307,15 +298,15 @@ function MusicUrgentSetting({ initial }: { initial?: AdminMusicDetail }) {
           label="긴급 공지 제목"
           name="urgentContent"
           required
-          defaultValue={initial?.urgentContent}
+          defaultValue={urgentContent}
         />
       )}
     </div>
   );
 }
 
-function MusicReservationSetting({ initial }: { initial?: AdminMusicDetail }) {
-  const [enabled, setEnabled] = useState(Boolean(initial?.scheduledAt));
+function ReservationSetting({ scheduledAt }: { scheduledAt?: string | null }) {
+  const [enabled, setEnabled] = useState(Boolean(scheduledAt));
 
   return (
     <div className="flex flex-col gap-[10px]">
@@ -340,7 +331,7 @@ function MusicReservationSetting({ initial }: { initial?: AdminMusicDetail }) {
                 name="scheduledDate"
                 type="date"
                 required
-                defaultValue={initial?.scheduledAt?.slice(0, 10) ?? ''}
+                defaultValue={scheduledAt?.slice(0, 10) ?? ''}
                 className="h-[48px] w-full min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none focus:border-secondary-500 [color-scheme:dark]"
               />
             </label>
@@ -351,7 +342,7 @@ function MusicReservationSetting({ initial }: { initial?: AdminMusicDetail }) {
                 type="time"
                 required
                 step="60"
-                defaultValue={initial?.scheduledAt?.slice(11, 16) ?? ''}
+                defaultValue={scheduledAt?.slice(11, 16) ?? ''}
                 className="h-[48px] w-full min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none focus:border-secondary-500 [color-scheme:dark]"
               />
             </label>
@@ -362,7 +353,7 @@ function MusicReservationSetting({ initial }: { initial?: AdminMusicDetail }) {
   );
 }
 
-function MusicChecklistFields({ initialItems }: { initialItems: string[] }) {
+function ChecklistFields({ initialItems }: { initialItems: string[] }) {
   const [items, setItems] = useState(() =>
     (initialItems.length > 0 ? initialItems : ['']).slice(0, 5).map((value, index) => ({
       id: index + 1,
@@ -426,6 +417,191 @@ function MusicChecklistFields({ initialItems }: { initialItems: string[] }) {
   );
 }
 
+const VOTE_MUSIC_SHOWS = [
+  { id: 1, code: 'SHOWMUSICCORE', label: '쇼! 음악중심' },
+  { id: 2, code: 'MUSICBANK', label: '뮤직뱅크' },
+  { id: 3, code: 'INKIGAYO', label: '인기가요' },
+  { id: 4, code: 'SHOWCHAMPION', label: '쇼챔피언' },
+  { id: 5, code: 'MCOUNTDOWN', label: '엠카운트다운' },
+  { id: 6, code: 'THESHOW', label: '더쇼' },
+] as const;
+
+const VOTE_PLATFORMS = [
+  { id: 10, code: 'mubeat', label: '뮤빗', musicShow: 'SHOWMUSICCORE' },
+  { id: 11, code: 'muniverse', label: '뮤니버스', musicShow: 'SHOWMUSICCORE' },
+  { id: 12, code: 'coogoong', label: '쿠궁', musicShow: 'MUSICBANK' },
+  { id: 13, code: 'higher', label: '하이어', musicShow: 'INKIGAYO' },
+  { id: 14, code: 'linc', label: '링크', musicShow: 'INKIGAYO' },
+  { id: 16, code: 'idolchamp', label: '아이돌챔프', musicShow: 'SHOWCHAMPION' },
+  { id: 17, code: 'mnetplus', label: '엠넷플러스', musicShow: 'MCOUNTDOWN' },
+  { id: 18, code: 'bigc', label: '빅크', musicShow: 'THESHOW' },
+] as const;
+
+const VOTE_DETAIL_OPTIONS = {
+  AWARDS: [
+    { value: 'MAMA', label: 'MAMA' },
+    { value: 'MMA', label: 'MMA' },
+  ],
+  ANNIVERSARY: [
+    { value: 'BIRTHDAY', label: '생일' },
+    { value: 'DEBUT', label: '데뷔 기념일' },
+    { value: 'ETC_ANNIVERSARY', label: '기타 기념일' },
+  ],
+  ETC: [{ value: 'ETC', label: '기타' }],
+} as const;
+
+function VoteBaseFields({ initial }: { initial?: AdminVoteDetail }) {
+  const initialMusicShow = VOTE_MUSIC_SHOWS.find(
+    (show) => show.id === initial?.musicShowId,
+  );
+  const [category, setCategory] = useState(initial?.category ?? '');
+  const [detailType, setDetailType] = useState(
+    initialMusicShow?.code ?? (initial?.category === 'ETC' ? 'ETC' : ''),
+  );
+  const [platformId, setPlatformId] = useState(
+    initial?.platformIds[0]?.toString() ?? '',
+  );
+
+  const detailOptions =
+    category === 'MUSIC_SHOW'
+      ? VOTE_MUSIC_SHOWS.map((show) => ({
+          value: show.code,
+          label: show.label,
+        }))
+      : category === 'AWARDS' ||
+          category === 'ANNIVERSARY' ||
+          category === 'ETC'
+        ? [...VOTE_DETAIL_OPTIONS[category]]
+        : [];
+
+  const platformOptions =
+    category === 'MUSIC_SHOW' && detailType
+      ? VOTE_PLATFORMS.filter(
+          (platform) => platform.musicShow === detailType,
+        )
+      : VOTE_PLATFORMS;
+
+  const selectedMusicShow = VOTE_MUSIC_SHOWS.find(
+    (show) => show.code === detailType,
+  );
+
+  return (
+    <>
+      <label className="block text-body-12 text-secondary-300">
+        총공 카테고리<span className="ml-[3px] text-accent-red">*</span>
+        <select
+          name="category"
+          required
+          value={category}
+          onChange={(event) => {
+            setCategory(event.target.value);
+            setDetailType('');
+            setPlatformId('');
+          }}
+          className={INPUT_CLASS}
+        >
+          <option value="" disabled>선택해주세요</option>
+          <option value="MUSIC_SHOW">음악방송</option>
+          <option value="AWARDS">시상식</option>
+          <option value="ANNIVERSARY">기념일</option>
+          <option value="ETC">기타</option>
+        </select>
+      </label>
+
+      <label className="block text-body-12 text-secondary-300">
+        총공 구분<span className="ml-[3px] text-accent-red">*</span>
+        <select
+          name="detailType"
+          required
+          value={detailType}
+          onChange={(event) => {
+            setDetailType(event.target.value);
+            setPlatformId('');
+          }}
+          className={INPUT_CLASS}
+        >
+          <option value="" disabled>선택해주세요</option>
+          {detailOptions.map((option) => (
+            <option key={option.value} value={option.value}>{option.label}</option>
+          ))}
+        </select>
+      </label>
+
+      <input
+        type="hidden"
+        name="musicShowId"
+        value={selectedMusicShow?.id ?? ''}
+      />
+
+      <label className="block text-body-12 text-secondary-300">
+        총공 플랫폼<span className="ml-[3px] text-accent-red">*</span>
+        <select
+          name="platformIds"
+          required
+          value={platformId}
+          onChange={(event) => setPlatformId(event.target.value)}
+          className={INPUT_CLASS}
+        >
+          <option value="" disabled>선택해주세요</option>
+          {platformOptions.map((platform) => (
+            <option key={platform.id} value={platform.id}>
+              {platform.label}
+            </option>
+          ))}
+        </select>
+      </label>
+    </>
+  );
+}
+
+function VotePeriodFields({ initial }: { initial?: AdminVoteDetail }) {
+  return (
+    <fieldset>
+      <legend className="text-body-12 text-secondary-300">
+        총공 기간<span className="ml-[3px] text-accent-red">*</span>
+      </legend>
+      <div className="mt-[7px] flex flex-col gap-[8px]">
+        <label className="grid grid-cols-[minmax(0,1fr)_120px] gap-[8px]">
+          <span className="sr-only">총공 시작 날짜와 시간</span>
+          <input
+            name="eventStartDate"
+            type="date"
+            required
+            defaultValue={initial?.eventStartAt?.slice(0, 10) ?? ''}
+            className="h-[48px] min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none [color-scheme:dark]"
+          />
+          <input
+            name="eventStartTime"
+            type="time"
+            required
+            step="60"
+            defaultValue={initial?.eventStartAt?.slice(11, 16) ?? ''}
+            className="h-[48px] min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none [color-scheme:dark]"
+          />
+        </label>
+        <label className="grid grid-cols-[minmax(0,1fr)_120px] gap-[8px]">
+          <span className="sr-only">총공 마감 날짜와 시간</span>
+          <input
+            name="eventEndDate"
+            type="date"
+            required
+            defaultValue={initial?.eventEndAt?.slice(0, 10) ?? ''}
+            className="h-[48px] min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none [color-scheme:dark]"
+          />
+          <input
+            name="eventEndTime"
+            type="time"
+            required
+            step="60"
+            defaultValue={initial?.eventEndAt?.slice(11, 16) ?? ''}
+            className="h-[48px] min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none [color-scheme:dark]"
+          />
+        </label>
+      </div>
+    </fieldset>
+  );
+}
+
 function PublishSetting({ defaultActive = true }: { defaultActive?: boolean }) {
   return (
     <section className="mt-[8px]">
@@ -464,6 +640,7 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
   const formRef = useRef<HTMLFormElement>(null);
   const [submitError, setSubmitError] = useState('');
   const [musicImageFiles, setMusicImageFiles] = useState<File[]>([]);
+  const [voteImageFiles, setVoteImageFiles] = useState<File[]>([]);
   const [isFormValid, setIsFormValid] = useState(false);
   const isEdit = Boolean(detailId);
   const musicQuery = useAdminMusicDetailQuery(detailId ?? '', adminType === 'music' && isEdit);
@@ -475,9 +652,11 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {
       const existingImageUrls = stringList(formData.get('imageUrls'));
+      const selectedImageFiles =
+        adminType === 'music' ? musicImageFiles : voteImageFiles;
       const imageUrls =
-        adminType === 'music' && musicImageFiles.length > 0
-          ? await Promise.all(musicImageFiles.map(uploadAdminImage))
+        selectedImageFiles.length > 0
+          ? await Promise.all(selectedImageFiles.map(uploadAdminImage))
           : existingImageUrls;
 
       const common = {
@@ -495,13 +674,10 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
         active:
           formData.get('active') === 'on' ||
           formData.get('active') === 'true',
-        scheduledAt:
-          adminType === 'music'
-            ? combineDateAndTime(
-                formData.get('scheduledDate'),
-                formData.get('scheduledTime'),
-              )
-            : dateTimeOrNull(formData.get('scheduledAt')),
+        scheduledAt: combineDateAndTime(
+          formData.get('scheduledDate'),
+          formData.get('scheduledTime'),
+        ),
         sortOrder: Number(formData.get('sortOrder') ?? 0),
       };
 
@@ -524,13 +700,19 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
         ...common,
         musicShowId: numberOrNull(formData.get('musicShowId')),
         rewardDescription: nullableString(formData.get('rewardDescription')),
-        eventStartAt: dateTimeOrNull(formData.get('eventStartAt')),
-        eventEndAt: dateTimeOrNull(formData.get('eventEndAt')),
+        eventStartAt: combineDateAndTime(
+          formData.get('eventStartDate'),
+          formData.get('eventStartTime'),
+        ),
+        eventEndAt: combineDateAndTime(
+          formData.get('eventEndDate'),
+          formData.get('eventEndTime'),
+        ),
         ctaButtonLabel: nullableString(formData.get('ctaButtonLabel')),
-        pushEnabled: formData.get('pushEnabled') === 'on',
-        pushSendAt: dateTimeOrNull(formData.get('pushSendAt')),
-        pushTitle: nullableString(formData.get('pushTitle')),
-        pushBody: nullableString(formData.get('pushBody')),
+        pushEnabled: false,
+        pushSendAt: null,
+        pushTitle: null,
+        pushBody: null,
       };
       return detailId
         ? updateAdminVoteDetail(detailId, payload)
@@ -657,67 +839,65 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
           </>
         ) : (
           <>
-            <Field
-              label="카테고리"
-              name="category"
-              required
-              defaultValue={voteInitial?.category}
-              placeholder="MUSIC_SHOW"
-            />
+            <VoteBaseFields initial={voteInitial} />
             <Field
               label="제목"
               name="title"
               required
               defaultValue={voteInitial?.title}
             />
-            <Field label="음악방송 ID" name="musicShowId" type="number" defaultValue={voteInitial?.musicShowId} />
-            <Field label="투표 시작" name="eventStartAt" type="datetime-local" defaultValue={toDateTimeInput(voteInitial?.eventStartAt)} />
-            <Field label="투표 마감" name="eventEndAt" type="datetime-local" defaultValue={toDateTimeInput(voteInitial?.eventEndAt)} />
-            <TextAreaField label="보상 설명" name="rewardDescription" defaultValue={voteInitial?.rewardDescription} />
-            <Field label="CTA 버튼명" name="ctaButtonLabel" defaultValue={voteInitial?.ctaButtonLabel} placeholder="투표하러 가기" />
+            <VotePeriodFields initial={voteInitial} />
+            <TextAreaField
+              label="1위 리워드"
+              name="rewardDescription"
+              required
+              defaultValue={voteInitial?.rewardDescription}
+            />
+            <Field
+              label="버튼명"
+              name="ctaButtonLabel"
+              defaultValue={voteInitial?.ctaButtonLabel}
+              placeholder="투표하러 가기"
+            />
+            <Field
+              label="버튼 연결 URL"
+              name="platformUrl"
+              type="url"
+              defaultValue={voteInitial?.platformUrl}
+              placeholder="https://"
+            />
           </>
         )}
 
-        {adminType === 'music' ? (
-          <MusicChecklistFields initialItems={musicInitial?.checklist ?? []} />
-        ) : (
-          <TextAreaField
-            label="체크 사항 (한 줄에 하나)"
-            name="checklist"
-            defaultValue={initial?.checklist}
-          />
-        )}
+        <ChecklistFields initialItems={initial?.checklist ?? []} />
 
         {adminType === 'music' ? (
           <>
-            <MusicImageUpload
+            <DetailImageUpload
               existingUrls={musicInitial?.imageUrls ?? []}
               files={musicImageFiles}
               onFilesChange={setMusicImageFiles}
             />
-            <MusicUrgentSetting initial={musicInitial} />
+            <UrgentSetting
+              menuUrgent={musicInitial?.menuUrgent}
+              urgentContent={musicInitial?.urgentContent}
+            />
           </>
         ) : (
           <>
-            <Field label="플랫폼 ID" name="platformIds" defaultValue={initial?.platformIds.join(', ')} placeholder="1, 2, 3" />
-            <Field label="플랫폼 URL" name="platformUrl" type="url" defaultValue={initial?.platformUrl} />
-            <TextAreaField label="이미지 URL (한 줄에 하나)" name="imageUrls" defaultValue={initial?.imageUrls} />
-            <Field label="가이드 ID" name="guideIds" defaultValue={initial?.guideIds.join(', ')} placeholder="10, 11" />
-            <Field label="응원 아이템 ID" name="cheeringItemId" type="number" defaultValue={initial?.cheeringItemId} />
-            <TextAreaField label="긴급 공지 문구" name="urgentContent" defaultValue={initial?.urgentContent} />
+            <DetailImageUpload
+              existingUrls={voteInitial?.imageUrls ?? []}
+              files={voteImageFiles}
+              onFilesChange={setVoteImageFiles}
+            />
+            <UrgentSetting
+              menuUrgent={voteInitial?.menuUrgent}
+              urgentContent={voteInitial?.urgentContent}
+            />
           </>
         )}
 
-        {adminType === 'music' ? (
-          <MusicReservationSetting initial={musicInitial} />
-        ) : (
-          <Field
-            label="예약 게시 시간"
-            name="scheduledAt"
-            type="datetime-local"
-            defaultValue={toDateTimeInput(initial?.scheduledAt)}
-          />
-        )}
+        <ReservationSetting scheduledAt={initial?.scheduledAt} />
         {adminType === 'music' ? (
           <input
             type="hidden"
@@ -733,27 +913,7 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
           />
         )}
 
-        {adminType === 'vote' && (
-          <div className="rounded-[14px] border border-secondary-800 p-[14px]">
-            <p className="mb-[12px] text-body-13 font-bold text-secondary-1">푸시 알림</p>
-            <div className="flex flex-col gap-[12px]">
-              <CheckboxField label="푸시 사용" name="pushEnabled" defaultChecked={voteInitial?.pushEnabled} />
-              <Field label="푸시 발송 시간" name="pushSendAt" type="datetime-local" defaultValue={toDateTimeInput(voteInitial?.pushSendAt)} />
-              <Field label="푸시 제목" name="pushTitle" defaultValue={voteInitial?.pushTitle} />
-              <TextAreaField label="푸시 내용" name="pushBody" defaultValue={voteInitial?.pushBody} />
-            </div>
-          </div>
-        )}
-
-        {adminType === 'music' ? (
-          <PublishSetting defaultActive={musicInitial?.active ?? true} />
-        ) : (
-          <div className="flex flex-col gap-[8px]">
-            <CheckboxField label="긴급 총공으로 노출" name="menuUrgent" defaultChecked={initial?.menuUrgent} />
-            <CheckboxField label="오늘 화면 노출" name="todayExposed" defaultChecked={initial?.todayExposed} />
-            <CheckboxField label="활성 상태" name="active" defaultChecked={initial?.active ?? true} />
-          </div>
-        )}
+        <PublishSetting defaultActive={initial?.active ?? true} />
 
         {submitError && <p role="alert" className="text-body-12 text-accent-red">{submitError}</p>}
         <button

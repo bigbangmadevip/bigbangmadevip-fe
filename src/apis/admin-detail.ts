@@ -22,6 +22,27 @@ export async function uploadAdminImage(file: File) {
   return response.data.data.url;
 }
 
+export type AdminMusicStreamingImage = {
+  id: number;
+  imageUrl: string;
+  active: boolean;
+  sortOrder: number;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export async function createAdminMusicStreamingImage(payload: {
+  imageUrl: string;
+  active: boolean;
+  sortOrder: number;
+}) {
+  const response = await api.post<ApiResponse<AdminMusicStreamingImage>>(
+    '/api/v1/admin/music/streaming-images',
+    payload,
+  );
+  return response.data.data;
+}
+
 export async function getAdminMusicDetails() {
   const response = await api.get<ApiResponse<AdminMusicDetail[]>>(
     '/api/v1/admin/music/details',

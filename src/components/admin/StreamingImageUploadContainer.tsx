@@ -1,8 +1,13 @@
 'use client';
 
+import { useMutation } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import {
+  createAdminMusicStreamingImage,
+  uploadAdminImage,
+} from '@/apis/admin-detail';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import { PageHeader } from '@/components/common/PageHeader';
 
@@ -19,6 +24,19 @@ export default function StreamingImageUploadContainer() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [fileError, setFileError] = useState('');
+
+  const createMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const imageUrl = await uploadAdminImage(file);
+      return createAdminMusicStreamingImage({
+        imageUrl,
+        active: true,
+        sortOrder: 0,
+      });
+    },
+    onSuccess: () => router.replace('/musicadmin'),
+  });
 
   useEffect(() => {
     return () => {
@@ -31,7 +49,21 @@ export default function StreamingImageUploadContainer() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] ?? null;
 
-    if (file && file.type.startsWith('image/')) {
+    if (!file) return;
+
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/gif',
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      setFileError('JPEG, PNG, WEBP, GIF 이미지만 등록할 수 있어요.');
+    } else if (file.size > 10 * 1024 * 1024) {
+      setFileError('이미지는 10MB 이하여야 해요.');
+    } else {
+      setFileError('');
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
     }
@@ -42,6 +74,7 @@ export default function StreamingImageUploadContainer() {
   const handleRemove = () => {
     setSelectedFile(null);
     setPreviewUrl(null);
+    setFileError('');
   };
 
   return (
@@ -83,7 +116,7 @@ export default function StreamingImageUploadContainer() {
         <input
           ref={inputRef}
           type="file"
-          accept="image/png,image/jpeg,image/webp"
+          accept="image/png,image/jpeg,image/webp,image/gif"
           className="sr-only"
           onChange={handleFileChange}
         />
@@ -129,7 +162,7 @@ export default function StreamingImageUploadContainer() {
               이미지 선택하기
             </span>
             <span className="mt-[4px] text-body-11 text-secondary-400">
-              PNG, JPG, WEBP
+              PNG, JPG, WEBP, GIF
             </span>
           </button>
         )}
@@ -143,18 +176,33 @@ export default function StreamingImageUploadContainer() {
             다른 이미지 선택
           </button>
         )}
+
+        {fileError && (
+          <p role="alert" className="mt-[10px] text-body-12 text-accent-red">
+            {fileError}
+          </p>
+        )}
+
+        {createMutation.isError && (
+          <p role="alert" className="mt-[10px] text-body-12 text-accent-red">
+            이미지를 등록하지 못했어요. 잠시 후 다시 시도해주세요.
+          </p>
+        )}
       </section>
 
       <button
         type="button"
-        disabled={!selectedFile}
+        disabled={!selectedFile || createMutation.isPending}
+        onClick={() => {
+          if (selectedFile) createMutation.mutate(selectedFile);
+        }}
         className={`mt-auto w-full rounded-[12px] py-[16px] text-body-14 font-bold ${
-          selectedFile
+          selectedFile && !createMutation.isPending
             ? 'bg-main text-secondary-950'
             : 'cursor-not-allowed bg-secondary-800 text-secondary-600'
         }`}
       >
-        등록하기
+        {createMutation.isPending ? '등록 중...' : '등록하기'}
       </button>
     </main>
   );

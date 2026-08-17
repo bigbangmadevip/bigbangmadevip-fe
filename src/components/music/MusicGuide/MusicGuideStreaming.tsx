@@ -13,7 +13,7 @@ const STREAMING_NATIONAL_GUIDE_MOCK: TEMP_TYPE[] = [
   { id: '1', platform: 'genie', link: '/music/guide/streaming/genie' },
   { id: '2', platform: 'bugs', link: '/music/guide/streaming/bugs' },
   { id: '3', platform: 'flo', link: '/music/guide/streaming/flo' },
-  { id: '4', platform: 'vibe', link: '' },
+  { id: '4', platform: 'vibe', link: '/music/guide/streaming/vibe' },
   // { id: '5', platform: 'samsungmusic', link: '' },
   // { id: '6', platform: 'kakaomusic', link: '' },
 ];

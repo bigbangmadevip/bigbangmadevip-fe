@@ -7,6 +7,7 @@ import bugsGuideImage from '@/assets/musicguide/bugs.png';
 import floGuideImage from '@/assets/musicguide/flo.png';
 import genieGuideImage from '@/assets/musicguide/genie.png';
 import melonGuideImage from '@/assets/musicguide/melon.png';
+import vibeGuideImage from '@/assets/musicguide/vibe.png';
 import CommonErrorScreen from '@/components/common/CommonErrorScreen';
 import FloatingShareButton from '@/components/common/FloatingShareButton';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
@@ -16,7 +17,7 @@ import { PLATFORM_LABEL } from '@/types/music';
 
 type StreamingGuidePlatform = Extract<
   Platform,
-  'melon' | 'genie' | 'bugs' | 'flo'
+  'melon' | 'genie' | 'bugs' | 'flo' | 'vibe'
 >;
 
 const STREAMING_GUIDE_IMAGES: Record<StreamingGuidePlatform, StaticImageData> =
@@ -25,6 +26,7 @@ const STREAMING_GUIDE_IMAGES: Record<StreamingGuidePlatform, StaticImageData> =
     genie: genieGuideImage,
     bugs: bugsGuideImage,
     flo: floGuideImage,
+    vibe: vibeGuideImage,
   };
 
 function isStreamingGuidePlatform(
