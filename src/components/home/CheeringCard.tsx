@@ -1,10 +1,11 @@
 'use client';
 
 import Image from 'next/image';
+import type { StaticImageData } from 'next/image';
 
 interface CheeringCardProps {
   title: string;
-  iconSrc: string | null;
+  iconSrc: string | StaticImageData | null;
   iconAlt: string;
   completed: boolean;
   onParticipate: () => void;

@@ -7,7 +7,9 @@ export type CheeringCategory =
   | 'YOUTUBE'
   | 'VOTECOIN'
   | 'REPORT'
-  | 'HASHTAG';
+  | 'HASHTAG'
+  | 'MELONKCHART'
+  | 'RADIO';
 
 export type CHEERING_CATEGORY = CheeringCategory;
 

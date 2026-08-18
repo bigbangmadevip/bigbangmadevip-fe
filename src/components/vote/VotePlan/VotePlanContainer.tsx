@@ -21,7 +21,7 @@ const PLAN_MOCK: VotePlanContentBoxProps[] = [
   {
     id: '1',
     caption: '투표를 위한 첫 걸음!',
-    title: '음악방송 재화 모으기 가이드',
+    title: '음악방송 재화 모으기',
     ctaText: '가이드 보기',
     ctaLink: '/vote/plan/currency',
   },

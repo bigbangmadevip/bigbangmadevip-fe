@@ -117,6 +117,7 @@ export default function VoteCategoryContent({
                 platform={item.platformNames
                   .map(getVotePlatformLabel)
                   .join(', ')}
+                iconPlatform={item.platformNames[0]}
                 imageUrl={item.imageUrl}
                 href={`/urgent/${item.detailId}?menuType=VOTE`}
               />
@@ -139,6 +140,7 @@ export default function VoteCategoryContent({
                 platform={item.platformNames
                   .map(getVotePlatformLabel)
                   .join(', ')}
+                iconPlatform={item.platformNames[0]}
                 imageUrl={item.imageUrl}
                 href={`/urgent/${item.detailId}?menuType=VOTE`}
               />

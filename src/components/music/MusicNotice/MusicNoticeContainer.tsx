@@ -16,7 +16,7 @@ export default function MusicNoticeContainer() {
         iconSrc={'/icon/x-logo-circle.svg'}
         title={'음원총공팀 X 바로가기'}
         description={'실시간 공지와 긴급 안내를 확인하세요!'}
-        href={'https://x.com/__vipwave__?s=11'}
+        href={'https://x.com/__VIPWAVE__'}
       />
 
       {isPending ? (

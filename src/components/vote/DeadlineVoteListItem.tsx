@@ -12,6 +12,7 @@ export interface DeadlineVoteListItemProps {
   remainingTime: string;
   title: string;
   platform: string;
+  iconPlatform?: string;
   imageUrl?: string | null;
   href: string;
 }
@@ -21,6 +22,7 @@ export default function DeadlineVoteListItem({
   remainingTime,
   title,
   platform,
+  iconPlatform,
   imageUrl,
   href,
 }: DeadlineVoteListItemProps) {
@@ -35,7 +37,10 @@ export default function DeadlineVoteListItem({
 
       <div className="flex items-center justify-between gap-[19px]">
         <div className="flex min-w-0 items-center gap-[12px]">
-          <VotePlatformIcon platform={platform} imageUrl={imageUrl} />
+          <VotePlatformIcon
+            platform={iconPlatform ?? platform}
+            imageUrl={imageUrl}
+          />
           <div className="min-w-0">
             <p className="line-clamp-1 text-body-15 font-bold">{title}</p>
             <p className="mt-[4px] text-body-13 text-[#777777]">{platform}</p>

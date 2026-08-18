@@ -115,6 +115,12 @@ export const FOLLOW_ACCOUNT_SECTIONS: FollowAccountSection[] = [
         url: 'https://x.com/RNDCOMPANY',
       },
       {
+        id: 'dae-ssong',
+        name: '댓쏭 | DaeSsong',
+        handle: '@daessong_',
+        url: 'https://x.com/daessong_',
+      },
+      {
         id: 'zip-daesung',
         name: '집대성',
         handle: '@zip_ds',

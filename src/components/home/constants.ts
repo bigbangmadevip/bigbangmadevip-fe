@@ -125,4 +125,32 @@ export const CHEERING_DIALOG_CONFIG = {
       buttonLabel: '확인',
     },
   },
+
+  MELONKCHART: {
+    confirm: {
+      title: '멜론 K차트 응원을 완료했나요?',
+      description: () => '멜론 K차트 응원을 완료했다면\n참여완료를 눌러주세요.',
+      buttonLabel: '참여완료',
+    },
+    complete: {
+      title: '멜론 K차트 응원 완료!',
+      description: ({ participantCount }) =>
+        `현재 ${participantCount}명의 VIP가\n멜론 K차트 응원에 참여했어요.`,
+      buttonLabel: '확인',
+    },
+  },
+
+  RADIO: {
+    confirm: {
+      title: '라디오 응원을 완료했나요?',
+      description: () => '라디오 응원을 완료했다면\n참여완료를 눌러주세요.',
+      buttonLabel: '참여완료',
+    },
+    complete: {
+      title: '라디오 응원 완료!',
+      description: ({ participantCount }) =>
+        `현재 ${participantCount}명의 VIP가\n라디오 응원에 참여했어요.`,
+      buttonLabel: '확인',
+    },
+  },
 } satisfies Record<CHEERING_CATEGORY, CheeringDialogConfig>;

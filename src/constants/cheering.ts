@@ -1,32 +1,41 @@
+import hashtagOff from '@/assets/cheeringbadge/hashtag_off.png';
+import hashtagOn from '@/assets/cheeringbadge/hashtag_on.png';
+import melonKChartOff from '@/assets/cheeringbadge/melonkchart_off.png';
+import melonKChartOn from '@/assets/cheeringbadge/melonkchart_on.png';
+import radioOff from '@/assets/cheeringbadge/radio_off.png';
+import radioOn from '@/assets/cheeringbadge/radio_on.png';
+import reportOff from '@/assets/cheeringbadge/report_off.png';
+import reportOn from '@/assets/cheeringbadge/report_on.png';
+import streamingOff from '@/assets/cheeringbadge/streaming_off.png';
+import streamingOn from '@/assets/cheeringbadge/streaming_on.png';
+import voteCoinOff from '@/assets/cheeringbadge/votecoin_off.png';
+import voteCoinOn from '@/assets/cheeringbadge/votecoin_on.png';
+import youtubeOff from '@/assets/cheeringbadge/youtube_off.png';
+import youtubeOn from '@/assets/cheeringbadge/youtube_on.png';
 import type { CHEERING_CATEGORY } from '@/types/home';
 
-export const CHEERING_ICON_BY_CATEGORY = {
-  STREAMING: '/cheering_streaming.svg',
+const CHEERING_BADGE_BY_CATEGORY = {
+  STREAMING: { off: streamingOff, on: streamingOn },
   DOWNLOAD: null,
-  VOTE: '/cheering_vote.svg',
-  YOUTUBE: '/cheering_youtube.svg',
-  VOTECOIN: null,
-  REPORT: '/cheering_report.svg',
-  HASHTAG: null,
-} satisfies Record<CHEERING_CATEGORY, string | null>;
-
-const CHEERING_COMPLETED_ICON_BY_CATEGORY: Partial<
-  Record<CHEERING_CATEGORY, string>
-> = {
-  STREAMING: '/cheering_streaming_completed.svg',
-  VOTE: '/cheering_vote_completed.png',
-};
+  VOTE: null,
+  YOUTUBE: { off: youtubeOff, on: youtubeOn },
+  VOTECOIN: { off: voteCoinOff, on: voteCoinOn },
+  REPORT: { off: reportOff, on: reportOn },
+  HASHTAG: { off: hashtagOff, on: hashtagOn },
+  MELONKCHART: { off: melonKChartOff, on: melonKChartOn },
+  RADIO: { off: radioOff, on: radioOn },
+} satisfies Record<
+  CHEERING_CATEGORY,
+  { off: typeof streamingOff; on: typeof streamingOn } | null
+>;
 
 export function getCheeringIcon(
   category: CHEERING_CATEGORY,
   completed = false,
 ) {
-  if (completed) {
-    return (
-      CHEERING_COMPLETED_ICON_BY_CATEGORY[category] ??
-      CHEERING_ICON_BY_CATEGORY[category]
-    );
-  }
+  const badge = CHEERING_BADGE_BY_CATEGORY[category];
 
-  return CHEERING_ICON_BY_CATEGORY[category];
+  if (!badge) return null;
+
+  return completed ? badge.on : badge.off;
 }

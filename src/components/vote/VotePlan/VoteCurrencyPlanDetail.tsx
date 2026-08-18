@@ -1,50 +1,47 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import voteCoinImage from '@/assets/voteplan/votecoin.png';
 import FloatingShareButton from '@/components/common/FloatingShareButton';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import { PageHeader } from '@/components/common/PageHeader';
 import { SectionTitle } from '@/components/common/SectionTitle';
+import {
+  getVoteAppLink,
+  type VoteAppPlatform,
+} from '@/constants/vote-app-link';
 
 const CURRENCY_GUIDES = [
   {
     id: 'idolchamp',
     label: '아이돌챔프',
     iconSrc: '/icon/vote/idolchamp.svg',
-    href: '/vote/guide/showchampion#vote-guide-idolchamp',
   },
   {
     id: 'coogoong',
     label: '쿠궁',
     iconSrc: '/icon/vote/coogoong.svg',
-    href: '/vote/guide/musicbank#vote-guide-coogoong',
   },
   {
     id: 'mubeat',
     label: '뮤빗',
     iconSrc: '/icon/vote/mubeat.svg',
-    href: '/vote/guide/musiccore#vote-guide-mubeat',
   },
   {
     id: 'muniverse',
     label: '뮤니버스',
     iconSrc: '/icon/vote/muniverse.svg',
-    href: '/vote/guide/musiccore#vote-guide-muniverse',
   },
   {
     id: 'linc',
     label: '링크',
     iconSrc: '/icon/vote/linc.svg',
-    href: '/vote/guide/inkigayo#vote-guide-linc',
   },
   {
     id: 'higher',
     label: '하이어',
     iconSrc: '/icon/vote/higher.svg',
-    href: '/vote/guide/inkigayo#vote-guide-higher',
   },
 ] as const;
 
@@ -55,7 +52,7 @@ export default function VoteCurrencyPlanDetail() {
     <main>
       <PageHeader
         sticky
-        title="음악방송 재화 모으기 가이드"
+        title="음악방송 재화 모으기"
         leftAction={
           <HeaderIconButton
             label="뒤로가기"
@@ -86,9 +83,15 @@ export default function VoteCurrencyPlanDetail() {
 
         <div className="mt-[12px] grid grid-cols-3 gap-[8px]">
           {CURRENCY_GUIDES.map((guide) => (
-            <Link
+            <button
               key={guide.id}
-              href={guide.href}
+              type="button"
+              onClick={() => {
+                window.location.href = getVoteAppLink(
+                  guide.id as VoteAppPlatform,
+                );
+              }}
+              aria-label={`${guide.label} 앱 열기`}
               className="flex flex-col items-center justify-center gap-[2px] rounded-[16px] bg-secondary-900 px-[21px] py-[14px]"
             >
               <span className="flex h-[40px] w-[40px] shrink-0 items-center justify-center">
@@ -104,7 +107,7 @@ export default function VoteCurrencyPlanDetail() {
               <span className="w-full truncate text-center text-body-13 font-medium text-secondary-100">
                 {guide.label}
               </span>
-            </Link>
+            </button>
           ))}
         </div>
       </section>
