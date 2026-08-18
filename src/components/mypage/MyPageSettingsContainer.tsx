@@ -119,14 +119,14 @@ export default function MyPageSettingsContainer() {
           </SettingsSection>
 
           <SettingsSection title="서비스 이용 안내">
-            <SettingsRow
+            {/* <SettingsRow
               label="개인정보처리방침"
               onClick={() => setActiveAgreement('privacy')}
-            />
-            <SettingsRow
+            /> */}
+            {/* <SettingsRow
               label="서비스 이용 약관"
               onClick={() => setActiveAgreement('terms')}
-            />
+            /> */}
             <SettingsRow label="버전 정보" value="v26.08.0 (26.08.19.20)" />
           </SettingsSection>
 
