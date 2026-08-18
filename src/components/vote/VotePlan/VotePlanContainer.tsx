@@ -14,7 +14,7 @@ const PLAN_MOCK: VotePlanContentBoxProps[] = [
   {
     id: '0',
     caption: '놓치면 안되는',
-    title: 'VIP 주간 투표 일정',
+    title: 'VIP 음악방송 투표 일정',
     ctaText: '이번 주 일정 보기',
     ctaLink: '/vote/plan/weekly',
   },
@@ -22,7 +22,7 @@ const PLAN_MOCK: VotePlanContentBoxProps[] = [
     id: '1',
     caption: '투표를 위한 첫 걸음!',
     title: '음악방송 재화 모으기',
-    ctaText: '가이드 보기',
+    ctaText: '재화 적립하기',
     ctaLink: '/vote/plan/currency',
   },
 ];

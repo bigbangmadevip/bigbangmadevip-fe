@@ -12,8 +12,6 @@ interface VoteGuideContainerProps {
 const GUIDE_TABS = [
   { id: 'all', label: '전체' },
   { id: 'music-show', label: '음악방송' },
-  { id: 'awards', label: '시상식' },
-  { id: 'etc', label: '기타' },
 ] as const;
 
 function isVoteGuideCategory(value: string | null): value is VoteGuideCategory {

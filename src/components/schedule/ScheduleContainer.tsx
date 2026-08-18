@@ -35,6 +35,9 @@ const CATEGORY_TABS = [
 
 const SPECIAL_DATE_ICONS: Record<string, string> = {
   '2026-08-19': '👑',
+  '2026-08-18': '🎂',
+  '2027-04-26': '🎂',
+  '2027-05-18': '🎂',
 };
 
 function getDateKey(date: Date) {
@@ -219,9 +222,20 @@ export default function ScheduleContainer() {
   const isDayPending = canUseInitialDay ? isInitialPending : dayQuery.isPending;
   const isDayError = canUseInitialDay ? isInitialError : dayQuery.isError;
   const dayCounts = new Map(
-    (monthData?.days ?? []).map((item) => [item.date, item]),
+    (monthData?.days ?? []).map((item) => [
+      item.date,
+      {
+        ...item,
+        musicCount: category === 'vote' ? 0 : item.musicCount,
+        voteCount: category === 'music' ? 0 : item.voteCount,
+      },
+    ]),
   );
-  const selectedScheduleItems = dayData?.items ?? [];
+  const selectedScheduleItems = (dayData?.items ?? []).filter((item) => {
+    if (category === 'all') return true;
+
+    return item.menuType === getApiCategory(category);
+  });
   const isFirstMonth =
     month.getFullYear() === FIRST_AVAILABLE_MONTH.getFullYear() &&
     month.getMonth() === FIRST_AVAILABLE_MONTH.getMonth();
@@ -403,8 +417,9 @@ export default function ScheduleContainer() {
             ))}
           </div>
         ) : (
-          <div className="flex min-h-[120px] items-center justify-center text-body-13 text-secondary-500">
-            등록된 총공 일정이 없어요.
+          <div className="flex flex-col min-h-[120px] items-center justify-center text-body-13 text-secondary-500 gap-[2px]">
+            <Image src={'/icon/empty.svg'} alt="" width={64} height={64} />
+            <p>등록된 총공 일정이 없어요.</p>
           </div>
         )}
       </div>

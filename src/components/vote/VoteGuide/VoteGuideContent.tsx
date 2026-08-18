@@ -8,10 +8,13 @@ interface VoteGuideContentProps {
 }
 
 export default function VoteGuideContent({ category }: VoteGuideContentProps) {
+  const visibleGuides = VOTE_GUIDE_MOCK_DATA.filter(
+    (guide) => guide.category === 'music-show',
+  );
   const filteredGuides =
     category === 'all'
-      ? VOTE_GUIDE_MOCK_DATA
-      : VOTE_GUIDE_MOCK_DATA.filter((guide) => guide.category === category);
+      ? visibleGuides
+      : visibleGuides.filter((guide) => guide.category === category);
 
   return (
     <div className="flex flex-col gap-[24px] mt-[12px]">

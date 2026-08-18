@@ -150,8 +150,9 @@ export default function VoteCategoryContent({
       )}
 
       {deadlineVotes.length === 0 && ongoingVotes.length === 0 && (
-        <div className="flex min-h-[320px] items-center justify-center text-body-13 text-secondary-500">
-          진행 중인 투표가 없어요.
+        <div className="flex flex-col min-h-[320px] items-center justify-center text-body-13 gap-[2px] text-secondary-500">
+          <Image src={'/icon/empty.svg'} alt="" width={64} height={64} />
+          <p>진행 중인 투표가 없어요.</p>
         </div>
       )}
     </div>

@@ -8,7 +8,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
   {
     id: 'the-show',
     title: '더 쇼',
-    channel: 'SBS MTV',
+    channel: 'SBS Life',
     broadcastTime: '화요일 18:00',
     iconSrc: '/icon/vote/musicshow/theshow.svg',
     description: COMBINED_DESCRIPTION,

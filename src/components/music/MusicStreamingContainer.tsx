@@ -44,7 +44,7 @@ export default function MusicStreamingContainer() {
         />
       )}
 
-      <div className="mb-[32px]">
+      <div className="mb-[32px] mt-[24px]">
         <SectionTitle>원클릭 스트리밍</SectionTitle>
         <div className="grid grid-cols-3 gap-[8px]">
           {data.platforms.map((platform) => (

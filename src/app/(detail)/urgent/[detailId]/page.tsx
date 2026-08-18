@@ -13,6 +13,7 @@ import { PageHeader } from '@/components/common/PageHeader';
 import { getMusicGuideLinks } from '@/constants/music-guide';
 import { getPlatformLabel } from '@/constants/platform';
 import { getVotePlatformLabel } from '@/constants/vote-platform';
+import { getVoteUrgentGuideLinks } from '@/constants/vote-urgent-guide';
 import { useMusicDetailQuery } from '@/hooks/queries/useMusicQuery';
 import { useVoteDetailQuery } from '@/hooks/queries/useVoteQuery';
 import type { MusicDetailResponse } from '@/types/music';
@@ -85,12 +86,7 @@ export default function UrgentDetailPage() {
     ? getMusicGuideLinks(detail.category, detail.platformNames)
     : [];
   const voteGuideLinks = !isMusicDetail
-    ? detail.guides.map((guide) => ({
-        id: String(guide.guideId),
-        title: guide.title,
-        description: '투표 가이드',
-        href: `/vote/guide/${guide.guideId}`,
-      }))
+    ? getVoteUrgentGuideLinks(detail)
     : [];
   const hasGuides = musicGuideLinks.length > 0 || voteGuideLinks.length > 0;
 
@@ -298,9 +294,17 @@ export default function UrgentDetailPage() {
                   <Link
                     key={guide.id}
                     href={guide.href}
-                    className="flex min-w-0 items-center rounded-[12px] border border-[rgba(255,255,255,0.08)] bg-secondary-900 p-[16px] text-left"
+                    className="flex min-w-0 items-center rounded-[12px] border border-[rgba(255,255,255,0.08)] bg-secondary-900 py-[16px] pr-[8px] pl-[12px] text-left"
                   >
-                    <span className="min-w-0 flex-1">
+                    <Image
+                      src={guide.iconSrc}
+                      alt=""
+                      width={40}
+                      height={40}
+                      aria-hidden="true"
+                      className="h-[40px] w-[40px] shrink-0 rounded-full object-contain"
+                    />
+                    <span className="ml-[8px] min-w-0 flex-1">
                       <strong className="block line-clamp-2 text-body-13 font-bold text-secondary-1">
                         {guide.title}
                       </strong>
@@ -370,16 +374,30 @@ export default function UrgentDetailPage() {
                 {imageUrls.map((imageUrl, index) => (
                   <div
                     key={imageUrl}
-                    className="relative aspect-square w-full shrink-0 snap-center overflow-hidden rounded-[16px] bg-secondary-800"
+                    className={`w-full shrink-0 snap-center overflow-hidden rounded-[16px] ${
+                      isMusicDetail
+                        ? ''
+                        : 'relative aspect-square bg-secondary-800'
+                    }`}
                   >
-                    <Image
-                      src={imageUrl}
-                      alt={`관련 이미지 ${index + 1}`}
-                      fill
-                      unoptimized
-                      sizes="(max-width: 430px) 100vw, 390px"
-                      className="object-contain"
-                    />
+                    {isMusicDetail ? (
+                      // API 이미지의 원본 비율과 전체 내용을 그대로 노출합니다.
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={imageUrl}
+                        alt={`관련 이미지 ${index + 1}`}
+                        className="block h-auto w-full"
+                      />
+                    ) : (
+                      <Image
+                        src={imageUrl}
+                        alt={`관련 이미지 ${index + 1}`}
+                        fill
+                        unoptimized
+                        sizes="(max-width: 430px) 100vw, 390px"
+                        className="object-contain"
+                      />
+                    )}
                   </div>
                 ))}
               </div>

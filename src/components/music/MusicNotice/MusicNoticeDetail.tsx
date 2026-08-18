@@ -33,10 +33,10 @@ export default function MusicNoticeDetail({
             onClick={() => router.back()}
           >
             <Image
-              src="/icon/line/arrow-left_white-24.svg"
+              src="/icon/line/arrow-left_white-28.svg"
               alt=""
-              width={24}
-              height={24}
+              width={28}
+              height={28}
               aria-hidden="true"
             />
           </HeaderIconButton>
