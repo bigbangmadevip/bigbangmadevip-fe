@@ -3,6 +3,10 @@
 import type { StaticImageData } from 'next/image';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
+import bugsDownloadGuideImage from '../../../../../../../public/musicguide/download/bugs.png';
+import genieDownloadGuideImage from '../../../../../../../public/musicguide/download/genie.png';
+import kakaomusicDownloadGuideImage from '../../../../../../../public/musicguide/download/kakaomusic.png';
+import melonDownloadGuideImage from '../../../../../../../public/musicguide/download/melon.png';
 import bugsGuideImage from '@/assets/musicguide/bugs.png';
 import floGuideImage from '@/assets/musicguide/flo.png';
 import genieGuideImage from '@/assets/musicguide/genie.png';
@@ -20,6 +24,18 @@ type StreamingGuidePlatform = Extract<
   'melon' | 'genie' | 'bugs' | 'flo' | 'vibe'
 >;
 
+type DownloadGuidePlatform = Extract<
+  Platform,
+  'melon' | 'genie' | 'bugs' | 'kakaomusic'
+>;
+
+const DOWNLOAD_GUIDE_IMAGES: Record<DownloadGuidePlatform, StaticImageData> = {
+  melon: melonDownloadGuideImage,
+  genie: genieDownloadGuideImage,
+  bugs: bugsDownloadGuideImage,
+  kakaomusic: kakaomusicDownloadGuideImage,
+};
+
 const STREAMING_GUIDE_IMAGES: Record<StreamingGuidePlatform, StaticImageData> =
   {
     melon: melonGuideImage,
@@ -35,18 +51,29 @@ function isStreamingGuidePlatform(
   return value in STREAMING_GUIDE_IMAGES;
 }
 
+function isDownloadGuidePlatform(
+  value: string,
+): value is DownloadGuidePlatform {
+  return value in DOWNLOAD_GUIDE_IMAGES;
+}
+
 export default function GuideDetailPage() {
   const router = useRouter();
   const { category, guideId } = useParams<{
     category: string;
     guideId: string;
   }>();
+  const isStreamingGuide =
+    category === 'streaming' && isStreamingGuidePlatform(guideId);
+  const isDownloadGuide =
+    category === 'download' && isDownloadGuidePlatform(guideId);
 
-  if (category !== 'streaming' || !isStreamingGuidePlatform(guideId)) {
+  if (!isStreamingGuide && !isDownloadGuide) {
     return <CommonErrorScreen message="준비되지 않은 음원 가이드예요." />;
   }
 
-  const title = `${PLATFORM_LABEL[guideId]} 스트리밍 가이드`;
+  const guideTypeLabel = isStreamingGuide ? '스트리밍' : '다운로드';
+  const title = `${PLATFORM_LABEL[guideId]} ${guideTypeLabel} 가이드`;
 
   return (
     <main>
@@ -70,14 +97,24 @@ export default function GuideDetailPage() {
       />
 
       <div className="mt-[24px]">
-        <Image
-          src={STREAMING_GUIDE_IMAGES[guideId]}
-          alt={title}
-          priority
-          placeholder="blur"
-          sizes="(max-width: 430px) 100vw, 390px"
-          className="h-auto w-full bg-secondary-950"
-        />
+        {isStreamingGuide ? (
+          <Image
+            src={STREAMING_GUIDE_IMAGES[guideId]}
+            alt={title}
+            priority
+            placeholder="blur"
+            sizes="(max-width: 430px) 100vw, 390px"
+            className="h-auto w-full bg-secondary-950"
+          />
+        ) : (
+          <Image
+            src={DOWNLOAD_GUIDE_IMAGES[guideId as DownloadGuidePlatform]}
+            alt={title}
+            sizes="(max-width: 430px) 100vw, 390px"
+            placeholder="blur"
+            className="block h-auto w-full"
+          />
+        )}
       </div>
 
       <FloatingShareButton title={title} />
