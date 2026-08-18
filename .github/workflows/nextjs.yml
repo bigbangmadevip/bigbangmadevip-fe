@@ -56,6 +56,24 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+            cleanup_old_frontend_images() {
+              docker images "${{ secrets.DOCKER_REPO }}" --format '{{.ID}}' \
+                | sort -u \
+                | while read -r image_id; do
+                    [ -n "$image_id" ] || continue
+
+                    if ! docker ps -a --filter "ancestor=$image_id" --format '{{.ID}}' | grep -q .; then
+                      docker rmi "$image_id" 2>/dev/null || true
+                    fi
+                  done
+            }
+
+            # SHA 태그가 붙은 이전 배포 이미지를 먼저 비워 pull 공간을 확보한다.
+            # 현재 실행 중인 컨테이너가 사용하는 이미지는 보존된다.
+            cleanup_old_frontend_images
+            docker image prune -f
+
             docker pull "${{ secrets.DOCKER_REPO }}:${{ github.sha }}"
             docker stop bigbangmadevip-fe 2>/dev/null || true
             docker rm bigbangmadevip-fe 2>/dev/null || true
@@ -65,4 +83,7 @@ jobs:
               --network bigbangmadevip-net \
               -p 3000:3000 \
               "${{ secrets.DOCKER_REPO }}:${{ github.sha }}"
+
+            # 교체 후 사용하지 않게 된 직전 이미지까지 제거한다.
+            cleanup_old_frontend_images
             docker image prune -f
