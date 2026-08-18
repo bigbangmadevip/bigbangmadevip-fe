@@ -61,6 +61,7 @@ export type MusicStreamingUrgent = {
 export type MusicStreamingLink = {
   label: string;
   url: string;
+  active?: boolean;
 };
 
 export type MusicStreamingOsGroup = {

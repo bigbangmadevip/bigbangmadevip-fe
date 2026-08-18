@@ -3,7 +3,7 @@ import { CHEERING_CATEGORY, CheeringItem } from '@/types/home';
 
 export type CheeringDialogContext = {
   item: CheeringItem;
-  participantCount: number;
+  typeCompletedCount: number;
   completedCount?: number;
 };
 
@@ -31,8 +31,8 @@ export const CHEERING_DIALOG_CONFIG = {
     },
     complete: {
       title: '오늘의 스트리밍 완료!',
-      description: ({ participantCount }) =>
-        `현재 ${participantCount}명의 VIP가\n스트리밍을 함께 했어요.`,
+      description: ({ typeCompletedCount }) =>
+        `현재 ${typeCompletedCount}명의 VIP가\n스트리밍을 함께 했어요.`,
       buttonLabel: '확인',
     },
   },
@@ -45,8 +45,8 @@ export const CHEERING_DIALOG_CONFIG = {
     },
     complete: {
       title: '음원 다운로드 완료!',
-      description: ({ participantCount }) =>
-        `현재 ${participantCount}명의 VIP가\n다운로드를 함께 했어요.`,
+      description: ({ typeCompletedCount }) =>
+        `현재 ${typeCompletedCount}명의 VIP가\n다운로드를 함께 했어요.`,
       buttonLabel: '확인',
     },
   },
@@ -59,8 +59,8 @@ export const CHEERING_DIALOG_CONFIG = {
     },
     complete: {
       title: '오늘의 투표 완료!',
-      description: ({ participantCount }) =>
-        `현재 ${participantCount}명의 VIP가\n투표를 함께했어요.`,
+      description: ({ typeCompletedCount }) =>
+        `현재 ${typeCompletedCount}명의 VIP가\n투표를 함께했어요.`,
       buttonLabel: '확인',
     },
   },
@@ -77,8 +77,8 @@ export const CHEERING_DIALOG_CONFIG = {
     },
     complete: {
       title: '뮤직비디오 시청 완료!',
-      description: ({ participantCount }) =>
-        `현재 ${participantCount}명의 VIP가\n뮤직비디오를 함께 조회 했어요.`,
+      description: ({ typeCompletedCount }) =>
+        `현재 ${typeCompletedCount}명의 VIP가\n뮤직비디오를 함께 조회 했어요.`,
       buttonLabel: '확인',
     },
   },
@@ -91,8 +91,8 @@ export const CHEERING_DIALOG_CONFIG = {
     },
     complete: {
       title: '투표권 사용 완료!',
-      description: ({ participantCount }) =>
-        `현재 ${participantCount}명의 VIP가\n투표권을 함께 모았어요.`,
+      description: ({ typeCompletedCount }) =>
+        `현재 ${typeCompletedCount}명의 VIP가\n투표권을 함께 모았어요.`,
       buttonLabel: '확인',
     },
   },
@@ -106,8 +106,8 @@ export const CHEERING_DIALOG_CONFIG = {
     },
     complete: {
       title: '오늘의 기사 좋아요 누르기 완료!',
-      description: ({ participantCount }) =>
-        `현재 ${participantCount}명의 VIP가\n기사에 좋아요를 함께 눌렀어요.`,
+      description: ({ typeCompletedCount }) =>
+        `현재 ${typeCompletedCount}명의 VIP가\n기사에 좋아요를 함께 눌렀어요.`,
       buttonLabel: '확인',
     },
   },
@@ -120,8 +120,8 @@ export const CHEERING_DIALOG_CONFIG = {
     },
     complete: {
       title: '해시태그 총공 완료!',
-      description: ({ participantCount }) =>
-        `현재 ${participantCount}명의 VIP가\nSNS에 해시태그 언급을 했어요.`,
+      description: ({ typeCompletedCount }) =>
+        `현재 ${typeCompletedCount}명의 VIP가\nSNS에 해시태그 언급을 했어요.`,
       buttonLabel: '확인',
     },
   },
@@ -134,8 +134,8 @@ export const CHEERING_DIALOG_CONFIG = {
     },
     complete: {
       title: '멜론 K차트 응원 완료!',
-      description: ({ participantCount }) =>
-        `현재 ${participantCount}명의 VIP가\n멜론 K차트 응원에 참여했어요.`,
+      description: ({ typeCompletedCount }) =>
+        `현재 ${typeCompletedCount}명의 VIP가\n멜론 K차트 응원에 참여했어요.`,
       buttonLabel: '확인',
     },
   },
@@ -148,8 +148,8 @@ export const CHEERING_DIALOG_CONFIG = {
     },
     complete: {
       title: '라디오 응원 완료!',
-      description: ({ participantCount }) =>
-        `현재 ${participantCount}명의 VIP가\n라디오 응원에 참여했어요.`,
+      description: ({ typeCompletedCount }) =>
+        `현재 ${typeCompletedCount}명의 VIP가\n라디오 응원에 참여했어요.`,
       buttonLabel: '확인',
     },
   },

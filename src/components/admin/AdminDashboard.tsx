@@ -17,7 +17,7 @@ type AdminAction = {
 const ADMIN_ACTIONS: Record<AdminType, AdminAction[]> = {
   music: [
     { label: '총공 등록', href: '/musicadmin/details' },
-    { label: '원클릭 등록' },
+    { label: '원클릭 등록', href: '/musicadmin/streaming-links' },
     {
       label: '스밍리스트 이미지 등록',
       href: '/musicadmin/streaming-image',

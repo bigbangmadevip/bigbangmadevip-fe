@@ -5,6 +5,10 @@ import type {
   AdminVoteDetail,
   AdminVoteDetailPayload,
 } from '@/types/admin-detail';
+import type {
+  MusicStreamingOsGroup,
+  MusicStreamingPlatform,
+} from '@/types/music';
 
 type ApiResponse<T> = {
   data: T;
@@ -40,6 +44,26 @@ export async function createAdminMusicStreamingImage(payload: {
     '/api/v1/admin/music/streaming-images',
     payload,
   );
+  return response.data.data;
+}
+
+export async function getAdminMusicStreamingLinks() {
+  const response = await api.get<ApiResponse<MusicStreamingPlatform[]>>(
+    '/api/v1/admin/music/streaming-links',
+  );
+
+  return response.data.data;
+}
+
+export async function updateAdminMusicStreamingLinks(
+  platformId: number,
+  payload: { osGroups: MusicStreamingOsGroup[] },
+) {
+  const response = await api.put<ApiResponse<MusicStreamingPlatform>>(
+    `/api/v1/admin/music/streaming-links/platforms/${platformId}`,
+    payload,
+  );
+
   return response.data.data;
 }
 

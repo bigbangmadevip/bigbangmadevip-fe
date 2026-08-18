@@ -66,6 +66,9 @@ function formatRemainingTime(eventEndAt: string, now: number | null) {
 export default function HomeContainer({ initialData }: HomeContainerProps) {
   const [now, setNow] = useState<number | null>(null);
   const [dialogStep, setDialogStep] = useState<DialogStep | null>(null);
+  const [typeCompletedCount, setTypeCompletedCount] = useState<number | null>(
+    null,
+  );
 
   const [selectedCheeringId, setSelectedCheeringId] = useState<string | null>(
     null,
@@ -114,11 +117,12 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
   const dialogContext = selectedCheering
     ? {
         item: selectedCheering,
-        participantCount: initialData.participantCount,
+        typeCompletedCount: typeCompletedCount ?? 0,
       }
     : null;
 
   const handleOpenParticipateDialog = (cheeringId: string) => {
+    setTypeCompletedCount(null);
     setSelectedCheeringId(cheeringId);
     setDialogStep('CONFIRM');
   };
@@ -126,13 +130,17 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
   const handleCloseDialog = () => {
     setDialogStep(null);
     setSelectedCheeringId(null);
+    setTypeCompletedCount(null);
   };
 
   const handleParticipate = () => {
     if (!selectedCheeringId || participateCheeringMutation.isPending) return;
 
     participateCheeringMutation.mutate(selectedCheeringId, {
-      onSuccess: () => setDialogStep('COMPLETE'),
+      onSuccess: ({ typeCompletedCount: completedCount }) => {
+        setTypeCompletedCount(completedCount);
+        setDialogStep('COMPLETE');
+      },
     });
   };
 

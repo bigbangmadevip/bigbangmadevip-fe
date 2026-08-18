@@ -6,64 +6,6 @@ const PRE_VOTE_DESCRIPTION = '사전투표 점수가 합산되어 차트에 반�
 
 export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
   {
-    id: 'the-show',
-    title: '더 쇼',
-    channel: 'SBS Life',
-    broadcastTime: '화요일 18:00',
-    iconSrc: '/icon/vote/musicshow/theshow.svg',
-    description: COMBINED_DESCRIPTION,
-    summaries: [
-      {
-        label: '사전 투표',
-        time: '매주 금요일 20:00 ~ 월요일 14:59',
-        tone: 'advance',
-      },
-      { label: '생방송 투표', time: '매주 화요일 18:05 ~ 19:00', tone: 'live' },
-    ],
-    details: [
-      {
-        label: '사전 투표',
-        time: '매주 금요일 20:00 ~ 월요일 14:59',
-        tone: 'advance',
-        rows: [
-          { label: '투표 플랫폼', value: '빅크 BIGC' },
-          {
-            label: '투표 방법',
-            value: '사전 투표 → 빅뱅 선택 → GEM 갯수 입력 → 투표',
-          },
-          { label: '필요 재화', value: '1표 = 20 ROYAL GEM / 400 FREE GEM' },
-          { label: '가능 횟수', value: '무제한 투표' },
-          {
-            label: '유의 사항',
-            value: '1회 투표 당 GEM 각각 최대 100만 개 사용 가능',
-          },
-        ],
-      },
-      {
-        label: '생방송 투표',
-        time: '매주 화요일 18:05 ~ 19:00',
-        tone: 'live',
-        rows: [
-          { label: '투표 플랫폼', value: '빅크 BIGC' },
-          {
-            label: '투표 방법',
-            value: '투표 → 빅뱅 선택 → GEM 갯수 입력 → 투표',
-          },
-          { label: '필요 재화', value: '1표 = 200 ROYAL GEM / 4000 FREE GEM' },
-          { label: '유의 사항', value: '생방송 중에만 참여 가능' },
-        ],
-      },
-    ],
-    guides: [
-      {
-        id: 'bigc',
-        title: '빅크 투표 가이드',
-        iconSrc: '/icon/vote/bigc.svg',
-        href: '/vote/guide/theshow#vote-guide-bigc',
-      },
-    ],
-  },
-  {
     id: 'show-champion',
     title: '쇼! 챔피언',
     channel: 'MBC Every1',
@@ -452,6 +394,64 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
         title: '하이어 투표 가이드',
         iconSrc: '/icon/vote/voteplan/higher.svg',
         href: '/vote/guide/inkigayo#vote-guide-higher',
+      },
+    ],
+  },
+  {
+    id: 'the-show',
+    title: '더 쇼',
+    channel: 'SBS Life',
+    broadcastTime: '화요일 18:00',
+    iconSrc: '/icon/vote/musicshow/theshow.svg',
+    description: COMBINED_DESCRIPTION,
+    summaries: [
+      {
+        label: '사전 투표',
+        time: '매주 금요일 17:00 ~ 월요일 10:00',
+        tone: 'advance',
+      },
+      { label: '생방송 투표', time: '매주 화요일 18:05 ~ 19:00', tone: 'live' },
+    ],
+    details: [
+      {
+        label: '사전 투표',
+        time: '매주 금요일 20:00 ~ 월요일 14:59',
+        tone: 'advance',
+        rows: [
+          { label: '투표 플랫폼', value: '빅크 BIGC' },
+          {
+            label: '투표 방법',
+            value: '사전 투표 → 빅뱅 선택 → GEM 갯수 입력 → 투표',
+          },
+          { label: '필요 재화', value: '1표 = 20 ROYAL GEM / 400 FREE GEM' },
+          { label: '가능 횟수', value: '무제한 투표' },
+          {
+            label: '유의 사항',
+            value: '1회 투표 당 GEM 각각 최대 100만 개 사용 가능',
+          },
+        ],
+      },
+      {
+        label: '생방송 투표',
+        time: '매주 화요일 18:05 ~ 19:00',
+        tone: 'live',
+        rows: [
+          { label: '투표 플랫폼', value: '빅크 BIGC' },
+          {
+            label: '투표 방법',
+            value: '투표 → 빅뱅 선택 → GEM 갯수 입력 → 투표',
+          },
+          { label: '필요 재화', value: '1표 = 200 ROYAL GEM / 4000 FREE GEM' },
+          { label: '유의 사항', value: '생방송 중에만 참여 가능' },
+        ],
+      },
+    ],
+    guides: [
+      {
+        id: 'bigc',
+        title: '빅크 투표 가이드',
+        iconSrc: '/icon/vote/bigc.svg',
+        href: '/vote/guide/theshow#vote-guide-bigc',
       },
     ],
   },

@@ -78,6 +78,73 @@ function combineDateAndTime(
   return date && time ? `${date}T${time}:00` : null;
 }
 
+function Time24Field({
+  name,
+  defaultValue,
+  required = false,
+}: {
+  name: string;
+  defaultValue?: string;
+  required?: boolean;
+}) {
+  const [hour, setHour] = useState(defaultValue?.slice(0, 2) ?? '');
+  const [minute, setMinute] = useState(defaultValue?.slice(3, 5) ?? '');
+  const timeValue = hour && minute ? `${hour}:${minute}` : '';
+
+  return (
+    <div className="grid grid-cols-2 gap-[8px]">
+      <input
+        type="text"
+        name={name}
+        value={timeValue}
+        required={required}
+        readOnly
+        tabIndex={-1}
+        aria-label="선택된 시간"
+        className="sr-only"
+      />
+      <label>
+        <span className="sr-only">시</span>
+        <select
+          value={hour}
+          onChange={(event) => setHour(event.target.value)}
+          className="h-[48px] w-full rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none focus:border-secondary-500"
+        >
+          <option value="" disabled>
+            시
+          </option>
+          {Array.from({ length: 24 }, (_, index) =>
+            String(index).padStart(2, '0'),
+          ).map((value) => (
+            <option key={value} value={value}>
+              {value}시
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
+        <span className="sr-only">분</span>
+        <select
+          value={minute}
+          onChange={(event) => setMinute(event.target.value)}
+          className="h-[48px] w-full rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none focus:border-secondary-500"
+        >
+          <option value="" disabled>
+            분
+          </option>
+          {Array.from({ length: 60 }, (_, index) =>
+            String(index).padStart(2, '0'),
+          ).map((value) => (
+            <option key={value} value={value}>
+              {value}분
+            </option>
+          ))}
+        </select>
+      </label>
+    </div>
+  );
+}
+
 function Field({
   label,
   name,
@@ -95,7 +162,8 @@ function Field({
 }) {
   return (
     <label className="block text-body-12 text-secondary-300">
-      {label}{required && <span className="ml-[3px] text-accent-red">*</span>}
+      {label}
+      {required && <span className="ml-[3px] text-accent-red">*</span>}
       <input
         name={name}
         type={type}
@@ -128,7 +196,11 @@ function TextAreaField({
       <textarea
         name={name}
         rows={4}
-        defaultValue={Array.isArray(defaultValue) ? defaultValue.join('\n') : defaultValue ?? ''}
+        defaultValue={
+          Array.isArray(defaultValue)
+            ? defaultValue.join('\n')
+            : (defaultValue ?? '')
+        }
         placeholder={placeholder}
         required={required}
         className={`${INPUT_CLASS} resize-y`}
@@ -143,7 +215,100 @@ const MUSIC_PLATFORMS = [
   { id: 3, label: '벅스' },
   { id: 4, label: '플로' },
   { id: 5, label: '바이브' },
+  { id: 6, label: '삼성뮤직' },
+  { id: 7, label: '스포티파이' },
+  { id: 8, label: '애플뮤직' },
+  { id: 9, label: '유튜브뮤직' },
 ];
+
+function MusicPlatformFields({
+  initialPlatformIds = [],
+}: {
+  initialPlatformIds?: number[];
+}) {
+  const [selectedIds, setSelectedIds] = useState<number[]>(initialPlatformIds);
+  const [pendingId, setPendingId] = useState('');
+
+  const addPlatform = () => {
+    const platformId = Number(pendingId);
+    if (!platformId || selectedIds.includes(platformId)) return;
+    setSelectedIds((current) => [...current, platformId]);
+    setPendingId('');
+  };
+
+  return (
+    <fieldset>
+      <legend className="text-body-12 text-secondary-300">
+        총공 플랫폼<span className="ml-[3px] text-accent-red">*</span>
+      </legend>
+      <input
+        type="text"
+        name="platformIds"
+        value={selectedIds.join(',')}
+        required
+        readOnly
+        tabIndex={-1}
+        aria-label="선택된 총공 플랫폼"
+        className="sr-only"
+      />
+      <select
+        value={pendingId}
+        onChange={(event) => setPendingId(event.target.value)}
+        className={INPUT_CLASS}
+      >
+        <option value="">총공 플랫폼을 선택해주세요</option>
+        {MUSIC_PLATFORMS.map((platform) => (
+          <option
+            key={platform.id}
+            value={platform.id}
+            disabled={selectedIds.includes(platform.id)}
+          >
+            {platform.label}
+          </option>
+        ))}
+      </select>
+      <button
+        type="button"
+        onClick={addPlatform}
+        disabled={!pendingId || selectedIds.length >= MUSIC_PLATFORMS.length}
+        className="mt-[8px] flex h-[48px] w-full items-center justify-center rounded-[10px] border border-dashed border-secondary-600 text-body-13 font-bold text-secondary-300 disabled:cursor-not-allowed disabled:text-secondary-700"
+      >
+        <span className="mr-[8px] text-[22px] font-normal">＋</span> 추가하기
+      </button>
+      {selectedIds.length > 0 && (
+        <ul className="mt-[8px] flex flex-wrap gap-[8px]">
+          {selectedIds.map((platformId) => {
+            const platform = MUSIC_PLATFORMS.find(
+              (item) => item.id === platformId,
+            );
+            if (!platform) return null;
+
+            return (
+              <li
+                key={platform.id}
+                className="flex items-center gap-[8px] rounded-full bg-secondary-800 py-[8px] pr-[10px] pl-[12px] text-body-12 text-secondary-100"
+              >
+                {platform.label}
+                <button
+                  type="button"
+                  aria-label={`${platform.label} 삭제`}
+                  onClick={() =>
+                    setSelectedIds((current) =>
+                      current.filter((id) => id !== platform.id),
+                    )
+                  }
+                  className="text-body-13 text-secondary-400"
+                >
+                  ×
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </fieldset>
+  );
+}
 
 function SelectField({
   label,
@@ -223,7 +388,7 @@ function DetailImageUpload({
               return;
             }
             setError('');
-              onFilesChange(selected);
+            onFilesChange(selected);
             event.target.value = '';
           }}
         />
@@ -258,7 +423,9 @@ function DetailImageUpload({
           기존 등록 이미지 {existingUrls.length}장
         </p>
       )}
-      {error && <p className="mt-[6px] text-body-11 text-accent-red">{error}</p>}
+      {error && (
+        <p className="mt-[6px] text-body-11 text-accent-red">{error}</p>
+      )}
       <textarea
         name="imageUrls"
         defaultValue={existingUrls.join('\n')}
@@ -324,7 +491,7 @@ function ReservationSetting({ scheduledAt }: { scheduledAt?: string | null }) {
           <legend className="text-body-12 text-secondary-300">
             예약 시간<span className="ml-[3px] text-accent-red">*</span>
           </legend>
-          <div className="mt-[7px] grid grid-cols-[minmax(0,1fr)_120px] gap-[8px]">
+          <div className="mt-[7px] grid grid-cols-[minmax(0,1fr)_168px] gap-[8px]">
             <label>
               <span className="sr-only">예약 날짜</span>
               <input
@@ -335,17 +502,11 @@ function ReservationSetting({ scheduledAt }: { scheduledAt?: string | null }) {
                 className="h-[48px] w-full min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none focus:border-secondary-500 [color-scheme:dark]"
               />
             </label>
-            <label>
-              <span className="sr-only">예약 시각</span>
-              <input
-                name="scheduledTime"
-                type="time"
-                required
-                step="60"
-                defaultValue={scheduledAt?.slice(11, 16) ?? ''}
-                className="h-[48px] w-full min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none focus:border-secondary-500 [color-scheme:dark]"
-              />
-            </label>
+            <Time24Field
+              name="scheduledTime"
+              required
+              defaultValue={scheduledAt?.slice(11, 16)}
+            />
           </div>
         </fieldset>
       )}
@@ -355,10 +516,12 @@ function ReservationSetting({ scheduledAt }: { scheduledAt?: string | null }) {
 
 function ChecklistFields({ initialItems }: { initialItems: string[] }) {
   const [items, setItems] = useState(() =>
-    (initialItems.length > 0 ? initialItems : ['']).slice(0, 5).map((value, index) => ({
-      id: index + 1,
-      value,
-    })),
+    (initialItems.length > 0 ? initialItems : [''])
+      .slice(0, 5)
+      .map((value, index) => ({
+        id: index + 1,
+        value,
+      })),
   );
 
   return (
@@ -476,9 +639,7 @@ function VoteBaseFields({ initial }: { initial?: AdminVoteDetail }) {
 
   const platformOptions =
     category === 'MUSIC_SHOW' && detailType
-      ? VOTE_PLATFORMS.filter(
-          (platform) => platform.musicShow === detailType,
-        )
+      ? VOTE_PLATFORMS.filter((platform) => platform.musicShow === detailType)
       : VOTE_PLATFORMS;
 
   const selectedMusicShow = VOTE_MUSIC_SHOWS.find(
@@ -500,7 +661,9 @@ function VoteBaseFields({ initial }: { initial?: AdminVoteDetail }) {
           }}
           className={INPUT_CLASS}
         >
-          <option value="" disabled>선택해주세요</option>
+          <option value="" disabled>
+            선택해주세요
+          </option>
           <option value="MUSIC_SHOW">음악방송</option>
           <option value="AWARDS">시상식</option>
           <option value="ANNIVERSARY">기념일</option>
@@ -520,9 +683,13 @@ function VoteBaseFields({ initial }: { initial?: AdminVoteDetail }) {
           }}
           className={INPUT_CLASS}
         >
-          <option value="" disabled>선택해주세요</option>
+          <option value="" disabled>
+            선택해주세요
+          </option>
           {detailOptions.map((option) => (
-            <option key={option.value} value={option.value}>{option.label}</option>
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
           ))}
         </select>
       </label>
@@ -542,7 +709,9 @@ function VoteBaseFields({ initial }: { initial?: AdminVoteDetail }) {
           onChange={(event) => setPlatformId(event.target.value)}
           className={INPUT_CLASS}
         >
-          <option value="" disabled>선택해주세요</option>
+          <option value="" disabled>
+            선택해주세요
+          </option>
           {platformOptions.map((platform) => (
             <option key={platform.id} value={platform.id}>
               {platform.label}
@@ -561,7 +730,7 @@ function VotePeriodFields({ initial }: { initial?: AdminVoteDetail }) {
         총공 기간<span className="ml-[3px] text-accent-red">*</span>
       </legend>
       <div className="mt-[7px] flex flex-col gap-[8px]">
-        <label className="grid grid-cols-[minmax(0,1fr)_120px] gap-[8px]">
+        <div className="grid grid-cols-[minmax(0,1fr)_168px] gap-[8px]">
           <span className="sr-only">총공 시작 날짜와 시간</span>
           <input
             name="eventStartDate"
@@ -570,16 +739,13 @@ function VotePeriodFields({ initial }: { initial?: AdminVoteDetail }) {
             defaultValue={initial?.eventStartAt?.slice(0, 10) ?? ''}
             className="h-[48px] min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none [color-scheme:dark]"
           />
-          <input
+          <Time24Field
             name="eventStartTime"
-            type="time"
             required
-            step="60"
-            defaultValue={initial?.eventStartAt?.slice(11, 16) ?? ''}
-            className="h-[48px] min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none [color-scheme:dark]"
+            defaultValue={initial?.eventStartAt?.slice(11, 16)}
           />
-        </label>
-        <label className="grid grid-cols-[minmax(0,1fr)_120px] gap-[8px]">
+        </div>
+        <div className="grid grid-cols-[minmax(0,1fr)_168px] gap-[8px]">
           <span className="sr-only">총공 마감 날짜와 시간</span>
           <input
             name="eventEndDate"
@@ -588,15 +754,12 @@ function VotePeriodFields({ initial }: { initial?: AdminVoteDetail }) {
             defaultValue={initial?.eventEndAt?.slice(0, 10) ?? ''}
             className="h-[48px] min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none [color-scheme:dark]"
           />
-          <input
+          <Time24Field
             name="eventEndTime"
-            type="time"
             required
-            step="60"
-            defaultValue={initial?.eventEndAt?.slice(11, 16) ?? ''}
-            className="h-[48px] min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none [color-scheme:dark]"
+            defaultValue={initial?.eventEndAt?.slice(11, 16)}
           />
-        </label>
+        </div>
       </div>
     </fieldset>
   );
@@ -627,14 +790,16 @@ function PublishSetting({ defaultActive = true }: { defaultActive?: boolean }) {
         ))}
       </div>
       <p className="mt-[8px] text-body-11 leading-[1.5] text-secondary-500">
-        공개 시 사용자에게 즉시 노출되며, 비공개 시 관리자만 확인할 수
-        있습니다.
+        공개 시 사용자에게 즉시 노출되며, 비공개 시 관리자만 확인할 수 있습니다.
       </p>
     </section>
   );
 }
 
-export default function AdminDetailForm({ adminType, detailId }: AdminDetailFormProps) {
+export default function AdminDetailForm({
+  adminType,
+  detailId,
+}: AdminDetailFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const formRef = useRef<HTMLFormElement>(null);
@@ -643,8 +808,14 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
   const [voteImageFiles, setVoteImageFiles] = useState<File[]>([]);
   const [isFormValid, setIsFormValid] = useState(false);
   const isEdit = Boolean(detailId);
-  const musicQuery = useAdminMusicDetailQuery(detailId ?? '', adminType === 'music' && isEdit);
-  const voteQuery = useAdminVoteDetailQuery(detailId ?? '', adminType === 'vote' && isEdit);
+  const musicQuery = useAdminMusicDetailQuery(
+    detailId ?? '',
+    adminType === 'music' && isEdit,
+  );
+  const voteQuery = useAdminVoteDetailQuery(
+    detailId ?? '',
+    adminType === 'vote' && isEdit,
+  );
   const detailQuery = adminType === 'music' ? musicQuery : voteQuery;
   const basePath = adminType === 'music' ? '/musicadmin' : '/voteadmin';
   const label = adminType === 'music' ? '음총' : '투총';
@@ -672,8 +843,7 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
         urgentContent: nullableString(formData.get('urgentContent')),
         todayExposed: formData.get('todayExposed') === 'on',
         active:
-          formData.get('active') === 'on' ||
-          formData.get('active') === 'true',
+          formData.get('active') === 'on' || formData.get('active') === 'true',
         scheduledAt: combineDateAndTime(
           formData.get('scheduledDate'),
           formData.get('scheduledTime'),
@@ -720,29 +890,51 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: adminType === 'music' ? ADMIN_DETAIL_QUERY_KEYS.music() : ADMIN_DETAIL_QUERY_KEYS.vote(),
+        queryKey:
+          adminType === 'music'
+            ? ADMIN_DETAIL_QUERY_KEYS.music()
+            : ADMIN_DETAIL_QUERY_KEYS.vote(),
       });
       router.replace(`${basePath}/details`);
     },
-    onError: () => setSubmitError('저장하지 못했어요. 입력값과 관리자 권한을 확인해주세요.'),
+    onError: () =>
+      setSubmitError('저장하지 못했어요. 입력값과 관리자 권한을 확인해주세요.'),
   });
 
-  if (isEdit && detailQuery.isPending) return <LoadingScreen label="상세 불러오는 중" />;
+  if (isEdit && detailQuery.isPending)
+    return <LoadingScreen label="상세 불러오는 중" />;
   if (isEdit && detailQuery.isError) {
-    return <main className="flex min-h-dvh items-center justify-center text-body-13 text-accent-red">상세를 불러오지 못했어요.</main>;
+    return (
+      <main className="flex min-h-dvh items-center justify-center text-body-13 text-accent-red">
+        상세를 불러오지 못했어요.
+      </main>
+    );
   }
 
   const initial = detailQuery.data as InitialDetail;
-  const musicInitial = adminType === 'music' ? (initial as AdminMusicDetail | undefined) : undefined;
-  const voteInitial = adminType === 'vote' ? (initial as AdminVoteDetail | undefined) : undefined;
+  const musicInitial =
+    adminType === 'music'
+      ? (initial as AdminMusicDetail | undefined)
+      : undefined;
+  const voteInitial =
+    adminType === 'vote' ? (initial as AdminVoteDetail | undefined) : undefined;
 
   return (
     <main className="min-h-[calc(100dvh-env(safe-area-inset-top))] px-5 pb-[calc(32px+env(safe-area-inset-bottom))]">
       <PageHeader
         title={`${label} 총공 ${isEdit ? '수정' : '등록'}`}
         leftAction={
-          <HeaderIconButton label="뒤로가기" align="start" onClick={() => router.back()}>
-            <Image src="/icon/line/arrow-left_white-28.svg" alt="" width={28} height={28} />
+          <HeaderIconButton
+            label="뒤로가기"
+            align="start"
+            onClick={() => router.back()}
+          >
+            <Image
+              src="/icon/line/arrow-left_white-28.svg"
+              alt=""
+              width={28}
+              height={28}
+            />
           </HeaderIconButton>
         }
       />
@@ -756,10 +948,13 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
         }}
         key={initial?.id ?? 'new'}
         className="mt-[20px] flex flex-col gap-[16px]"
-        onInput={(event) =>
-          setIsFormValid(event.currentTarget.checkValidity())
-        }
+        onInput={(event) => setIsFormValid(event.currentTarget.checkValidity())}
         onChange={() => {
+          queueMicrotask(() => {
+            setIsFormValid(formRef.current?.checkValidity() ?? false);
+          });
+        }}
+        onClick={() => {
           queueMicrotask(() => {
             setIsFormValid(formRef.current?.checkValidity() ?? false);
           });
@@ -783,15 +978,8 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
                 { value: 'ETC', label: '기타' },
               ]}
             />
-            <SelectField
-              label="총공 플랫폼"
-              name="platformIds"
-              required
-              defaultValue={musicInitial?.platformIds[0]}
-              options={MUSIC_PLATFORMS.map((platform) => ({
-                value: platform.id,
-                label: platform.label,
-              }))}
+            <MusicPlatformFields
+              initialPlatformIds={musicInitial?.platformIds}
             />
             <Field
               label="제목"
@@ -809,7 +997,7 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
               <legend className="text-body-12 text-secondary-300">
                 총공 시간<span className="ml-[3px] text-accent-red">*</span>
               </legend>
-              <div className="mt-[7px] grid grid-cols-[minmax(0,1fr)_120px] gap-[8px]">
+              <div className="mt-[7px] grid grid-cols-[minmax(0,1fr)_168px] gap-[8px]">
                 <label>
                   <span className="sr-only">총공 날짜</span>
                   <input
@@ -820,17 +1008,11 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
                     className="h-[48px] w-full min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none focus:border-secondary-500 [color-scheme:dark]"
                   />
                 </label>
-                <label>
-                  <span className="sr-only">총공 시각</span>
-                  <input
-                    name="eventTime"
-                    type="time"
-                    required
-                    step="60"
-                    defaultValue={musicInitial?.eventAt?.slice(11, 16) ?? ''}
-                    className="h-[48px] w-full min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none focus:border-secondary-500 [color-scheme:dark]"
-                  />
-                </label>
+                <Time24Field
+                  name="eventTime"
+                  required
+                  defaultValue={musicInitial?.eventAt?.slice(11, 16)}
+                />
               </div>
               <p className="mt-[6px] text-caption-10 text-secondary-500">
                 날짜와 시작 시간을 각각 선택해주세요.
@@ -915,7 +1097,11 @@ export default function AdminDetailForm({ adminType, detailId }: AdminDetailForm
 
         <PublishSetting defaultActive={initial?.active ?? true} />
 
-        {submitError && <p role="alert" className="text-body-12 text-accent-red">{submitError}</p>}
+        {submitError && (
+          <p role="alert" className="text-body-12 text-accent-red">
+            {submitError}
+          </p>
+        )}
         <button
           type="submit"
           disabled={mutation.isPending || !isFormValid}

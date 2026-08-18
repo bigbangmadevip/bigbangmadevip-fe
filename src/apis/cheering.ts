@@ -1,7 +1,20 @@
 import { api } from '@/lib/api';
 
-export async function participateCheering(cheeringId: string) {
-  const response = await api.post(`/api/v1/cheerings/${cheeringId}`);
+export type ParticipateCheeringResponse = {
+  typeCompletedCount: number;
+};
 
-  return response.data;
+type ParticipateCheeringApiResponse = {
+  data: ParticipateCheeringResponse;
+  success?: boolean;
+};
+
+export async function participateCheering(
+  cheeringId: string,
+): Promise<ParticipateCheeringResponse> {
+  const response = await api.post<ParticipateCheeringApiResponse>(
+    `/api/v1/cheerings/${cheeringId}`,
+  );
+
+  return response.data.data;
 }
