@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import votePng from '@/assets/voteplan.png';
 import Link from 'next/link';
 
 interface VotePlanContentBoxProps {
@@ -43,7 +42,7 @@ const VotePlanContentBox = ({
       </h3>
       <Image
         className="mx-auto"
-        src={votePng}
+        src={'/images/voteplan/voteplan.png'}
         alt="votePng"
         width={172}
         height={172}

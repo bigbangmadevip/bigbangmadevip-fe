@@ -170,7 +170,8 @@ export default function VoteGuideDetailContainer({
             src={guide.overviewImage}
             alt={`${guide.title} 전체 안내`}
             priority
-            unoptimized
+            width={400}
+            height={200}
             className="h-auto w-full rounded-[12px]"
           />
         )}
@@ -192,11 +193,12 @@ export default function VoteGuideDetailContainer({
                 <div className="flex flex-col gap-[12px]">
                   {section.images.map((image, index) => (
                     <Image
-                      key={image.src}
+                      key={`${image[0]}-${index}`}
                       src={image}
                       alt={`${section.label} ${index + 1}`}
                       loading="lazy"
-                      unoptimized
+                      width={400}
+                      height={1000}
                       className="h-auto w-full rounded-[12px]"
                     />
                   ))}

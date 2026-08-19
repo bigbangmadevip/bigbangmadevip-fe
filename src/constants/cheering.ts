@@ -1,33 +1,42 @@
-import hashtagOff from '@/assets/cheeringbadge/hashtag_off.png';
-import hashtagOn from '@/assets/cheeringbadge/hashtag_on.png';
-import melonKChartOff from '@/assets/cheeringbadge/melonkchart_off.png';
-import melonKChartOn from '@/assets/cheeringbadge/melonkchart_on.png';
-import radioOff from '@/assets/cheeringbadge/radio_off.png';
-import radioOn from '@/assets/cheeringbadge/radio_on.png';
-import reportOff from '@/assets/cheeringbadge/report_off.png';
-import reportOn from '@/assets/cheeringbadge/report_on.png';
-import streamingOff from '@/assets/cheeringbadge/streaming_off.png';
-import streamingOn from '@/assets/cheeringbadge/streaming_on.png';
-import voteCoinOff from '@/assets/cheeringbadge/votecoin_off.png';
-import voteCoinOn from '@/assets/cheeringbadge/votecoin_on.png';
-import youtubeOff from '@/assets/cheeringbadge/youtube_off.png';
-import youtubeOn from '@/assets/cheeringbadge/youtube_on.png';
 import type { CHEERING_CATEGORY } from '@/types/home';
 
-const CHEERING_BADGE_BY_CATEGORY = {
-  STREAMING: { off: streamingOff, on: streamingOn },
+type CHEERING_BADGE_OPTION = { on: string; off: string };
+
+const CHEERING_BADGE_BY_CATEGORY: Record<
+  CHEERING_CATEGORY,
+  CHEERING_BADGE_OPTION | null
+> = {
+  STREAMING: {
+    off: '/images/cheeringbadge/streaming_off.png',
+    on: '/images/cheeringbadge/streaming_on.png',
+  },
   DOWNLOAD: null,
   VOTE: null,
-  YOUTUBE: { off: youtubeOff, on: youtubeOn },
-  VOTECOIN: { off: voteCoinOff, on: voteCoinOn },
-  REPORT: { off: reportOff, on: reportOn },
-  HASHTAG: { off: hashtagOff, on: hashtagOn },
-  MELONKCHART: { off: melonKChartOff, on: melonKChartOn },
-  RADIO: { off: radioOff, on: radioOn },
-} satisfies Record<
-  CHEERING_CATEGORY,
-  { off: typeof streamingOff; on: typeof streamingOn } | null
->;
+  YOUTUBE: {
+    off: '/images/cheeringbadge/youtube_off.png',
+    on: '/images/cheeringbadge/youtube_on.png',
+  },
+  VOTECOIN: {
+    off: '/images/cheeringbadge/votecoin_off.png',
+    on: '/images/cheeringbadge/votecoin_on.png',
+  },
+  REPORT: {
+    off: '/images/cheeringbadge/report_off.png',
+    on: '/images/cheeringbadge/report_on.png',
+  },
+  HASHTAG: {
+    off: '/images/cheeringbadge/hashtag_off.png',
+    on: '/images/cheeringbadge/hashtag_on.png',
+  },
+  MELONKCHART: {
+    off: '/images/cheeringbadge/melonkchart_off.png',
+    on: '/images/cheeringbadge/melonkchart_on.png',
+  },
+  RADIO: {
+    off: '/images/cheeringbadge/radio_off.png',
+    on: '/images/cheeringbadge/radio_on.png',
+  },
+};
 
 export function getCheeringIcon(
   category: CHEERING_CATEGORY,

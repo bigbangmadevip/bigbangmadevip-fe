@@ -19,9 +19,13 @@ const STREAMING_NATIONAL_GUIDE_MOCK: TEMP_TYPE[] = [
 ];
 
 const STREMING_INTERNATIONAL_GUIDE_MOCK: TEMP_TYPE[] = [
-  // { id: '0', platform: 'spotify', link: '' },
-  // { id: '1', platform: 'youtubemusic', link: '' },
-  // { id: '2', platform: 'applemusic', link: '' },
+  { id: '0', platform: 'spotify', link: '/music/guide/streaming/spotify' },
+  {
+    id: '1',
+    platform: 'youtubemusic',
+    link: '/music/guide/streaming/youtubemusic',
+  },
+  // { id: '2', platform: 'applemusic', link: '/music/guide/streaming/applemusic' },
   // { id: '3', platform: 'linemusic', link: '' },
   // { id: '4', platform: 'stationhead', link: '' },
 ];
@@ -40,7 +44,7 @@ const MusicGuideStreaming = () => {
           />
         ))}
       </div>
-      {/* <SectionTitle>해외 음원 사이트</SectionTitle> */}
+      <SectionTitle>해외 음원 사이트</SectionTitle>
       <div className="flex flex-col gap-[8px] mb-[32px]">
         {STREMING_INTERNATIONAL_GUIDE_MOCK.map((item) => (
           <MusicGuideLinkButton

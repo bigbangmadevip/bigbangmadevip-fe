@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import voteCoinImage from '@/assets/voteplan/votecoin.png';
 import FloatingShareButton from '@/components/common/FloatingShareButton';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import { PageHeader } from '@/components/common/PageHeader';
@@ -71,10 +70,11 @@ export default function VoteCurrencyPlanDetail() {
       />
 
       <Image
-        src={voteCoinImage}
+        src={'/images/voteplan/votecoin.jpg'}
         alt="음악방송 재화 적립 가이드"
         priority
-        sizes="(max-width: 430px) 100vw, 390px"
+        width={1005}
+        height={1341}
         className="mt-[24px] h-auto w-full rounded-[16px]"
       />
 

@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import voteWeeklyImage from '@/assets/voteplan/voteweekly.png';
 import FloatingShareButton from '@/components/common/FloatingShareButton';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import { PageHeader } from '@/components/common/PageHeader';
@@ -36,10 +35,11 @@ export default function VoteWeeklyPlanDetail() {
       />
 
       <Image
-        src={voteWeeklyImage}
+        src={'/images/voteplan/voteweekly.jpg'}
         alt="VIP 주간 투표 일정"
         priority
-        sizes="(max-width: 430px) 100vw, 390px"
+        width={3240}
+        height={4320}
         className="mt-[24px] h-auto w-full rounded-[16px]"
       />
 

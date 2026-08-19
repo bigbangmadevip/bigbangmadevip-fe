@@ -1,31 +1,16 @@
-import bstage from '@/assets/voteguidethumbnail/bstage.png';
-import bugs from '@/assets/voteguidethumbnail/bugs.png';
-import idolchampMusicShow from '@/assets/voteguidethumbnail/idolchamp-musicshow.png';
-import inkigayoMusicShow from '@/assets/voteguidethumbnail/inga-musicshow.png';
-import mamaAwards from '@/assets/voteguidethumbnail/mama-awards.png';
-import mcountdownMusicShow from '@/assets/voteguidethumbnail/mcountdown-musicshow.png';
-import melonWeekly from '@/assets/voteguidethumbnail/melon-weekly.png';
-import mmaAwards from '@/assets/voteguidethumbnail/mma-awards.png';
-import musicbankMusicShow from '@/assets/voteguidethumbnail/musicbank-musicshow.png';
-import musiccoreMusicShow from '@/assets/voteguidethumbnail/musiccore-musicshow.png';
-import podoal from '@/assets/voteguidethumbnail/podoal.png';
-import showchampionMusicShow from '@/assets/voteguidethumbnail/showchampion-musicshow.png';
-import theshowMusicShow from '@/assets/voteguidethumbnail/theshow-musicshow.png';
-
 export const VOTE_GUIDE_THUMBNAIL = {
-  musiccore: musiccoreMusicShow,
-  musicbank: musicbankMusicShow,
-  inkigayo: inkigayoMusicShow,
-  showchampion: showchampionMusicShow,
-  idolchamp: idolchampMusicShow,
-  mcountdown: mcountdownMusicShow,
-  theshow: theshowMusicShow,
-  melonWeekly,
-  mama: mamaAwards,
-  mma: mmaAwards,
-  podoal,
-  bugs,
-  bstage,
+  musiccore: '/images/voteguidethumbnail/musiccore.png',
+  musicbank: '/images/voteguidethumbnail/musicbank.png',
+  inkigayo: '/images/voteguidethumbnail/inkigayo.png',
+  showchampion: '/images/voteguidethumbnail/showchampion.png',
+  mcountdown: '/images/voteguidethumbnail/mcountdown.png',
+  theshow: '/images/voteguidethumbnail/theshow.png',
+  melonWeekly: '/images/voteguidethumbnail/melonWeekly.png',
+  mama: '/images/voteguidethumbnail/mama.png',
+  mma: '/images/voteguidethumbnail/mma.png',
+  podoal: '/images/voteguidethumbnail/podoal.png',
+  bugs: '/images/voteguidethumbnail/bugs.png',
+  bstage: '/images/voteguidethumbnail/bstage.png',
 } as const;
 
 export type voteguideThumbnailCode = keyof typeof VOTE_GUIDE_THUMBNAIL;

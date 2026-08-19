@@ -1,17 +1,7 @@
 'use client';
 
-import type { StaticImageData } from 'next/image';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import bugsDownloadGuideImage from '../../../../../../../public/musicguide/download/bugs.png';
-import genieDownloadGuideImage from '../../../../../../../public/musicguide/download/genie.png';
-import kakaomusicDownloadGuideImage from '../../../../../../../public/musicguide/download/kakaomusic.png';
-import melonDownloadGuideImage from '../../../../../../../public/musicguide/download/melon.png';
-import bugsGuideImage from '@/assets/musicguide/bugs.png';
-import floGuideImage from '@/assets/musicguide/flo.png';
-import genieGuideImage from '@/assets/musicguide/genie.png';
-import melonGuideImage from '@/assets/musicguide/melon.png';
-import vibeGuideImage from '@/assets/musicguide/vibe.png';
 import CommonErrorScreen from '@/components/common/CommonErrorScreen';
 import FloatingShareButton from '@/components/common/FloatingShareButton';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
@@ -21,7 +11,7 @@ import { PLATFORM_LABEL } from '@/types/music';
 
 type StreamingGuidePlatform = Extract<
   Platform,
-  'melon' | 'genie' | 'bugs' | 'flo' | 'vibe'
+  'melon' | 'genie' | 'bugs' | 'flo' | 'vibe' | 'spotify' | 'youtubemusic'
 >;
 
 type DownloadGuidePlatform = Extract<
@@ -29,21 +19,72 @@ type DownloadGuidePlatform = Extract<
   'melon' | 'genie' | 'bugs' | 'kakaomusic'
 >;
 
-const DOWNLOAD_GUIDE_IMAGES: Record<DownloadGuidePlatform, StaticImageData> = {
-  melon: melonDownloadGuideImage,
-  genie: genieDownloadGuideImage,
-  bugs: bugsDownloadGuideImage,
-  kakaomusic: kakaomusicDownloadGuideImage,
+export type ImageSize = {
+  src: string;
+  width: number;
+  height: number;
 };
 
-const STREAMING_GUIDE_IMAGES: Record<StreamingGuidePlatform, StaticImageData> =
-  {
-    melon: melonGuideImage,
-    genie: genieGuideImage,
-    bugs: bugsGuideImage,
-    flo: floGuideImage,
-    vibe: vibeGuideImage,
-  };
+const DOWNLOAD_GUIDE_IMAGES: Record<DownloadGuidePlatform, ImageSize> = {
+  melon: {
+    src: '/images/musicguide/download/melon.jpg',
+    width: 2000,
+    height: 7880,
+  },
+  genie: {
+    src: '/images/musicguide/download/genie.jpg',
+    width: 2000,
+    height: 8402,
+  },
+  bugs: {
+    src: '/images/musicguide/download/bugs.jpg',
+    width: 2000,
+    height: 7348,
+  },
+  kakaomusic: {
+    src: '/images/musicguide/download/kakaomusic.jpg',
+    width: 2000,
+    height: 4374,
+  },
+};
+
+const STREAMING_GUIDE_IMAGES: Record<StreamingGuidePlatform, ImageSize> = {
+  melon: {
+    src: '/images/musicguide/streaming/melon.jpg',
+    width: 2000,
+    height: 9808,
+  },
+  genie: {
+    src: '/images/musicguide/streaming/genie.jpg',
+    width: 2000,
+    height: 7524,
+  },
+  bugs: {
+    src: '/images/musicguide/streaming/bugs.jpg',
+    width: 2000,
+    height: 8806,
+  },
+  flo: {
+    src: '/images/musicguide/streaming/flo.jpg',
+    width: 2000,
+    height: 9070,
+  },
+  vibe: {
+    src: '/images/musicguide/streaming/vibe.jpg',
+    width: 2000,
+    height: 10204,
+  },
+  spotify: {
+    src: '/images/musicguide/streaming/spotify.jpg',
+    width: 2000,
+    height: 7096,
+  },
+  youtubemusic: {
+    src: '/images/musicguide/streaming/youtubemusic.jpg',
+    width: 2000,
+    height: 11922,
+  },
+};
 
 function isStreamingGuidePlatform(
   value: string,
@@ -102,17 +143,22 @@ export default function GuideDetailPage() {
             src={STREAMING_GUIDE_IMAGES[guideId]}
             alt={title}
             priority
-            placeholder="blur"
-            sizes="(max-width: 430px) 100vw, 390px"
+            width={STREAMING_GUIDE_IMAGES[guideId].width}
+            height={STREAMING_GUIDE_IMAGES[guideId].height}
             className="h-auto w-full bg-secondary-950"
           />
         ) : (
           <Image
             src={DOWNLOAD_GUIDE_IMAGES[guideId as DownloadGuidePlatform]}
             alt={title}
-            sizes="(max-width: 430px) 100vw, 390px"
-            placeholder="blur"
-            className="block h-auto w-full"
+            priority
+            width={
+              DOWNLOAD_GUIDE_IMAGES[guideId as DownloadGuidePlatform].width
+            }
+            height={
+              DOWNLOAD_GUIDE_IMAGES[guideId as DownloadGuidePlatform].height
+            }
+            className="h-auto w-full bg-secondary-950"
           />
         )}
       </div>
