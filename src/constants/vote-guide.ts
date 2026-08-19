@@ -5,7 +5,7 @@ export const VOTE_GUIDE_THUMBNAIL = {
   showchampion: '/images/voteguidethumbnail/showchampion.png',
   mcountdown: '/images/voteguidethumbnail/mcountdown.png',
   theshow: '/images/voteguidethumbnail/theshow.png',
-  melonWeekly: '/images/voteguidethumbnail/melonWeekly.png',
+  melonWeekly: '/images/voteguidethumbnail/melonweekly.png',
   mama: '/images/voteguidethumbnail/mama.png',
   mma: '/images/voteguidethumbnail/mma.png',
   podoal: '/images/voteguidethumbnail/podoal.png',
