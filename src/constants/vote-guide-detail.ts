@@ -68,7 +68,7 @@ export const VOTE_GUIDE_DETAIL: Record<VoteGuideDetailId, VoteGuideDetail> = {
         id: 'linc',
         label: '링크 가이드',
         images: [
-          '/images/voteguide/linc-1.jpg',
+          '/images/voteguide/linc-1.jpeg',
           '/images/voteguide/linc-2.jpg',
         ],
       },

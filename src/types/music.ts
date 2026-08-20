@@ -90,7 +90,13 @@ export type MusicNoticeListItem = {
   createdAt: string;
 };
 
+export type MusicNoticeLinkItem = {
+  label: string;
+  url: string;
+};
+
 export type MusicNoticeDetail = MusicNoticeListItem & {
   content: string;
   imageUrls: string[];
+  links: MusicNoticeLinkItem[];
 };
