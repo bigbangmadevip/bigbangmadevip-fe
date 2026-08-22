@@ -16,14 +16,18 @@ type AdminAction = {
 
 const ADMIN_ACTIONS: Record<AdminType, AdminAction[]> = {
   music: [
-    { label: '총공 등록', href: '/musicadmin/details' },
+    { label: '총공 일정 등록', href: '/musicadmin/details' },
+    { label: '음총 공지 등록', href: '/musicadmin/notices' },
     { label: '원클릭 등록', href: '/musicadmin/streaming-links' },
     {
       label: '스밍리스트 이미지 등록',
       href: '/musicadmin/streaming-image',
     },
   ],
-  vote: [{ label: '총공 등록', href: '/voteadmin/details' }],
+  vote: [
+    { label: '총공 일정 등록', href: '/voteadmin/details' },
+    { label: '투총 공지 등록', href: '/voteadmin/notices' },
+  ],
 };
 
 export default function AdminDashboard({ adminType }: AdminDashboardProps) {
