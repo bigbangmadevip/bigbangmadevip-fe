@@ -14,6 +14,15 @@ const nextConfig: NextConfig = {
     },
   },
   webpack(config) {
+    const svgAssetRule = config.module.rules.find(
+      (rule: { test?: RegExp }) =>
+        rule && typeof rule === 'object' && rule.test?.test?.('.svg'),
+    );
+
+    if (svgAssetRule && typeof svgAssetRule === 'object') {
+      svgAssetRule.exclude = /\.svg$/i;
+    }
+
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,

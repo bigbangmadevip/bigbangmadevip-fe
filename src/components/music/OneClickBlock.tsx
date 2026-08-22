@@ -25,11 +25,42 @@ const PLATFORM_ICON_KEYS: Partial<Record<string, Platform>> = {
   applemusic: 'applemusic',
   애플뮤직: 'applemusic',
   youtubemusic: 'youtubemusic',
-  '유튜브 뮤직': 'youtubemusic',
+  유튜브뮤직: 'youtubemusic',
+};
+
+const PLATFORM_ICONS: Partial<Record<Platform, string>> = {
+  melon: '/icon/music/oneclicklogo/melon-logo.png',
+  genie: '/icon/music/oneclicklogo/genie-logo.png',
+  bugs: '/icon/music/oneclicklogo/bugs-logo.png',
+  flo: '/icon/music/oneclicklogo/flo-logo.png',
+  vibe: '/icon/music/oneclicklogo/vibe-logo.png',
+  samsungmusic: '/icon/music/oneclicklogo/samsungmusic-logo.png',
+  spotify: '/icon/music/oneclicklogo/spotify-logo.png',
+  applemusic: '/icon/music/oneclicklogo/applemusic-logo.png',
+  youtubemusic: '/icon/music/oneclicklogo/youtubemusic-logo.png',
+};
+
+const PLATFORM_ICONS_BY_ID: Record<number, string> = {
+  1: PLATFORM_ICONS.melon!,
+  2: PLATFORM_ICONS.genie!,
+  3: PLATFORM_ICONS.bugs!,
+  4: PLATFORM_ICONS.flo!,
+  5: PLATFORM_ICONS.vibe!,
+  6: PLATFORM_ICONS.samsungmusic!,
+  7: PLATFORM_ICONS.spotify!,
+  8: PLATFORM_ICONS.applemusic!,
+  9: PLATFORM_ICONS.youtubemusic!,
 };
 
 const OneClickBlock = ({ platform, onClick }: OneClickBlockProps) => {
-  const iconKey = PLATFORM_ICON_KEYS[platform.name.toLowerCase()];
+  const normalizedPlatformName = platform.name
+    .trim()
+    .toLowerCase()
+    .replace(/[\s_-]/g, '');
+  const iconKey = PLATFORM_ICON_KEYS[normalizedPlatformName];
+  const platformIconSrc =
+    PLATFORM_ICONS_BY_ID[platform.platformId] ??
+    (iconKey ? PLATFORM_ICONS[iconKey] : undefined);
   const platformLabel = getPlatformKoreanLabel(platform.name);
 
   return (
@@ -38,7 +69,15 @@ const OneClickBlock = ({ platform, onClick }: OneClickBlockProps) => {
       onClick={onClick}
       className="flex min-h-[88px] flex-col items-center justify-center gap-[2px] rounded-[16px] bg-secondary-900"
     >
-      {platform.iconUrl ? (
+      {platformIconSrc ? (
+        <Image
+          src={platformIconSrc}
+          alt=""
+          width={40}
+          height={40}
+          className="h-[40px] w-[40px] object-contain"
+        />
+      ) : platform.iconUrl ? (
         <span
           role="img"
           aria-label={`${platformLabel} 아이콘`}
@@ -46,17 +85,7 @@ const OneClickBlock = ({ platform, onClick }: OneClickBlockProps) => {
           style={{ backgroundImage: `url(${platform.iconUrl})` }}
         />
       ) : (
-        <Image
-          src={
-            iconKey
-              ? `/icon/music/${iconKey}-logo.svg`
-              : '/icon/guide/musicwave-filled.svg'
-          }
-          alt=""
-          width={40}
-          height={40}
-          aria-hidden="true"
-        />
+        <span className="h-[40px] w-[40px] rounded-full bg-secondary-800" />
       )}
       <span className="text-body-13 text-secondary-100">{platformLabel}</span>
     </button>

@@ -1,13 +1,5 @@
 export type AdminDetailBase = {
   id: number;
-  title: string;
-  category: string;
-  menuUrgent: boolean;
-  urgentContent: string | null;
-  todayExposed: boolean;
-  active: boolean;
-  scheduledAt: string | null;
-  sortOrder: number;
   createdAt: string;
   updatedAt: string;
 };
@@ -17,16 +9,13 @@ export type AdminMusicDetailPayload = {
   title: string;
   songName: string | null;
   platformIds: number[];
-  platformUrl: string | null;
-  eventAt: string | null;
-  description: string | null;
+  eventStartAt: string | null;
+  eventEndAt: string | null;
   checklist: string[];
   imageUrls: string[];
   guideIds: number[];
-  cheeringItemId: number | null;
   menuUrgent: boolean;
   urgentContent: string | null;
-  todayExposed: boolean;
   active: boolean;
   scheduledAt: string | null;
   sortOrder: number;
@@ -47,10 +36,8 @@ export type AdminVoteDetailPayload = {
   imageUrls: string[];
   guideIds: number[];
   ctaButtonLabel: string | null;
-  cheeringItemId: number | null;
   menuUrgent: boolean;
   urgentContent: string | null;
-  todayExposed: boolean;
   active: boolean;
   scheduledAt: string | null;
   pushEnabled: boolean;
@@ -61,4 +48,3 @@ export type AdminVoteDetailPayload = {
 };
 
 export type AdminVoteDetail = AdminDetailBase & AdminVoteDetailPayload;
-

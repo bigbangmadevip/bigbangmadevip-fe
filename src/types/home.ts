@@ -13,22 +13,22 @@ export type CheeringCategory =
 
 export type CHEERING_CATEGORY = CheeringCategory;
 
-type UrgentDetailBase = {
+export type UrgentCategory =
+  | 'STREAMING'
+  | 'DOWNLOAD'
+  | 'MUSICSHOW'
+  | 'AWARDS'
+  | 'ANNIVERSARY'
+  | 'ETC';
+
+export type UrgentDetail = {
+  menuType: 'MUSIC' | 'VOTE';
   detailId: number;
-  category: CheeringCategory;
+  category: UrgentCategory;
   title: string;
   platformNames: string[];
+  eventEndAt: string | null;
 };
-
-export type UrgentDetail =
-  | (UrgentDetailBase & {
-      menuType: 'MUSIC';
-      eventEndAt: null;
-    })
-  | (UrgentDetailBase & {
-      menuType: 'VOTE';
-      eventEndAt: string;
-    });
 
 export type TodaySchedule = {
   menuType: MenuType;
@@ -50,7 +50,7 @@ export type HomeResponse = {
   participantCount: number;
   totalCheeringCount: number;
   completedCheeringCount: number;
-  urgentDetail: UrgentDetail | null;
+  urgentDetails: UrgentDetail[] | null;
   todaySchedule: TodaySchedule[];
   cheeringItems: CheeringItem[];
 };

@@ -26,6 +26,7 @@
     "zustand": "latest"
   },
   "devDependencies": {
+    "@svgr/cli": "^8.1.0",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

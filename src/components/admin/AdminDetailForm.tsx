@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   createAdminMusicDetail,
   createAdminVoteDetail,
@@ -11,6 +11,7 @@ import {
   updateAdminMusicDetail,
   updateAdminVoteDetail,
 } from '@/apis/admin-detail';
+import { AppDialog } from '@/components/common/AppDialog';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import LoadingScreen from '@/components/common/LoadingScreen';
 import { PageHeader } from '@/components/common/PageHeader';
@@ -32,6 +33,10 @@ type AdminDetailFormProps = {
 };
 
 type InitialDetail = AdminMusicDetail | AdminVoteDetail | undefined;
+
+type ImageItem =
+  | { id: string; kind: 'existing'; url: string }
+  | { id: string; kind: 'new'; file: File; previewUrl: string };
 
 const INPUT_CLASS =
   'mt-[7px] w-full rounded-[10px] border border-secondary-800 bg-secondary-900 px-[13px] py-[12px] text-body-13 text-secondary-1 outline-none placeholder:text-secondary-600 focus:border-secondary-500';
@@ -145,6 +150,45 @@ function Time24Field({
   );
 }
 
+const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
+
+function getWeekdayLabel(dateValue: string) {
+  if (!dateValue) return '';
+  const date = new Date(`${dateValue}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return '';
+  return `(${WEEKDAY_LABELS[date.getDay()]})`;
+}
+
+function DateField({
+  name,
+  defaultValue,
+  required = false,
+}: {
+  name: string;
+  defaultValue?: string;
+  required?: boolean;
+}) {
+  const [value, setValue] = useState(defaultValue ?? '');
+
+  return (
+    <div className="flex min-w-0 items-center gap-[8px]">
+      <input
+        name={name}
+        type="date"
+        required={required}
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+        className="h-[48px] w-full min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none focus:border-secondary-500 [color-scheme:dark]"
+      />
+      {getWeekdayLabel(value) && (
+        <span className="shrink-0 text-body-12 text-secondary-400">
+          {getWeekdayLabel(value)}
+        </span>
+      )}
+    </div>
+  );
+}
+
 function Field({
   label,
   name,
@@ -176,54 +220,96 @@ function Field({
   );
 }
 
-function TextAreaField({
+function ToggleSwitch({
   label,
   name,
-  defaultValue,
-  placeholder,
-  required = false,
+  checked,
+  onChange,
 }: {
   label: string;
-  name: string;
-  defaultValue?: string | string[] | null;
-  placeholder?: string;
-  required?: boolean;
+  name?: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
 }) {
   return (
-    <label className="block text-body-12 text-secondary-300">
+    <label className="flex items-center justify-between rounded-[10px] border border-secondary-800 bg-secondary-900 px-[13px] py-[12px] text-body-13 text-secondary-100">
       {label}
-      {required && <span className="ml-[3px] text-accent-red">*</span>}
-      <textarea
-        name={name}
-        rows={4}
-        defaultValue={
-          Array.isArray(defaultValue)
-            ? defaultValue.join('\n')
-            : (defaultValue ?? '')
-        }
-        placeholder={placeholder}
-        required={required}
-        className={`${INPUT_CLASS} resize-y`}
-      />
+      <span className="relative inline-flex h-[24px] w-[42px] shrink-0">
+        <input
+          name={name}
+          type="checkbox"
+          checked={checked}
+          onChange={(event) => onChange(event.target.checked)}
+          className="peer sr-only"
+        />
+        <span className="pointer-events-none absolute inset-0 rounded-full bg-secondary-700 transition-colors peer-checked:bg-main" />
+        <span className="pointer-events-none absolute top-1/2 left-[3px] h-[18px] w-[18px] -translate-y-1/2 rounded-full bg-secondary-1 transition-transform peer-checked:translate-x-[18px]" />
+      </span>
     </label>
   );
 }
 
-const MUSIC_PLATFORMS = [
-  { id: 1, label: '멜론' },
-  { id: 2, label: '지니' },
-  { id: 3, label: '벅스' },
-  { id: 4, label: '플로' },
-  { id: 5, label: '바이브' },
-  { id: 6, label: '삼성뮤직' },
-  { id: 7, label: '스포티파이' },
-  { id: 8, label: '애플뮤직' },
-  { id: 9, label: '유튜브뮤직' },
+const MUSIC_PLATFORM_OPTIONS = {
+  melon: { id: 1, label: '멜론' },
+  genie: { id: 2, label: '지니' },
+  bugs: { id: 3, label: '벅스' },
+  flo: { id: 4, label: '플로' },
+  vibe: { id: 5, label: '바이브' },
+  samsungmusic: { id: 6, label: '삼성뮤직' },
+  spotify: { id: 7, label: '스포티파이' },
+  applemusic: { id: 8, label: '애플뮤직' },
+  youtubemusic: { id: 9, label: '유튜브뮤직' },
+  melonmv: { id: 21, label: '멜론뮤비' },
+  kakaomusic: { id: 22, label: '카카오뮤직' },
+};
+
+const MUSIC_CATEGORY_OPTIONS = [
+  { value: 'STREAMING', label: '스트리밍' },
+  { value: 'DOWNLOAD', label: '다운로드' },
+  { value: 'ETC', label: '기타' },
 ];
 
-function MusicPlatformFields({
+const MUSIC_PLATFORMS_BY_CATEGORY: Record<
+  string,
+  (typeof MUSIC_PLATFORM_OPTIONS)[keyof typeof MUSIC_PLATFORM_OPTIONS][]
+> = {
+  STREAMING: [
+    MUSIC_PLATFORM_OPTIONS.melon,
+    MUSIC_PLATFORM_OPTIONS.genie,
+    MUSIC_PLATFORM_OPTIONS.bugs,
+    MUSIC_PLATFORM_OPTIONS.flo,
+    MUSIC_PLATFORM_OPTIONS.vibe,
+    MUSIC_PLATFORM_OPTIONS.samsungmusic,
+    MUSIC_PLATFORM_OPTIONS.spotify,
+    MUSIC_PLATFORM_OPTIONS.applemusic,
+    MUSIC_PLATFORM_OPTIONS.youtubemusic,
+  ],
+  DOWNLOAD: [
+    MUSIC_PLATFORM_OPTIONS.melon,
+    MUSIC_PLATFORM_OPTIONS.genie,
+    MUSIC_PLATFORM_OPTIONS.bugs,
+    MUSIC_PLATFORM_OPTIONS.melonmv,
+    MUSIC_PLATFORM_OPTIONS.kakaomusic,
+  ],
+  ETC: [
+    MUSIC_PLATFORM_OPTIONS.melon,
+    MUSIC_PLATFORM_OPTIONS.genie,
+    MUSIC_PLATFORM_OPTIONS.bugs,
+    MUSIC_PLATFORM_OPTIONS.flo,
+    MUSIC_PLATFORM_OPTIONS.vibe,
+    MUSIC_PLATFORM_OPTIONS.samsungmusic,
+    MUSIC_PLATFORM_OPTIONS.spotify,
+    MUSIC_PLATFORM_OPTIONS.applemusic,
+    MUSIC_PLATFORM_OPTIONS.youtubemusic,
+    MUSIC_PLATFORM_OPTIONS.kakaomusic,
+  ],
+};
+
+function PlatformChipFields({
+  platforms,
   initialPlatformIds = [],
 }: {
+  platforms: readonly { id: number; label: string }[];
   initialPlatformIds?: number[];
 }) {
   const [selectedIds, setSelectedIds] = useState<number[]>(initialPlatformIds);
@@ -257,7 +343,7 @@ function MusicPlatformFields({
         className={INPUT_CLASS}
       >
         <option value="">총공 플랫폼을 선택해주세요</option>
-        {MUSIC_PLATFORMS.map((platform) => (
+        {platforms.map((platform) => (
           <option
             key={platform.id}
             value={platform.id}
@@ -270,7 +356,7 @@ function MusicPlatformFields({
       <button
         type="button"
         onClick={addPlatform}
-        disabled={!pendingId || selectedIds.length >= MUSIC_PLATFORMS.length}
+        disabled={!pendingId || selectedIds.length >= platforms.length}
         className="mt-[8px] flex h-[48px] w-full items-center justify-center rounded-[10px] border border-dashed border-secondary-600 text-body-13 font-bold text-secondary-300 disabled:cursor-not-allowed disabled:text-secondary-700"
       >
         <span className="mr-[8px] text-[22px] font-normal">＋</span> 추가하기
@@ -278,9 +364,7 @@ function MusicPlatformFields({
       {selectedIds.length > 0 && (
         <ul className="mt-[8px] flex flex-wrap gap-[8px]">
           {selectedIds.map((platformId) => {
-            const platform = MUSIC_PLATFORMS.find(
-              (item) => item.id === platformId,
-            );
+            const platform = platforms.find((item) => item.id === platformId);
             if (!platform) return null;
 
             return (
@@ -310,128 +394,155 @@ function MusicPlatformFields({
   );
 }
 
-function SelectField({
-  label,
-  name,
-  defaultValue,
-  options,
-  required = false,
+function MusicCategoryAndPlatformFields({
+  initialCategory,
+  initialPlatformIds = [],
 }: {
-  label: string;
-  name: string;
-  defaultValue?: string | number;
-  options: { value: string | number; label: string }[];
-  required?: boolean;
+  initialCategory?: string;
+  initialPlatformIds?: number[];
 }) {
+  const [category, setCategory] = useState(initialCategory ?? '');
+  const platforms = MUSIC_PLATFORMS_BY_CATEGORY[category] ?? [];
+
   return (
-    <label className="block text-body-12 text-secondary-300">
-      {label}
-      {required && <span className="ml-[3px] text-accent-red">*</span>}
-      <select
-        name={name}
-        required={required}
-        defaultValue={defaultValue ?? ''}
-        className={INPUT_CLASS}
-      >
-        <option value="" disabled>
-          선택해주세요
-        </option>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
+    <>
+      <label className="block text-body-12 text-secondary-300">
+        카테고리<span className="ml-[3px] text-accent-red">*</span>
+        <select
+          name="category"
+          required
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+          className={INPUT_CLASS}
+        >
+          <option value="" disabled>
+            선택해주세요
           </option>
-        ))}
-      </select>
-    </label>
+          {MUSIC_CATEGORY_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </label>
+      <PlatformChipFields
+        key={category}
+        platforms={platforms}
+        initialPlatformIds={
+          category === initialCategory ? initialPlatformIds : []
+        }
+      />
+    </>
   );
 }
 
 function DetailImageUpload({
-  existingUrls,
-  files,
-  onFilesChange,
+  initialUrls,
+  onItemsChange,
 }: {
-  existingUrls: string[];
-  files: File[];
-  onFilesChange: (files: File[]) => void;
+  initialUrls: string[];
+  onItemsChange: (items: ImageItem[]) => void;
 }) {
+  const [items, setItems] = useState<ImageItem[]>(() =>
+    initialUrls.map((url) => ({ id: url, kind: 'existing', url })),
+  );
   const [error, setError] = useState('');
+  const itemsRef = useRef(items);
+
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
+
+  useEffect(() => {
+    return () => {
+      itemsRef.current.forEach((item) => {
+        if (item.kind === 'new') URL.revokeObjectURL(item.previewUrl);
+      });
+    };
+  }, []);
+
+  const updateItems = (next: ImageItem[]) => {
+    setItems(next);
+    onItemsChange(next);
+  };
 
   return (
     <div>
       <div className="flex items-center justify-between">
-        <p className="text-body-12 text-secondary-300">이미지 첨부</p>
+        <p className="text-body-12 text-secondary-300">이미지 첨부 (선택)</p>
         <span className="text-caption-10 text-secondary-500">
-          {files.length} / 3
+          {items.length} / 3
         </span>
       </div>
-      <label className="mt-[7px] flex min-h-[92px] cursor-pointer items-center justify-center rounded-[10px] border border-dashed border-secondary-700 bg-secondary-900 text-body-13 font-bold text-secondary-200">
-        이미지 선택
-        <input
-          type="file"
-          accept="image/png,image/jpeg,image/webp,image/gif"
-          multiple
-          className="sr-only"
-          onChange={(event) => {
-            const selected = Array.from(event.target.files ?? []);
-            const oversized = selected.some(
-              (file) => file.size > 10 * 1024 * 1024,
-            );
-            if (oversized) {
-              setError('이미지는 한 장당 10MB 이하여야 해요.');
-              event.target.value = '';
-              return;
-            }
-            if (selected.length > 3) {
-              setError('이미지는 최대 3장까지 첨부할 수 있어요.');
-              event.target.value = '';
-              return;
-            }
-            setError('');
-            onFilesChange(selected);
-            event.target.value = '';
-          }}
-        />
-      </label>
-      {files.length > 0 && (
-        <ul className="mt-[8px] flex flex-col gap-[6px]">
-          {files.map((file, index) => (
-            <li
-              key={`${file.name}-${file.lastModified}`}
-              className="flex items-center justify-between gap-[8px] rounded-[8px] bg-secondary-900 px-[12px] py-[9px]"
+      <div className="mt-[7px] grid grid-cols-3 gap-[8px]">
+        {items.map((item) => (
+          <div
+            key={item.id}
+            className="relative aspect-square overflow-hidden rounded-[10px] bg-secondary-900"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={item.kind === 'existing' ? item.url : item.previewUrl}
+              alt=""
+              className="h-full w-full object-cover"
+            />
+            <button
+              type="button"
+              aria-label="이미지 삭제"
+              onClick={() => {
+                if (item.kind === 'new') URL.revokeObjectURL(item.previewUrl);
+                updateItems(
+                  items.filter((current) => current.id !== item.id),
+                );
+              }}
+              className="absolute top-[4px] right-[4px] flex h-[20px] w-[20px] items-center justify-center rounded-full bg-black/60 text-[12px] text-secondary-1"
             >
-              <span className="min-w-0 truncate text-body-12 text-secondary-200">
-                {file.name}
-              </span>
-              <button
-                type="button"
-                onClick={() =>
-                  onFilesChange(
-                    files.filter((_, fileIndex) => fileIndex !== index),
-                  )
+              ×
+            </button>
+          </div>
+        ))}
+        {items.length < 3 && (
+          <label className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-[4px] rounded-[10px] border border-dashed border-secondary-700 bg-secondary-900 text-secondary-400">
+            <span className="text-[22px] font-normal">＋</span>
+            <span className="text-caption-10">이미지 선택</span>
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp,image/gif"
+              multiple
+              className="sr-only"
+              onChange={(event) => {
+                const selected = Array.from(event.target.files ?? []);
+                const oversized = selected.some(
+                  (file) => file.size > 10 * 1024 * 1024,
+                );
+                if (oversized) {
+                  setError('이미지는 한 장당 10MB 이하여야 해요.');
+                  event.target.value = '';
+                  return;
                 }
-                className="shrink-0 text-body-11 text-secondary-500"
-              >
-                삭제
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-      {existingUrls.length > 0 && (
-        <p className="mt-[8px] text-caption-10 text-secondary-500">
-          기존 등록 이미지 {existingUrls.length}장
-        </p>
-      )}
+                const room = 3 - items.length;
+                if (selected.length > room) {
+                  setError('이미지는 최대 3장까지 첨부할 수 있어요.');
+                  event.target.value = '';
+                  return;
+                }
+                setError('');
+                const newItems: ImageItem[] = selected.map((file) => ({
+                  id: `${file.name}-${file.lastModified}-${Math.random().toString(36).slice(2, 8)}`,
+                  kind: 'new',
+                  file,
+                  previewUrl: URL.createObjectURL(file),
+                }));
+                updateItems([...items, ...newItems]);
+                event.target.value = '';
+              }}
+            />
+          </label>
+        )}
+      </div>
       {error && (
         <p className="mt-[6px] text-body-11 text-accent-red">{error}</p>
       )}
-      <textarea
-        name="imageUrls"
-        defaultValue={existingUrls.join('\n')}
-        className="hidden"
-        readOnly
-      />
       <p className="mt-[6px] text-caption-10 text-secondary-500">
         PNG, JPG, WEBP, GIF · 장당 최대 10MB
       </p>
@@ -450,16 +561,12 @@ function UrgentSetting({
 
   return (
     <div className="flex flex-col gap-[10px]">
-      <label className="flex items-center justify-between rounded-[10px] border border-secondary-800 bg-secondary-900 px-[13px] py-[12px] text-body-13 text-secondary-100">
-        긴급 총공으로 노출
-        <input
-          name="menuUrgent"
-          type="checkbox"
-          checked={enabled}
-          onChange={(event) => setEnabled(event.target.checked)}
-          className="h-[20px] w-[20px] accent-[#FFFB1F]"
-        />
-      </label>
+      <ToggleSwitch
+        label="긴급 총공으로 노출"
+        name="menuUrgent"
+        checked={enabled}
+        onChange={setEnabled}
+      />
       {enabled && (
         <Field
           label="긴급 공지 제목"
@@ -472,43 +579,42 @@ function UrgentSetting({
   );
 }
 
-function ReservationSetting({ scheduledAt }: { scheduledAt?: string | null }) {
-  const [enabled, setEnabled] = useState(Boolean(scheduledAt));
+function ShortcutButtonSetting({
+  ctaButtonLabel,
+  platformUrl,
+}: {
+  ctaButtonLabel?: string | null;
+  platformUrl?: string | null;
+}) {
+  const [enabled, setEnabled] = useState(
+    Boolean(ctaButtonLabel || platformUrl),
+  );
 
   return (
     <div className="flex flex-col gap-[10px]">
-      <label className="flex items-center justify-between rounded-[10px] border border-secondary-800 bg-secondary-900 px-[13px] py-[12px] text-body-13 text-secondary-100">
-        예약 게시
-        <input
-          type="checkbox"
-          checked={enabled}
-          onChange={(event) => setEnabled(event.target.checked)}
-          className="h-[20px] w-[20px] accent-[#FFFB1F]"
-        />
-      </label>
+      <ToggleSwitch
+        label="바로가기 버튼 생성"
+        checked={enabled}
+        onChange={setEnabled}
+      />
       {enabled && (
-        <fieldset>
-          <legend className="text-body-12 text-secondary-300">
-            예약 시간<span className="ml-[3px] text-accent-red">*</span>
-          </legend>
-          <div className="mt-[7px] grid grid-cols-[minmax(0,1fr)_168px] gap-[8px]">
-            <label>
-              <span className="sr-only">예약 날짜</span>
-              <input
-                name="scheduledDate"
-                type="date"
-                required
-                defaultValue={scheduledAt?.slice(0, 10) ?? ''}
-                className="h-[48px] w-full min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none focus:border-secondary-500 [color-scheme:dark]"
-              />
-            </label>
-            <Time24Field
-              name="scheduledTime"
-              required
-              defaultValue={scheduledAt?.slice(11, 16)}
-            />
-          </div>
-        </fieldset>
+        <>
+          <Field
+            label="버튼명"
+            name="ctaButtonLabel"
+            required
+            defaultValue={ctaButtonLabel}
+            placeholder="투표하러 가기"
+          />
+          <Field
+            label="버튼 연결 URL"
+            name="platformUrl"
+            type="url"
+            required
+            defaultValue={platformUrl}
+            placeholder="https://"
+          />
+        </>
       )}
     </div>
   );
@@ -516,22 +622,15 @@ function ReservationSetting({ scheduledAt }: { scheduledAt?: string | null }) {
 
 function ChecklistFields({ initialItems }: { initialItems: string[] }) {
   const [items, setItems] = useState(() =>
-    (initialItems.length > 0 ? initialItems : [''])
-      .slice(0, 5)
-      .map((value, index) => ({
-        id: index + 1,
-        value,
-      })),
+    (initialItems.length > 0 ? initialItems : ['']).map((value, index) => ({
+      id: index + 1,
+      value,
+    })),
   );
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <p className="text-body-12 text-secondary-300">체크 사항</p>
-        <span className="text-caption-10 text-secondary-500">
-          {items.length} / 5
-        </span>
-      </div>
+      <p className="text-body-12 text-secondary-300">체크 사항 (선택)</p>
       <div className="mt-[7px] flex flex-col gap-[8px]">
         {items.map((item, index) => (
           <div key={item.id} className="flex items-center gap-[8px]">
@@ -559,91 +658,49 @@ function ChecklistFields({ initialItems }: { initialItems: string[] }) {
           </div>
         ))}
       </div>
-      {items.length < 5 && (
-        <button
-          type="button"
-          onClick={() =>
-            setItems((current) => [
-              ...current,
-              {
-                id: Math.max(0, ...current.map((item) => item.id)) + 1,
-                value: '',
-              },
-            ])
-          }
-          className="mt-[8px] flex w-full items-center justify-center rounded-[10px] border border-secondary-800 py-[11px] text-body-13 font-bold text-secondary-300"
-        >
-          + 체크 사항 추가
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={() =>
+          setItems((current) => [
+            ...current,
+            {
+              id: Math.max(0, ...current.map((item) => item.id)) + 1,
+              value: '',
+            },
+          ])
+        }
+        className="mt-[8px] flex w-full items-center justify-center rounded-[10px] border border-secondary-800 py-[11px] text-body-13 font-bold text-secondary-300"
+      >
+        + 체크 사항 추가
+      </button>
     </div>
   );
 }
 
 const VOTE_MUSIC_SHOWS = [
-  { id: 1, code: 'SHOWMUSICCORE', label: '쇼! 음악중심' },
-  { id: 2, code: 'MUSICBANK', label: '뮤직뱅크' },
-  { id: 3, code: 'INKIGAYO', label: '인기가요' },
-  { id: 4, code: 'SHOWCHAMPION', label: '쇼챔피언' },
-  { id: 5, code: 'MCOUNTDOWN', label: '엠카운트다운' },
-  { id: 6, code: 'THESHOW', label: '더쇼' },
+  { id: 1, label: '쇼! 음악중심' },
+  { id: 2, label: '뮤직뱅크' },
+  { id: 3, label: '인기가요' },
+  { id: 4, label: '쇼챔피언' },
+  { id: 5, label: '엠카운트다운' },
+  { id: 6, label: '더쇼' },
 ] as const;
 
 const VOTE_PLATFORMS = [
-  { id: 10, code: 'mubeat', label: '뮤빗', musicShow: 'SHOWMUSICCORE' },
-  { id: 11, code: 'muniverse', label: '뮤니버스', musicShow: 'SHOWMUSICCORE' },
-  { id: 12, code: 'coogoong', label: '쿠궁', musicShow: 'MUSICBANK' },
-  { id: 13, code: 'higher', label: '하이어', musicShow: 'INKIGAYO' },
-  { id: 14, code: 'linc', label: '링크', musicShow: 'INKIGAYO' },
-  { id: 16, code: 'idolchamp', label: '아이돌챔프', musicShow: 'SHOWCHAMPION' },
-  { id: 17, code: 'mnetplus', label: '엠넷플러스', musicShow: 'MCOUNTDOWN' },
-  { id: 18, code: 'bigc', label: '빅크', musicShow: 'THESHOW' },
+  { id: 10, label: '뮤빗' },
+  { id: 11, label: '뮤니버스' },
+  { id: 12, label: '쿠궁' },
+  { id: 13, label: '하이어' },
+  { id: 14, label: '링크' },
+  { id: 16, label: '아이돌챔프' },
+  { id: 17, label: '엠넷플러스' },
+  { id: 18, label: '빅크' },
 ] as const;
 
-const VOTE_DETAIL_OPTIONS = {
-  AWARDS: [
-    { value: 'MAMA', label: 'MAMA' },
-    { value: 'MMA', label: 'MMA' },
-  ],
-  ANNIVERSARY: [
-    { value: 'BIRTHDAY', label: '생일' },
-    { value: 'DEBUT', label: '데뷔 기념일' },
-    { value: 'ETC_ANNIVERSARY', label: '기타 기념일' },
-  ],
-  ETC: [{ value: 'ETC', label: '기타' }],
-} as const;
-
 function VoteBaseFields({ initial }: { initial?: AdminVoteDetail }) {
-  const initialMusicShow = VOTE_MUSIC_SHOWS.find(
-    (show) => show.id === initial?.musicShowId,
-  );
   const [category, setCategory] = useState(initial?.category ?? '');
-  const [detailType, setDetailType] = useState(
-    initialMusicShow?.code ?? (initial?.category === 'ETC' ? 'ETC' : ''),
-  );
-  const [platformId, setPlatformId] = useState(
-    initial?.platformIds[0]?.toString() ?? '',
-  );
-
-  const detailOptions =
-    category === 'MUSIC_SHOW'
-      ? VOTE_MUSIC_SHOWS.map((show) => ({
-          value: show.code,
-          label: show.label,
-        }))
-      : category === 'AWARDS' ||
-          category === 'ANNIVERSARY' ||
-          category === 'ETC'
-        ? [...VOTE_DETAIL_OPTIONS[category]]
-        : [];
-
-  const platformOptions =
-    category === 'MUSIC_SHOW' && detailType
-      ? VOTE_PLATFORMS.filter((platform) => platform.musicShow === detailType)
-      : VOTE_PLATFORMS;
-
-  const selectedMusicShow = VOTE_MUSIC_SHOWS.find(
-    (show) => show.code === detailType,
+  const [musicShowId, setMusicShowId] = useState(
+    initial?.musicShowId?.toString() ?? '',
   );
 
   return (
@@ -654,11 +711,7 @@ function VoteBaseFields({ initial }: { initial?: AdminVoteDetail }) {
           name="category"
           required
           value={category}
-          onChange={(event) => {
-            setCategory(event.target.value);
-            setDetailType('');
-            setPlatformId('');
-          }}
+          onChange={(event) => setCategory(event.target.value)}
           className={INPUT_CLASS}
         >
           <option value="" disabled>
@@ -672,92 +725,70 @@ function VoteBaseFields({ initial }: { initial?: AdminVoteDetail }) {
       </label>
 
       <label className="block text-body-12 text-secondary-300">
-        총공 구분<span className="ml-[3px] text-accent-red">*</span>
+        음악방송 (선택)
         <select
-          name="detailType"
-          required
-          value={detailType}
-          onChange={(event) => {
-            setDetailType(event.target.value);
-            setPlatformId('');
-          }}
+          name="musicShowId"
+          value={musicShowId}
+          onChange={(event) => setMusicShowId(event.target.value)}
           className={INPUT_CLASS}
         >
-          <option value="" disabled>
-            선택해주세요
-          </option>
-          {detailOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
+          <option value="">선택 안 함</option>
+          {VOTE_MUSIC_SHOWS.map((show) => (
+            <option key={show.id} value={show.id}>
+              {show.label}
             </option>
           ))}
         </select>
       </label>
 
-      <input
-        type="hidden"
-        name="musicShowId"
-        value={selectedMusicShow?.id ?? ''}
+      <PlatformChipFields
+        platforms={VOTE_PLATFORMS}
+        initialPlatformIds={initial?.platformIds}
       />
-
-      <label className="block text-body-12 text-secondary-300">
-        총공 플랫폼<span className="ml-[3px] text-accent-red">*</span>
-        <select
-          name="platformIds"
-          required
-          value={platformId}
-          onChange={(event) => setPlatformId(event.target.value)}
-          className={INPUT_CLASS}
-        >
-          <option value="" disabled>
-            선택해주세요
-          </option>
-          {platformOptions.map((platform) => (
-            <option key={platform.id} value={platform.id}>
-              {platform.label}
-            </option>
-          ))}
-        </select>
-      </label>
     </>
   );
 }
 
-function VotePeriodFields({ initial }: { initial?: AdminVoteDetail }) {
+function EventPeriodFields({
+  legend,
+  required = true,
+  eventStartAt,
+  eventEndAt,
+}: {
+  legend: string;
+  required?: boolean;
+  eventStartAt?: string | null;
+  eventEndAt?: string | null;
+}) {
   return (
     <fieldset>
       <legend className="text-body-12 text-secondary-300">
-        총공 기간<span className="ml-[3px] text-accent-red">*</span>
+        {legend}
+        {required && <span className="ml-[3px] text-accent-red">*</span>}
       </legend>
       <div className="mt-[7px] flex flex-col gap-[8px]">
         <div className="grid grid-cols-[minmax(0,1fr)_168px] gap-[8px]">
-          <span className="sr-only">총공 시작 날짜와 시간</span>
-          <input
+          <DateField
             name="eventStartDate"
-            type="date"
-            required
-            defaultValue={initial?.eventStartAt?.slice(0, 10) ?? ''}
-            className="h-[48px] min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none [color-scheme:dark]"
+            required={required}
+            defaultValue={eventStartAt?.slice(0, 10) ?? ''}
           />
           <Time24Field
             name="eventStartTime"
-            required
-            defaultValue={initial?.eventStartAt?.slice(11, 16)}
+            required={required}
+            defaultValue={eventStartAt?.slice(11, 16)}
           />
         </div>
         <div className="grid grid-cols-[minmax(0,1fr)_168px] gap-[8px]">
-          <span className="sr-only">총공 마감 날짜와 시간</span>
-          <input
+          <DateField
             name="eventEndDate"
-            type="date"
-            required
-            defaultValue={initial?.eventEndAt?.slice(0, 10) ?? ''}
-            className="h-[48px] min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none [color-scheme:dark]"
+            required={required}
+            defaultValue={eventEndAt?.slice(0, 10) ?? ''}
           />
           <Time24Field
             name="eventEndTime"
-            required
-            defaultValue={initial?.eventEndAt?.slice(11, 16)}
+            required={required}
+            defaultValue={eventEndAt?.slice(11, 16)}
           />
         </div>
       </div>
@@ -803,9 +834,10 @@ export default function AdminDetailForm({
   const router = useRouter();
   const queryClient = useQueryClient();
   const formRef = useRef<HTMLFormElement>(null);
+  const musicImageItemsRef = useRef<ImageItem[]>([]);
+  const voteImageItemsRef = useRef<ImageItem[]>([]);
   const [submitError, setSubmitError] = useState('');
-  const [musicImageFiles, setMusicImageFiles] = useState<File[]>([]);
-  const [voteImageFiles, setVoteImageFiles] = useState<File[]>([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const isEdit = Boolean(detailId);
   const musicQuery = useAdminMusicDetailQuery(
@@ -822,32 +854,36 @@ export default function AdminDetailForm({
 
   const mutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      const existingImageUrls = stringList(formData.get('imageUrls'));
-      const selectedImageFiles =
-        adminType === 'music' ? musicImageFiles : voteImageFiles;
-      const imageUrls =
-        selectedImageFiles.length > 0
-          ? await Promise.all(selectedImageFiles.map(uploadAdminImage))
-          : existingImageUrls;
+      const imageItems = (
+        adminType === 'music' ? musicImageItemsRef : voteImageItemsRef
+      ).current;
+      const newImageItems = imageItems.filter(
+        (item): item is Extract<ImageItem, { kind: 'new' }> =>
+          item.kind === 'new',
+      );
+      const uploadedUrls =
+        newImageItems.length > 0
+          ? await Promise.all(
+              newImageItems.map((item) => uploadAdminImage(item.file)),
+            )
+          : [];
+      let uploadIndex = 0;
+      const imageUrls = imageItems.map((item) =>
+        item.kind === 'existing' ? item.url : uploadedUrls[uploadIndex++],
+      );
 
       const common = {
         category: String(formData.get('category') ?? '').trim(),
         title: String(formData.get('title') ?? '').trim(),
         platformIds: numberList(formData.get('platformIds')),
-        platformUrl: nullableString(formData.get('platformUrl')),
         checklist: formDataStringList(formData, 'checklist'),
         imageUrls,
         guideIds: numberList(formData.get('guideIds')),
-        cheeringItemId: numberOrNull(formData.get('cheeringItemId')),
         menuUrgent: formData.get('menuUrgent') === 'on',
         urgentContent: nullableString(formData.get('urgentContent')),
-        todayExposed: formData.get('todayExposed') === 'on',
         active:
           formData.get('active') === 'on' || formData.get('active') === 'true',
-        scheduledAt: combineDateAndTime(
-          formData.get('scheduledDate'),
-          formData.get('scheduledTime'),
-        ),
+        scheduledAt: null,
         sortOrder: Number(formData.get('sortOrder') ?? 0),
       };
 
@@ -855,11 +891,14 @@ export default function AdminDetailForm({
         const payload: AdminMusicDetailPayload = {
           ...common,
           songName: nullableString(formData.get('songName')),
-          eventAt: combineDateAndTime(
-            formData.get('eventDate'),
-            formData.get('eventTime'),
+          eventStartAt: combineDateAndTime(
+            formData.get('eventStartDate'),
+            formData.get('eventStartTime'),
           ),
-          description: nullableString(formData.get('description')),
+          eventEndAt: combineDateAndTime(
+            formData.get('eventEndDate'),
+            formData.get('eventEndTime'),
+          ),
         };
         return detailId
           ? updateAdminMusicDetail(detailId, payload)
@@ -870,6 +909,7 @@ export default function AdminDetailForm({
         ...common,
         musicShowId: numberOrNull(formData.get('musicShowId')),
         rewardDescription: nullableString(formData.get('rewardDescription')),
+        platformUrl: nullableString(formData.get('platformUrl')),
         eventStartAt: combineDateAndTime(
           formData.get('eventStartDate'),
           formData.get('eventStartTime'),
@@ -967,18 +1007,8 @@ export default function AdminDetailForm({
       >
         {adminType === 'music' ? (
           <>
-            <SelectField
-              label="카테고리"
-              name="category"
-              required
-              defaultValue={musicInitial?.category}
-              options={[
-                { value: 'DOWNLOAD', label: '다운로드' },
-                { value: 'STREAMING', label: '스트리밍' },
-                { value: 'ETC', label: '기타' },
-              ]}
-            />
-            <MusicPlatformFields
+            <MusicCategoryAndPlatformFields
+              initialCategory={musicInitial?.category}
               initialPlatformIds={musicInitial?.platformIds}
             />
             <Field
@@ -992,32 +1022,14 @@ export default function AdminDetailForm({
               name="songName"
               required
               defaultValue={musicInitial?.songName}
+              placeholder="스트리밍리스트 OR BiiiG"
             />
-            <fieldset>
-              <legend className="text-body-12 text-secondary-300">
-                총공 시간<span className="ml-[3px] text-accent-red">*</span>
-              </legend>
-              <div className="mt-[7px] grid grid-cols-[minmax(0,1fr)_168px] gap-[8px]">
-                <label>
-                  <span className="sr-only">총공 날짜</span>
-                  <input
-                    name="eventDate"
-                    type="date"
-                    required
-                    defaultValue={musicInitial?.eventAt?.slice(0, 10) ?? ''}
-                    className="h-[48px] w-full min-w-0 rounded-[10px] border border-secondary-800 bg-secondary-900 px-[12px] text-body-13 text-secondary-1 outline-none focus:border-secondary-500 [color-scheme:dark]"
-                  />
-                </label>
-                <Time24Field
-                  name="eventTime"
-                  required
-                  defaultValue={musicInitial?.eventAt?.slice(11, 16)}
-                />
-              </div>
-              <p className="mt-[6px] text-caption-10 text-secondary-500">
-                날짜와 시작 시간을 각각 선택해주세요.
-              </p>
-            </fieldset>
+            <EventPeriodFields
+              legend="총공 기간"
+              required={false}
+              eventStartAt={musicInitial?.eventStartAt}
+              eventEndAt={musicInitial?.eventEndAt}
+            />
           </>
         ) : (
           <>
@@ -1028,25 +1040,16 @@ export default function AdminDetailForm({
               required
               defaultValue={voteInitial?.title}
             />
-            <VotePeriodFields initial={voteInitial} />
-            <TextAreaField
+            <EventPeriodFields
+              legend="총공 기간"
+              eventStartAt={voteInitial?.eventStartAt}
+              eventEndAt={voteInitial?.eventEndAt}
+            />
+            <Field
               label="1위 리워드"
               name="rewardDescription"
               required
               defaultValue={voteInitial?.rewardDescription}
-            />
-            <Field
-              label="버튼명"
-              name="ctaButtonLabel"
-              defaultValue={voteInitial?.ctaButtonLabel}
-              placeholder="투표하러 가기"
-            />
-            <Field
-              label="버튼 연결 URL"
-              name="platformUrl"
-              type="url"
-              defaultValue={voteInitial?.platformUrl}
-              placeholder="https://"
             />
           </>
         )}
@@ -1056,9 +1059,10 @@ export default function AdminDetailForm({
         {adminType === 'music' ? (
           <>
             <DetailImageUpload
-              existingUrls={musicInitial?.imageUrls ?? []}
-              files={musicImageFiles}
-              onFilesChange={setMusicImageFiles}
+              initialUrls={musicInitial?.imageUrls ?? []}
+              onItemsChange={(items) => {
+                musicImageItemsRef.current = items;
+              }}
             />
             <UrgentSetting
               menuUrgent={musicInitial?.menuUrgent}
@@ -1068,9 +1072,14 @@ export default function AdminDetailForm({
         ) : (
           <>
             <DetailImageUpload
-              existingUrls={voteInitial?.imageUrls ?? []}
-              files={voteImageFiles}
-              onFilesChange={setVoteImageFiles}
+              initialUrls={voteInitial?.imageUrls ?? []}
+              onItemsChange={(items) => {
+                voteImageItemsRef.current = items;
+              }}
+            />
+            <ShortcutButtonSetting
+              ctaButtonLabel={voteInitial?.ctaButtonLabel}
+              platformUrl={voteInitial?.platformUrl}
             />
             <UrgentSetting
               menuUrgent={voteInitial?.menuUrgent}
@@ -1079,7 +1088,6 @@ export default function AdminDetailForm({
           </>
         )}
 
-        <ReservationSetting scheduledAt={initial?.scheduledAt} />
         {adminType === 'music' ? (
           <input
             type="hidden"
@@ -1102,14 +1110,31 @@ export default function AdminDetailForm({
             {submitError}
           </p>
         )}
-        <button
-          type="submit"
-          disabled={mutation.isPending || !isFormValid}
-          className="mt-[8px] w-full rounded-[12px] bg-main py-[16px] text-body-14 font-bold text-secondary-950 disabled:cursor-not-allowed disabled:bg-secondary-800 disabled:text-secondary-600"
-        >
-          {mutation.isPending ? '저장 중...' : isEdit ? '수정하기' : '등록하기'}
-        </button>
+        <div className="mt-[8px] grid grid-cols-2 gap-[8px]">
+          <button
+            type="button"
+            onClick={() => setPreviewOpen(true)}
+            className="w-full rounded-[12px] border border-secondary-700 py-[16px] text-body-14 font-bold text-secondary-200"
+          >
+            미리보기
+          </button>
+          <button
+            type="submit"
+            disabled={mutation.isPending || !isFormValid}
+            className="w-full rounded-[12px] bg-main py-[16px] text-body-14 font-bold text-secondary-950 disabled:cursor-not-allowed disabled:bg-secondary-800 disabled:text-secondary-600"
+          >
+            {mutation.isPending ? '저장 중...' : isEdit ? '수정하기' : '등록하기'}
+          </button>
+        </div>
       </form>
+
+      <AppDialog
+        open={previewOpen}
+        onOpenChange={setPreviewOpen}
+        title="미리보기"
+        description={'조금만 기다려주세요.\n미리보기 기능을 준비하고 있어요.'}
+        actions={[{ label: '확인', onClick: () => setPreviewOpen(false) }]}
+      />
     </main>
   );
 }

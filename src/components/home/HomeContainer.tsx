@@ -14,7 +14,8 @@ import { getVotePlatformLabel } from '@/constants/vote-platform';
 import { useParticipateCheeringMutation } from '@/hooks/mutations/useParticipateCheeringMutation';
 import type { HomeResponse } from '@/types/home';
 import CheeringGrid from './CheeringGrid';
-import { CHEERING_DIALOG_CONFIG } from './constants';
+import { CHEERING_DIALOG_CONFIG, urgentDetailMock } from './constants';
+import HomeUrgentCarousel from './HomeUrgentCarousel';
 
 type DialogStep = 'CONFIRM' | 'COMPLETE';
 
@@ -38,31 +39,6 @@ function getSchedulePlatformLabel(
   return platformNames.map(getLabel).join(', ');
 }
 
-function formatRemainingTime(eventEndAt: string, now: number | null) {
-  if (now === null) return '마감 시간 확인 중';
-
-  const remainingMinutes = Math.ceil(
-    (new Date(eventEndAt).getTime() - now) / 60_000,
-  );
-
-  if (!Number.isFinite(remainingMinutes)) return '마감 정보를 확인해주세요';
-  if (remainingMinutes <= 0) return '마감되었어요';
-
-  const days = Math.floor(remainingMinutes / (60 * 24));
-  const hours = Math.floor((remainingMinutes % (60 * 24)) / 60);
-  const minutes = remainingMinutes % 60;
-
-  if (days > 0) {
-    return `${days}일${hours > 0 ? ` ${hours}시간` : ''} 남음`;
-  }
-
-  if (hours > 0) {
-    return `${hours}시간${minutes > 0 ? ` ${minutes}분` : ''} 남음`;
-  }
-
-  return `${minutes}분 남음`;
-}
-
 export default function HomeContainer({ initialData }: HomeContainerProps) {
   const [now, setNow] = useState<number | null>(null);
   const [dialogStep, setDialogStep] = useState<DialogStep | null>(null);
@@ -75,10 +51,10 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
   );
 
   const participateCheeringMutation = useParticipateCheeringMutation();
-  const urgentDetail = initialData.urgentDetail;
+  const urgentDetails = initialData.urgentDetails;
 
   useEffect(() => {
-    if (urgentDetail?.menuType !== 'VOTE') return;
+    if (!urgentDetails?.some((item) => item.menuType === 'VOTE')) return;
 
     const updateNow = () => setNow(Date.now());
     const initialTimer = window.setTimeout(updateNow, 0);
@@ -88,14 +64,7 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
       window.clearTimeout(initialTimer);
       window.clearInterval(interval);
     };
-  }, [urgentDetail?.eventEndAt, urgentDetail?.menuType]);
-
-  const urgentStatusText =
-    urgentDetail?.menuType === 'MUSIC'
-      ? '지금 바로 참여해주세요'
-      : urgentDetail?.menuType === 'VOTE' && urgentDetail.eventEndAt
-        ? `마감까지 ${formatRemainingTime(urgentDetail.eventEndAt, now)}`
-        : '마감 정보를 확인해주세요';
+  }, [urgentDetails]);
 
   const completedCheeringIds = initialData.cheeringItems
     .filter((item) => item.completed)
@@ -160,7 +129,6 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
           </HeaderIconButton>
         }
       />
-
       {/* HOME TITLE */}
       <div className="mb-[24px] text-title-36 font-extralight">
         <h1>오늘</h1>
@@ -172,57 +140,12 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
       </div>
 
       {/* 긴급 안내 배너 */}
-      {urgentDetail && (
-        <Link
-          href={{
-            pathname: `/urgent/${urgentDetail.detailId}`,
-            query: { menuType: urgentDetail.menuType },
-          }}
-          className="mb-[40px] block rounded-[16px] border border-main bg-[rgba(255,251,31,0.04)] p-[16px]"
-        >
-          <p className="mb-[20px] text-body-12 font-medium">
-            🚨 놓치면 안되는 VIP 긴급 총공
-          </p>
-          <div className="flex items-center justify-between gap-[12px]">
-            <div className="min-w-0">
-              <p className="mb-[2px] line-clamp-2 text-title-17 font-bold">
-                {urgentDetail.title}
-              </p>
-
-              <div className="flex min-w-0 items-center gap-[2px]">
-                {urgentDetail.menuType === 'VOTE' && (
-                  <Image
-                    src="/icon/line/clock_red-16.svg"
-                    alt=""
-                    width={16}
-                    height={16}
-                    aria-hidden="true"
-                    className="shrink-0"
-                  />
-                )}
-                <span className="shrink-0 text-body-13 text-accent-red">
-                  {urgentStatusText}
-                </span>
-                <span className="px-[6px] text-body-13 font-bold text-secondary-300">
-                  |
-                </span>
-                <span className="truncate text-body-13 font-medium text-secondary-300">
-                  {urgentDetail.platformNames.map(getPlatformLabel).join(', ')}
-                </span>
-              </div>
-            </div>
-
-            <Image
-              src="/icon/line/arrow-right_yellow-bg.svg"
-              alt=""
-              width={32}
-              height={32}
-              aria-hidden="true"
-              className="shrink-0"
-            />
-          </div>
-        </Link>
+      {urgentDetailMock && urgentDetailMock.length > 0 && (
+        <HomeUrgentCarousel items={urgentDetailMock} now={now} />
       )}
+      {/* {urgentDetails && urgentDetails.length > 0 && (
+        <HomeUrgentCarousel items={urgentDetails} now={now} />
+      )} */}
 
       {/* 오늘 해야 할 응원 */}
       <div className="mb-[32px]">

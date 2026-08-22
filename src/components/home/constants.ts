@@ -1,5 +1,5 @@
 import { withObjectParticle } from '@/lib/korean';
-import { CHEERING_CATEGORY, CheeringItem } from '@/types/home';
+import { CHEERING_CATEGORY, CheeringItem, UrgentDetail } from '@/types/home';
 
 export type CheeringDialogContext = {
   item: CheeringItem;
@@ -154,3 +154,22 @@ export const CHEERING_DIALOG_CONFIG = {
     },
   },
 } satisfies Record<CHEERING_CATEGORY, CheeringDialogConfig>;
+
+export const urgentDetailMock: UrgentDetail[] = [
+  {
+    menuType: 'MUSIC',
+    detailId: 2,
+    category: 'STREAMING',
+    title: ' 테스트1',
+    platformNames: ['melon'],
+    eventEndAt: '2026-08-22T23:59:59',
+  },
+  // {
+  //   menuType: 'VOTE',
+  //   detailId: 2,
+  //   category: 'AWARDS',
+  //   title: ' 테스트2',
+  //   platformNames: ['mubeat'],
+  //   eventEndAt: '2026-08-22T23:59:59',
+  // },
+];

@@ -23,6 +23,7 @@ export const VOTE_APP_LINKS: Record<VoteAppPlatform, VoteAppLinks> = {
       'intent://#Intent;scheme=android-app;package=com.contentsmadang.fancast;end',
   },
   mubeat: {
+    // 빅뱅음총팀으로는 넘어가게 할 수 있음
     ios: 'https://apps.apple.com/kr/app/%EB%AE%A4%EB%B9%97-mubeat-kpop-%ED%8C%AC%EB%93%A4%EC%9D%84-%EC%9C%84%ED%95%9C-%EB%AA%A8%EB%93%A0-%EA%B2%83/id1320789688',
     android:
       'intent://#Intent;scheme=android-app;package=com.vlending.apps.mubeat;end',
