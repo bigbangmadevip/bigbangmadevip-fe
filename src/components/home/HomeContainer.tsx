@@ -14,7 +14,7 @@ import { getVotePlatformLabel } from '@/constants/vote-platform';
 import { useParticipateCheeringMutation } from '@/hooks/mutations/useParticipateCheeringMutation';
 import type { HomeResponse } from '@/types/home';
 import CheeringGrid from './CheeringGrid';
-import { CHEERING_DIALOG_CONFIG, urgentDetailMock } from './constants';
+import { CHEERING_DIALOG_CONFIG } from './constants';
 import HomeUrgentCarousel from './HomeUrgentCarousel';
 
 type DialogStep = 'CONFIRM' | 'COMPLETE';
@@ -140,12 +140,12 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
       </div>
 
       {/* 긴급 안내 배너 */}
-      {urgentDetailMock && urgentDetailMock.length > 0 && (
+      {/* {urgentDetailMock && urgentDetailMock.length > 0 && (
         <HomeUrgentCarousel items={urgentDetailMock} now={now} />
-      )}
-      {/* {urgentDetails && urgentDetails.length > 0 && (
-        <HomeUrgentCarousel items={urgentDetails} now={now} />
       )} */}
+      {urgentDetails && urgentDetails.length > 0 && (
+        <HomeUrgentCarousel items={urgentDetails} now={now} />
+      )}
 
       {/* 오늘 해야 할 응원 */}
       <div className="mb-[32px]">

@@ -156,14 +156,14 @@ export const CHEERING_DIALOG_CONFIG = {
 } satisfies Record<CHEERING_CATEGORY, CheeringDialogConfig>;
 
 export const urgentDetailMock: UrgentDetail[] = [
-  {
-    menuType: 'MUSIC',
-    detailId: 2,
-    category: 'STREAMING',
-    title: ' 테스트1',
-    platformNames: ['melon'],
-    eventEndAt: '2026-08-22T23:59:59',
-  },
+  // {
+  //   menuType: 'MUSIC',
+  //   detailId: 2,
+  //   category: 'STREAMING',
+  //   title: ' 테스트1',
+  //   platformNames: ['melon'],
+  //   eventEndAt: '2026-08-22T23:59:59',
+  // },
   // {
   //   menuType: 'VOTE',
   //   detailId: 2,
