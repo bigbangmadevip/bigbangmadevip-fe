@@ -36,6 +36,10 @@ const CHEERING_BADGE_BY_CATEGORY: Record<
     off: '/images/cheeringbadge/radio_off.png',
     on: '/images/cheeringbadge/radio_on.png',
   },
+  MELONWEEKLY: {
+    off: '/images/cheeringbadge/melonweekly_off.png',
+    on: '/images/cheeringbadge/melonweekly_on.png',
+  },
 };
 
 export function getCheeringIcon(

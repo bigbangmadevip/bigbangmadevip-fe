@@ -46,6 +46,8 @@ const PLATFORM_ALIAS: Record<string, string> = {
   빅크: 'bigc',
   melon: 'melon',
   멜론: 'melon',
+  melonweekly: 'melon',
+  멜론주간인기상: 'melon',
 };
 
 function normalizePlatform(platform: string) {
@@ -79,7 +81,10 @@ function getMusicShowGuideLinks(
 
     links.push({
       id: `${guide.detailId}-${guide.anchorId ?? 'all'}`,
-      title: getVotePlatformLabel(platformName),
+      title:
+        guide.detailId === 'melon-weekly'
+          ? '멜론 주간인기상'
+          : getVotePlatformLabel(platformName),
       description: '투표 가이드',
       href,
       iconSrc,

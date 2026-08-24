@@ -10,7 +10,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
     title: '쇼! 챔피언',
     channel: 'MBC Every1',
     broadcastTime: '수요일 18:00',
-    iconSrc: '/icon/vote/musicshow/showchampion.svg',
+    iconSrc: '/images/voteguidethumbnail/showchampion.png',
     description: PRE_VOTE_DESCRIPTION,
     summaries: [
       {
@@ -37,7 +37,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
       {
         id: 'idolchamp',
         title: '아이돌챔프 투표 가이드',
-        iconSrc: '/icon/vote/voteplan/idolchamp.svg',
+        iconSrc: '/images/voteplatform/idolchamp.png',
         href: '/vote/guide/showchampion#vote-guide-idolchamp',
       },
     ],
@@ -47,7 +47,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
     title: '엠 카운트다운',
     channel: 'Mnet',
     broadcastTime: '목요일 18:00',
-    iconSrc: '/icon/vote/musicshow/mcountdown.svg',
+    iconSrc: '/images/voteguidethumbnail/mcountdown.png',
     description: COMBINED_DESCRIPTION,
     summaries: [
       {
@@ -107,7 +107,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
       {
         id: 'mnetplus',
         title: '엠넷 플러스 투표 가이드',
-        iconSrc: '/icon/vote/mnetplus.svg',
+        iconSrc: '/images/voteplatform/mnetplus.png',
         href: '/vote/guide/mcountdown#vote-guide-mnetplus',
       },
     ],
@@ -117,7 +117,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
     title: '뮤직뱅크',
     channel: 'KBS',
     broadcastTime: '금요일 17:00',
-    iconSrc: '/icon/vote/musicshow/musicbank.svg',
+    iconSrc: '/images/voteguidethumbnail/musicbank.png',
     description: PRE_VOTE_DESCRIPTION,
     summaries: [
       {
@@ -150,7 +150,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
       {
         id: 'coogoong',
         title: '쿠궁 투표 가이드',
-        iconSrc: '/icon/vote/coogoong.svg',
+        iconSrc: '/images/voteplatform/coogoong.png',
         href: '/vote/guide/musicbank#vote-guide-coogoong',
       },
     ],
@@ -160,7 +160,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
     title: '쇼! 음악중심',
     channel: 'MBC',
     broadcastTime: '토요일 15:15',
-    iconSrc: '/icon/vote/musicshow/musiccore.svg',
+    iconSrc: '/images/voteguidethumbnail/musiccore.png',
     description: COMBINED_DESCRIPTION,
     summaries: [
       {
@@ -292,13 +292,13 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
       {
         id: 'muniverse',
         title: '뮤니버스 투표 가이드',
-        iconSrc: '/icon/vote/voteplan/muniverse.svg',
+        iconSrc: '/images/voteplatform/muniverse.png',
         href: '/vote/guide/musiccore#vote-guide-muniverse',
       },
       {
         id: 'mubeat',
         title: '뮤빗 투표 가이드',
-        iconSrc: '/icon/vote/voteplan/mubeat.svg',
+        iconSrc: '/images/voteplatform/mubeat.png',
         href: '/vote/guide/musiccore#vote-guide-mubeat',
       },
     ],
@@ -308,7 +308,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
     title: '인기가요',
     channel: 'SBS',
     broadcastTime: '일요일 15:20',
-    iconSrc: '/icon/vote/musicshow/inga.svg',
+    iconSrc: '/images/voteguidethumbnail/inkigayo.png',
     description: COMBINED_DESCRIPTION,
     summaries: [
       {
@@ -386,13 +386,13 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
       {
         id: 'linc',
         title: '링크 투표 가이드',
-        iconSrc: '/icon/vote/voteplan/linc.svg',
+        iconSrc: '/images/voteplatform/linc.png',
         href: '/vote/guide/inkigayo#vote-guide-linc',
       },
       {
         id: 'higher',
         title: '하이어 투표 가이드',
-        iconSrc: '/icon/vote/voteplan/higher.svg',
+        iconSrc: '/images/voteplatform/higher.png',
         href: '/vote/guide/inkigayo#vote-guide-higher',
       },
     ],
@@ -402,7 +402,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
     title: '더 쇼',
     channel: 'SBS Life',
     broadcastTime: '화요일 18:00',
-    iconSrc: '/icon/vote/musicshow/theshow.svg',
+    iconSrc: '/images/voteguidethumbnail/theshow.png',
     description: COMBINED_DESCRIPTION,
     summaries: [
       {
@@ -450,7 +450,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
       {
         id: 'bigc',
         title: '빅크 투표 가이드',
-        iconSrc: '/icon/vote/bigc.svg',
+        iconSrc: '/images/voteplatform/bigc.png',
         href: '/vote/guide/theshow#vote-guide-bigc',
       },
     ],

@@ -153,6 +153,21 @@ export const CHEERING_DIALOG_CONFIG = {
       buttonLabel: '확인',
     },
   },
+
+  MELONWEEKLY: {
+    confirm: {
+      title: '오늘 멜론 주간인기상 투표를 완료했나요?',
+      description: () =>
+        '멜론 주간인기상 투표를 완료했다면\n참여완료를 눌러주세요.',
+      buttonLabel: '참여완료',
+    },
+    complete: {
+      title: '멜론 주간인기상 투표 완료!',
+      description: ({ typeCompletedCount }) =>
+        `현재 ${typeCompletedCount}명의 VIP가\n멜론 주간인기상 투표에 참여했어요.`,
+      buttonLabel: '확인',
+    },
+  },
 } satisfies Record<CHEERING_CATEGORY, CheeringDialogConfig>;
 
 export const urgentDetailMock: UrgentDetail[] = [

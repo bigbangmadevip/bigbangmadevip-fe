@@ -511,6 +511,7 @@ const VOTE_MUSIC_SHOWS = [
   { id: 4, label: '쇼챔피언' },
   { id: 5, label: '엠카운트다운' },
   { id: 6, label: '더쇼' },
+  { id: 7, label: '멜론 주간인기상' },
 ] as const;
 
 const VOTE_PLATFORMS = [
@@ -522,6 +523,7 @@ const VOTE_PLATFORMS = [
   { id: 16, label: '아이돌챔프' },
   { id: 17, label: '엠넷플러스' },
   { id: 18, label: '빅크' },
+  { id: 23, label: '멜론' },
 ] as const;
 
 function VoteBaseFields({ initial }: { initial?: AdminVoteDetail }) {
@@ -674,13 +676,11 @@ export default function AdminDetailForm({
         platformIds: numberList(formData.get('platformIds')),
         checklist: formDataStringList(formData, 'checklist'),
         imageUrls,
-        guideIds: numberList(formData.get('guideIds')),
         menuUrgent: formData.get('menuUrgent') === 'on',
         urgentContent: nullableString(formData.get('urgentContent')),
         active:
           formData.get('active') === 'on' || formData.get('active') === 'true',
         scheduledAt: null,
-        sortOrder: Number(formData.get('sortOrder') ?? 0),
       };
 
       if (adminType === 'music') {
@@ -826,6 +826,7 @@ export default function AdminDetailForm({
               eventStartAt={musicInitial?.eventStartAt}
               eventEndAt={musicInitial?.eventEndAt}
             />
+            {/* 여기!8 */}
           </>
         ) : (
           <>
@@ -842,9 +843,8 @@ export default function AdminDetailForm({
               eventEndAt={voteInitial?.eventEndAt}
             />
             <Field
-              label="1위 리워드"
+              label="1위 리워드 (선택)"
               name="rewardDescription"
-              required
               defaultValue={voteInitial?.rewardDescription}
             />
           </>
@@ -884,21 +884,6 @@ export default function AdminDetailForm({
           </>
         )}
 
-        {adminType === 'music' ? (
-          <input
-            type="hidden"
-            name="sortOrder"
-            value={musicInitial?.sortOrder ?? 0}
-          />
-        ) : (
-          <Field
-            label="정렬 순서"
-            name="sortOrder"
-            type="number"
-            defaultValue={initial?.sortOrder ?? 0}
-          />
-        )}
-
         <PublishSetting defaultActive={initial?.active ?? true} />
 
         {submitError && (
@@ -919,7 +904,11 @@ export default function AdminDetailForm({
             disabled={mutation.isPending || !isFormValid}
             className="w-full rounded-[12px] bg-main py-[16px] text-body-14 font-bold text-secondary-950 disabled:cursor-not-allowed disabled:bg-secondary-800 disabled:text-secondary-600"
           >
-            {mutation.isPending ? '저장 중...' : isEdit ? '수정하기' : '등록하기'}
+            {mutation.isPending
+              ? '저장 중...'
+              : isEdit
+                ? '수정하기'
+                : '등록하기'}
           </button>
         </div>
       </form>

@@ -29,15 +29,15 @@ const PLATFORM_ICON_KEYS: Partial<Record<string, Platform>> = {
 };
 
 const PLATFORM_ICONS: Partial<Record<Platform, string>> = {
-  melon: '/icon/music/oneclicklogo/melon-logo.png',
-  genie: '/icon/music/oneclicklogo/genie-logo.png',
-  bugs: '/icon/music/oneclicklogo/bugs-logo.png',
-  flo: '/icon/music/oneclicklogo/flo-logo.png',
-  vibe: '/icon/music/oneclicklogo/vibe-logo.png',
-  samsungmusic: '/icon/music/oneclicklogo/samsungmusic-logo.png',
-  spotify: '/icon/music/oneclicklogo/spotify-logo.png',
-  applemusic: '/icon/music/oneclicklogo/applemusic-logo.png',
-  youtubemusic: '/icon/music/oneclicklogo/youtubemusic-logo.png',
+  melon: '/images/musicstreaming/melon-logo.png',
+  genie: '/images/musicstreaming/genie-logo.png',
+  bugs: '/images/musicstreaming/bugs-logo.png',
+  flo: '/images/musicstreaming/flo-logo.png',
+  vibe: '/images/musicstreaming/vibe-logo.png',
+  samsungmusic: '/images/musicstreaming/samsungmusic-logo.png',
+  spotify: '/images/musicstreaming/spotify-logo.png',
+  applemusic: '/images/musicstreaming/applemusic-logo.png',
+  youtubemusic: '/images/musicstreaming/youtubemusic-logo.png',
 };
 
 const PLATFORM_ICONS_BY_ID: Record<number, string> = {

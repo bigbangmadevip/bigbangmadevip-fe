@@ -9,7 +9,8 @@ export type CheeringCategory =
   | 'REPORT'
   | 'HASHTAG'
   | 'MELONKCHART'
-  | 'RADIO';
+  | 'RADIO'
+  | 'MELONWEEKLY';
 
 export type CHEERING_CATEGORY = CheeringCategory;
 

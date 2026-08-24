@@ -13,12 +13,10 @@ export type AdminMusicDetailPayload = {
   eventEndAt: string | null;
   checklist: string[];
   imageUrls: string[];
-  guideIds: number[];
   menuUrgent: boolean;
   urgentContent: string | null;
   active: boolean;
   scheduledAt: string | null;
-  sortOrder: number;
 };
 
 export type AdminMusicDetail = AdminDetailBase & AdminMusicDetailPayload;
@@ -34,17 +32,16 @@ export type AdminVoteDetailPayload = {
   eventEndAt: string | null;
   checklist: string[];
   imageUrls: string[];
-  guideIds: number[];
   ctaButtonLabel: string | null;
   menuUrgent: boolean;
   urgentContent: string | null;
   active: boolean;
   scheduledAt: string | null;
+  // 알림 설정 관련값
   pushEnabled: boolean;
   pushSendAt: string | null;
   pushTitle: string | null;
   pushBody: string | null;
-  sortOrder: number;
 };
 
 export type AdminVoteDetail = AdminDetailBase & AdminVoteDetailPayload;
