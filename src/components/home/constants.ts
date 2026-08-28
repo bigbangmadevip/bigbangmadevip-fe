@@ -51,7 +51,7 @@ export const CHEERING_DIALOG_CONFIG = {
     },
   },
 
-  VOTE: {
+  PREVOTE: {
     confirm: {
       title: '투표를 완료했나요?',
       description: () => '투표를 마쳤다면\n참여완료를 눌러주세요.',
@@ -65,7 +65,7 @@ export const CHEERING_DIALOG_CONFIG = {
     },
   },
 
-  YOUTUBE: {
+  YOUTUBEMV: {
     confirm: {
       title: '오늘 뮤직비디오 조회를 완료했나요?',
       description: ({ item }) => {
