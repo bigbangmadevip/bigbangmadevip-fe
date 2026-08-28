@@ -19,6 +19,8 @@ type DownloadGuidePlatform = Extract<
   'melon' | 'genie' | 'bugs' | 'kakaomusic'
 >;
 
+type GenieShareGuideId = 'genieshare';
+
 export type ImageSize = {
   src: string;
   width: number;
@@ -86,6 +88,14 @@ const STREAMING_GUIDE_IMAGES: Record<StreamingGuidePlatform, ImageSize> = {
   },
 };
 
+const GENIESHARE_GUIDE_IMAGES: Record<GenieShareGuideId, ImageSize> = {
+  genieshare: {
+    src: '/images/musicguide/genieshare/genieshare.jpg',
+    width: 1086,
+    height: 1448,
+  },
+};
+
 function isStreamingGuidePlatform(
   value: string,
 ): value is StreamingGuidePlatform {
@@ -98,23 +108,48 @@ function isDownloadGuidePlatform(
   return value in DOWNLOAD_GUIDE_IMAGES;
 }
 
+function isGenieShareGuideId(value: string): value is GenieShareGuideId {
+  return value in GENIESHARE_GUIDE_IMAGES;
+}
+
+function getGuideDetail(category: string, guideId: string) {
+  if (category === 'streaming' && isStreamingGuidePlatform(guideId)) {
+    return {
+      image: STREAMING_GUIDE_IMAGES[guideId],
+      title: `${PLATFORM_LABEL[guideId]} 스트리밍 가이드`,
+    };
+  }
+
+  if (category === 'download' && isDownloadGuidePlatform(guideId)) {
+    return {
+      image: DOWNLOAD_GUIDE_IMAGES[guideId],
+      title: `${PLATFORM_LABEL[guideId]} 다운로드 가이드`,
+    };
+  }
+
+  if (category === 'genieshare' && isGenieShareGuideId(guideId)) {
+    return {
+      image: GENIESHARE_GUIDE_IMAGES[guideId],
+      title: '지니 음악 나누기 가이드',
+    };
+  }
+
+  return null;
+}
+
 export default function GuideDetailPage() {
   const router = useRouter();
   const { category, guideId } = useParams<{
     category: string;
     guideId: string;
   }>();
-  const isStreamingGuide =
-    category === 'streaming' && isStreamingGuidePlatform(guideId);
-  const isDownloadGuide =
-    category === 'download' && isDownloadGuidePlatform(guideId);
+  const guideDetail = getGuideDetail(category, guideId);
 
-  if (!isStreamingGuide && !isDownloadGuide) {
+  if (!guideDetail) {
     return <CommonErrorScreen message="준비되지 않은 음원 가이드예요." />;
   }
 
-  const guideTypeLabel = isStreamingGuide ? '스트리밍' : '다운로드';
-  const title = `${PLATFORM_LABEL[guideId]} ${guideTypeLabel} 가이드`;
+  const { image, title } = guideDetail;
 
   return (
     <main>
@@ -138,29 +173,14 @@ export default function GuideDetailPage() {
       />
 
       <div className="mt-[24px]">
-        {isStreamingGuide ? (
-          <Image
-            src={STREAMING_GUIDE_IMAGES[guideId]}
-            alt={title}
-            priority
-            width={STREAMING_GUIDE_IMAGES[guideId].width}
-            height={STREAMING_GUIDE_IMAGES[guideId].height}
-            className="h-auto w-full bg-secondary-950"
-          />
-        ) : (
-          <Image
-            src={DOWNLOAD_GUIDE_IMAGES[guideId as DownloadGuidePlatform]}
-            alt={title}
-            priority
-            width={
-              DOWNLOAD_GUIDE_IMAGES[guideId as DownloadGuidePlatform].width
-            }
-            height={
-              DOWNLOAD_GUIDE_IMAGES[guideId as DownloadGuidePlatform].height
-            }
-            className="h-auto w-full bg-secondary-950"
-          />
-        )}
+        <Image
+          src={image.src}
+          alt={title}
+          priority
+          width={image.width}
+          height={image.height}
+          className="h-auto w-full bg-secondary-950"
+        />
       </div>
 
       <FloatingShareButton title={title} />

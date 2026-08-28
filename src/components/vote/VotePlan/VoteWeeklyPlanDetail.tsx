@@ -35,7 +35,7 @@ export default function VoteWeeklyPlanDetail() {
       />
 
       <Image
-        src={'/images/voteplan/voteweekly.jpg'}
+        src={'/images/voteplan/voteweekly.png'}
         alt="VIP 주간 투표 일정"
         priority
         width={3240}

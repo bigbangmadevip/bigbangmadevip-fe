@@ -5,10 +5,12 @@ import type { ComponentType } from 'react';
 import { CategoryTabs } from '@/components/common/CategoryTabs';
 import MusicGuideStreaming from './MusicGuideStreaming';
 import MusicGuideDownload from './MusicGuideDownload';
+import MusicGuideGenieShare from './MusicGuideGenieShare';
 
 const GUIDE_TABS = [
   { id: 'streaming', label: '스트리밍' },
   { id: 'download', label: '다운로드' },
+  { id: 'genieshare', label: '지니 음악나누기' },
   // { id: 'music-video', label: '뮤비 반복재생' },
   // { id: 'account', label: '아이디 생성' },
   // { id: 'melon-kchart', label: '멜론 K차트' },
@@ -19,6 +21,7 @@ type GuideTab = (typeof GUIDE_TABS)[number]['id'];
 const GUIDE_CONTENT = {
   streaming: MusicGuideStreaming,
   download: MusicGuideDownload,
+  genieshare: MusicGuideGenieShare,
   // 'music-video': MusicGuideReplay,
   // account: MusicGuideMakeId,
   // 'melon-kchart': MusicGuideKChart,

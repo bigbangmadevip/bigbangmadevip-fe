@@ -85,9 +85,7 @@ export default function UrgentDetailPage() {
   const musicGuideLinks = isMusicDetail
     ? getMusicGuideLinks(detail.category, detail.platformNames)
     : [];
-  const voteGuideLinks = !isMusicDetail
-    ? getVoteUrgentGuideLinks(detail)
-    : [];
+  const voteGuideLinks = !isMusicDetail ? getVoteUrgentGuideLinks(detail) : [];
   const hasGuides = musicGuideLinks.length > 0 || voteGuideLinks.length > 0;
 
   const handleImageScroll = () => {

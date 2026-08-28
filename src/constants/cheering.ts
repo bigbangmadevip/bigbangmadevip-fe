@@ -11,10 +11,13 @@ const CHEERING_BADGE_BY_CATEGORY: Record<
     on: '/images/cheeringbadge/streaming_on.png',
   },
   DOWNLOAD: null,
-  VOTE: null,
-  YOUTUBE: {
-    off: '/images/cheeringbadge/youtube_off.png',
-    on: '/images/cheeringbadge/youtube_on.png',
+  PREVOTE: {
+    off: '/images/cheeringbadge/prevote_off.png',
+    on: '/images/cheeringbadge/prevote_on.png',
+  },
+  YOUTUBEMV: {
+    off: '/images/cheeringbadge/youtubemv_off.png',
+    on: '/images/cheeringbadge/youtubemv_on.png',
   },
   VOTECOIN: {
     off: '/images/cheeringbadge/votecoin_off.png',

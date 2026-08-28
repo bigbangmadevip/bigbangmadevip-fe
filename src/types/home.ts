@@ -3,8 +3,8 @@ export type MenuType = 'MUSIC' | 'VOTE';
 export type CheeringCategory =
   | 'STREAMING'
   | 'DOWNLOAD'
-  | 'VOTE'
-  | 'YOUTUBE'
+  | 'PREVOTE'
+  | 'YOUTUBEMV'
   | 'VOTECOIN'
   | 'REPORT'
   | 'HASHTAG'
