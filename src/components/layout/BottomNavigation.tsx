@@ -65,7 +65,8 @@ export function BottomNavigation() {
 
     let user = currentUser;
 
-    if (isAuthPending) {
+    // OAuth 로그인 후 PWA 컨텍스트에 남아 있을 수 있는 게스트 캐시를 갱신한다.
+    if (isAuthPending || !user) {
       const result = await refetchCurrentUser();
       user = result.data;
     }

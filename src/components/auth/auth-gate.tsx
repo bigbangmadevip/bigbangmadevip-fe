@@ -23,22 +23,15 @@ export function AuthGate({ children }: AuthGateProps) {
   const router = useRouter();
   const pathname = usePathname();
   const requiresAuth = isProtectedPath(pathname);
-  const {
-    data: currentUser,
-    isPending,
-    isError,
-  } = useCurrentUserQuery();
+  const { data: currentUser, isPending, isError } = useCurrentUserQuery();
 
   useEffect(() => {
     if (isError) {
       return;
     }
 
-    if (!isPending && !currentUser) {
-      if (requiresAuth) {
-        router.replace('/login');
-      }
-
+    if (!isPending && !currentUser && requiresAuth) {
+      router.replace('/login');
       return;
     }
 
@@ -53,28 +46,19 @@ export function AuthGate({ children }: AuthGateProps) {
         console.error('[GET /api/v1/csrf-token] 요청 실패', error);
       });
     }
-  }, [currentUser, isError, isPending, requiresAuth, router]);
+  }, [
+    currentUser,
+    isError,
+    isPending,
+    requiresAuth,
+    router,
+  ]);
 
-  if (requiresAuth && isPending) {
-    return (
-      <>
-        {children}
-        <LoadingScreen label="로그인 확인 중" />
-      </>
-    );
-  }
-
-  if (
-    requiresAuth &&
-    (isError || !currentUser || !currentUser.termsAgreed)
-  ) {
+  if (currentUser && !currentUser.termsAgreed) {
     return <LoadingScreen label="로그인 확인 중" />;
   }
 
-  // 공개 조회 화면은 인증 확인 중이거나 게스트여도 즉시 노출한다.
-  if (!requiresAuth && (!currentUser || currentUser.termsAgreed)) {
-    return children;
-  }
-
-  return <LoadingScreen label="로그인 확인 중" />;
+  // 공개 화면과 인증 확인 중인 보호 화면은 렌더링을 막지 않는다.
+  // 비로그인 보호 경로는 위 effect에서 로그인 화면으로 이동한다.
+  return children;
 }
