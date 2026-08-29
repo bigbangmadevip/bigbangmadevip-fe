@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import FloatingShareButton from '@/components/common/FloatingShareButton';
 import { SectionTitle } from '@/components/common/SectionTitle';
 import LoadingScreen from '@/components/common/LoadingScreen';
 import UrgentNoticeBanner from '@/components/common/UrgentNoticeBanner';
@@ -105,6 +106,11 @@ export default function MusicStreamingContainer() {
         }}
         platform={selectedPlatform}
         os={currentOs}
+      />
+
+      <FloatingShareButton
+        title="음원 스트리밍"
+        className="bottom-[calc(90px+env(safe-area-inset-bottom))]"
       />
     </>
   );
