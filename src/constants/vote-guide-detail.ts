@@ -38,8 +38,8 @@ export const VOTE_GUIDE_DETAIL: Record<VoteGuideDetailId, VoteGuideDetail> = {
         images: [
           '/images/voteguide/muniverse-1.jpg',
           '/images/voteguide/muniverse-2.jpg',
-          '/images/voteguide/muniverse-3.jpg',
-          '/images/voteguide/muniverse-4.jpg',
+          '/images/voteguide/muniverse-3.png',
+          '/images/voteguide/muniverse-4.png',
           '/images/voteguide/muniverse-5.jpg',
         ],
       },
