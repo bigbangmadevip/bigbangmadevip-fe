@@ -8,7 +8,7 @@ interface TEMP_TYPE {
 }
 
 const STREAMING_NATIONAL_GUIDE_MOCK: TEMP_TYPE[] = [
-  { id: '0', platform: 'youtube', link: '' },
+  { id: '0', platform: 'youtube', link: '/music/guide/replay/youtubemv' },
 ];
 
 const MusicGuideReplay = () => {
@@ -18,7 +18,7 @@ const MusicGuideReplay = () => {
         {STREAMING_NATIONAL_GUIDE_MOCK.map((item) => (
           <MusicGuideLinkButton
             key={item.id}
-            content={' 뮤비 반복재생 가이드'}
+            content={' 반복재생 가이드'}
             platform={item.platform}
             link={item.link}
           />

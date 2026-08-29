@@ -6,12 +6,13 @@ import { CategoryTabs } from '@/components/common/CategoryTabs';
 import MusicGuideStreaming from './MusicGuideStreaming';
 import MusicGuideDownload from './MusicGuideDownload';
 import MusicGuideGenieShare from './MusicGuideGenieShare';
+import MusicGuideReplay from './MusicGuideReplay';
 
 const GUIDE_TABS = [
   { id: 'streaming', label: '스트리밍' },
   { id: 'download', label: '다운로드' },
+  { id: 'youtubemv', label: '뮤비 반복재생' },
   { id: 'genieshare', label: '지니 음악나누기' },
-  // { id: 'music-video', label: '뮤비 반복재생' },
   // { id: 'account', label: '아이디 생성' },
   // { id: 'melon-kchart', label: '멜론 K차트' },
 ] as const;
@@ -22,7 +23,7 @@ const GUIDE_CONTENT = {
   streaming: MusicGuideStreaming,
   download: MusicGuideDownload,
   genieshare: MusicGuideGenieShare,
-  // 'music-video': MusicGuideReplay,
+  youtubemv: MusicGuideReplay,
   // account: MusicGuideMakeId,
   // 'melon-kchart': MusicGuideKChart,
 } satisfies Record<GuideTab, ComponentType>;

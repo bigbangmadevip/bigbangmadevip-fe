@@ -20,6 +20,9 @@ type DownloadGuidePlatform = Extract<
 >;
 
 type GenieShareGuideId = 'genieshare';
+type ReplayGuideId = 'youtubemv';
+
+type YoutubeMvGuideId = 'youtubemv';
 
 export type ImageSize = {
   src: string;
@@ -96,6 +99,22 @@ const GENIESHARE_GUIDE_IMAGES: Record<GenieShareGuideId, ImageSize> = {
   },
 };
 
+const REPLAY_GUIDE_IMAGES: Record<ReplayGuideId, ImageSize> = {
+  youtubemv: {
+    src: '/images/musicguide/replay/youtubemv.JPG',
+    width: 2500,
+    height: 6248,
+  },
+};
+
+const YOUTUBEMV_GUIDE_IMAGES: Record<YoutubeMvGuideId, ImageSize> = {
+  youtubemv: {
+    src: '/images/musicguide/replay/youtubemv.jpg',
+    width: 2500,
+    height: 6248,
+  },
+};
+
 function isStreamingGuidePlatform(
   value: string,
 ): value is StreamingGuidePlatform {
@@ -110,6 +129,14 @@ function isDownloadGuidePlatform(
 
 function isGenieShareGuideId(value: string): value is GenieShareGuideId {
   return value in GENIESHARE_GUIDE_IMAGES;
+}
+
+function isReplayGuideId(value: string): value is ReplayGuideId {
+  return value in REPLAY_GUIDE_IMAGES;
+}
+
+function isYoutubeMvGuideId(value: string): value is YoutubeMvGuideId {
+  return value in YOUTUBEMV_GUIDE_IMAGES;
 }
 
 function getGuideDetail(category: string, guideId: string) {
@@ -131,6 +158,20 @@ function getGuideDetail(category: string, guideId: string) {
     return {
       image: GENIESHARE_GUIDE_IMAGES[guideId],
       title: '지니 음악 나누기 가이드',
+    };
+  }
+
+  if (category === 'youtubemv' && isYoutubeMvGuideId(guideId)) {
+    return {
+      image: YOUTUBEMV_GUIDE_IMAGES[guideId],
+      title: '유튜브 뮤비 스트리밍 가이드',
+    };
+  }
+
+  if (category === 'replay' && isReplayGuideId(guideId)) {
+    return {
+      image: REPLAY_GUIDE_IMAGES[guideId],
+      title: '유튜브 뮤직 반복재생 가이드',
     };
   }
 
