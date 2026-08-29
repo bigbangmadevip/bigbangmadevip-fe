@@ -1,11 +1,13 @@
 'use client';
 
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import LoadingScreen from '@/components/common/LoadingScreen';
 import { createKakaoLoginUrl } from '@/lib/auth';
-import Image from 'next/image';
-import { useState } from 'react';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [isPending, setIsPending] = useState(false);
 
   const handleLogin = () => {
@@ -16,6 +18,12 @@ export default function LoginPage() {
     window.setTimeout(() => {
       window.location.href = createKakaoLoginUrl();
     }, 50);
+  };
+
+  const handleContinueAsGuest = () => {
+    if (isPending) return;
+
+    router.replace('/');
   };
 
   return (
@@ -39,6 +47,16 @@ export default function LoginPage() {
       >
         <Image src={'/icon/kakao.svg'} alt="kakaoIcon" width={16} height={16} />
         <p>카카오로 시작하기</p>
+      </button>
+      <button
+        type="button"
+        className="mt-[40px]"
+        onClick={handleContinueAsGuest}
+        disabled={isPending}
+      >
+        <p className="text-body-13 text-secondary-400 underline">
+          로그인 없이 시작하기
+        </p>
       </button>
     </main>
   );

@@ -1,6 +1,9 @@
 'use client';
 
 import Image from 'next/image';
+import HomeActiveIcon from '@/assets/navigation/home-active.svg';
+import MusicDefaultIcon from '@/assets/navigation/music-default.svg';
+import VoteDefaultIcon from '@/assets/navigation/vote-default.svg';
 
 type AdminType = 'music' | 'vote';
 
@@ -12,25 +15,44 @@ export default function AdminBottomNavigation({
   adminType,
 }: AdminBottomNavigationProps) {
   const managementLabel = adminType === 'music' ? '음원총공' : '투표';
-  const managementIcon = adminType === 'music' ? 'music' : 'vote';
+  const ManagementIcon =
+    adminType === 'music' ? MusicDefaultIcon : VoteDefaultIcon;
 
   const items = [
     {
       id: 'home',
       label: '홈',
-      iconSrc: '/icon/navigation/home-active.svg',
+      icon: (
+        <HomeActiveIcon
+          aria-hidden="true"
+          className="h-[24px] w-[24px]"
+        />
+      ),
       active: true,
     },
     {
       id: 'management',
       label: managementLabel,
-      iconSrc: `/icon/navigation/${managementIcon}-default.svg`,
+      icon: (
+        <ManagementIcon
+          aria-hidden="true"
+          className="h-[24px] w-[24px]"
+        />
+      ),
       active: false,
     },
     {
       id: 'notice',
       label: '공지',
-      iconSrc: '/icon/line/alarm_white-24.svg',
+      icon: (
+        <Image
+          src="/icon/line/alarm_white-24.svg"
+          alt=""
+          width={24}
+          height={24}
+          aria-hidden="true"
+        />
+      ),
       active: false,
     },
   ];
@@ -44,14 +66,9 @@ export default function AdminBottomNavigation({
             type="button"
             className="flex flex-col items-center justify-center gap-[3px]"
           >
-            <Image
-              src={item.iconSrc}
-              alt=""
-              width={24}
-              height={24}
-              aria-hidden="true"
-              className={item.active ? 'opacity-100' : 'opacity-40'}
-            />
+            <span className={item.active ? 'opacity-100' : 'opacity-40'}>
+              {item.icon}
+            </span>
             <span
               className={`text-caption-10 ${
                 item.active ? 'text-secondary-1' : 'text-secondary-500'

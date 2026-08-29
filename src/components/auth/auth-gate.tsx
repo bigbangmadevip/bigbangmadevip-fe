@@ -11,33 +11,38 @@ type AuthGateProps = {
   children: React.ReactNode;
 };
 
-const LOCAL_AUTH_BYPASS_PATHS = ['/schedule', '/mypage'];
+const PROTECTED_PATHS = ['/mypage'];
+
+function isProtectedPath(pathname: string) {
+  return PROTECTED_PATHS.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`),
+  );
+}
 
 export function AuthGate({ children }: AuthGateProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const canBypassAuth =
-    process.env.NODE_ENV === 'development' &&
-    LOCAL_AUTH_BYPASS_PATHS.some(
-      (path) => pathname === path || pathname.startsWith(`${path}/`),
-    );
+  const requiresAuth = isProtectedPath(pathname);
   const {
     data: currentUser,
     isPending,
     isError,
-  } = useCurrentUserQuery(!canBypassAuth);
+  } = useCurrentUserQuery();
 
   useEffect(() => {
-    if (canBypassAuth) return;
-
     if (isError) {
-      router.replace('/login');
       return;
     }
 
-    if (!currentUser) return;
+    if (!isPending && !currentUser) {
+      if (requiresAuth) {
+        router.replace('/login');
+      }
 
-    if (!currentUser.termsAgreed) {
+      return;
+    }
+
+    if (currentUser && !currentUser.termsAgreed) {
       router.replace('/agreement');
       return;
     }
@@ -48,13 +53,9 @@ export function AuthGate({ children }: AuthGateProps) {
         console.error('[GET /api/v1/csrf-token] 요청 실패', error);
       });
     }
-  }, [canBypassAuth, currentUser, isError, router]);
+  }, [currentUser, isError, isPending, requiresAuth, router]);
 
-  if (canBypassAuth) {
-    return children;
-  }
-
-  if (isPending) {
+  if (requiresAuth && isPending) {
     return (
       <>
         {children}
@@ -63,9 +64,17 @@ export function AuthGate({ children }: AuthGateProps) {
     );
   }
 
-  if (isError || !currentUser?.termsAgreed) {
+  if (
+    requiresAuth &&
+    (isError || !currentUser || !currentUser.termsAgreed)
+  ) {
     return <LoadingScreen label="로그인 확인 중" />;
   }
 
-  return children;
+  // 공개 조회 화면은 인증 확인 중이거나 게스트여도 즉시 노출한다.
+  if (!requiresAuth && (!currentUser || currentUser.termsAgreed)) {
+    return children;
+  }
+
+  return <LoadingScreen label="로그인 확인 중" />;
 }

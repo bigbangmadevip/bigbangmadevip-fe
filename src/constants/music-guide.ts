@@ -99,7 +99,7 @@ export function getMusicGuideLinks(
       title: PLATFORM_LABEL[platform],
       description: GUIDE_CATEGORY_LABEL[category],
       href: `/music/guide/${guideCategory}/${platform}`,
-      iconSrc: `/icon/guide/${platform}-filled.svg`,
+      iconSrc: `/images/musicguide/filledlogo/${platform}.png`,
     });
 
     return guides;

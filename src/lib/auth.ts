@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { API_BASE_URL, api, initializeCsrfToken } from '@/lib/api';
 
 const LOCAL_FRONTEND_URL = 'http://localhost:3000';
@@ -52,12 +53,23 @@ type CurrentUserResponse = {
   data: CurrentUser;
 };
 
-export async function getCurrentUser(signal?: AbortSignal) {
-  const response = await api.get<CurrentUserResponse>('/api/v1/me', {
-    signal,
-  });
+export async function getCurrentUser(
+  signal?: AbortSignal,
+): Promise<CurrentUser | null> {
+  try {
+    const response = await api.get<CurrentUserResponse>('/api/v1/me', {
+      signal,
+    });
 
-  return response.data.data;
+    return response.data.data;
+  } catch (error) {
+    // 비로그인 사용자의 401은 조회 실패가 아니라 정상적인 게스트 상태다.
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      return null;
+    }
+
+    throw error;
+  }
 }
 
 export { initializeCsrfToken };

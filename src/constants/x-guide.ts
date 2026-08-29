@@ -15,7 +15,7 @@ export type FollowAccountSection = {
 };
 
 export const getXAccountIconSrc = (handle: string) =>
-  `/icon/xaccount/${handle.replace(/^@/, '').toLowerCase()}.svg`;
+  `/images/xprofile/${handle.replace(/^@/, '').toLowerCase()}.png`;
 
 export const FOLLOW_ACCOUNT_SECTIONS: FollowAccountSection[] = [
   {

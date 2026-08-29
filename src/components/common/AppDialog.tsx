@@ -41,7 +41,7 @@ export function AppDialog({
           </DialogTitle>
 
           {description && (
-            <DialogDescription className="mt-[8px] whitespace-pre-line text-body-13 text-secondary-300">
+            <DialogDescription className="mt-[8px] whitespace-pre-line text-body-15 text-secondary-300">
               {description}
             </DialogDescription>
           )}
@@ -59,8 +59,8 @@ export function AppDialog({
               disabled={action.disabled}
               className={
                 action.variant === 'secondary'
-                  ? 'py-[14px] rounded-[12px] bg-secondary-400 font-bold text-secondary-700'
-                  : 'py-[14px] rounded-[12px] bg-main font-bold text-[#161619]'
+                  ? 'py-[12px] rounded-[12px] bg-secondary-400 font-bold text-secondary-700'
+                  : 'py-[12px] rounded-[12px] bg-main font-bold text-[#161619]'
               }
               onClick={action.onClick}
             >

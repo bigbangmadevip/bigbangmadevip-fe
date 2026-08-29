@@ -6,12 +6,14 @@ import { useEffect, useState } from 'react';
 import { AppDialog } from '@/components/common/AppDialog';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import LoadingScreen from '@/components/common/LoadingScreen';
+import { LoginRequiredDialog } from '@/components/common/LoginRequiredDialog';
 import NavigationListItem from '@/components/common/NavigationListItem';
 import { PageHeader } from '@/components/common/PageHeader';
 import { SectionTitle } from '@/components/common/SectionTitle';
 import { getPlatformLabel } from '@/constants/platform';
 import { getVotePlatformLabel } from '@/constants/vote-platform';
 import { useParticipateCheeringMutation } from '@/hooks/mutations/useParticipateCheeringMutation';
+import { useCurrentUserQuery } from '@/hooks/queries/useAuthQuery';
 import type { HomeResponse } from '@/types/home';
 import CheeringGrid from './CheeringGrid';
 import { CHEERING_DIALOG_CONFIG } from './constants';
@@ -42,6 +44,7 @@ function getSchedulePlatformLabel(
 export default function HomeContainer({ initialData }: HomeContainerProps) {
   const [now, setNow] = useState<number | null>(null);
   const [dialogStep, setDialogStep] = useState<DialogStep | null>(null);
+  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
   const [typeCompletedCount, setTypeCompletedCount] = useState<number | null>(
     null,
   );
@@ -51,6 +54,11 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
   );
 
   const participateCheeringMutation = useParticipateCheeringMutation();
+  const {
+    data: currentUser,
+    isPending: isAuthPending,
+    refetch: refetchCurrentUser,
+  } = useCurrentUserQuery();
   const urgentDetails = initialData.urgentDetails;
 
   useEffect(() => {
@@ -90,7 +98,19 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
       }
     : null;
 
-  const handleOpenParticipateDialog = (cheeringId: string) => {
+  const handleOpenParticipateDialog = async (cheeringId: string) => {
+    let user = currentUser;
+
+    if (isAuthPending) {
+      const result = await refetchCurrentUser();
+      user = result.data;
+    }
+
+    if (!user) {
+      setIsLoginDialogOpen(true);
+      return;
+    }
+
     setTypeCompletedCount(null);
     setSelectedCheeringId(cheeringId);
     setDialogStep('CONFIRM');
@@ -274,6 +294,11 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
                 },
               ]
         }
+      />
+
+      <LoginRequiredDialog
+        open={isLoginDialogOpen}
+        onOpenChange={setIsLoginDialogOpen}
       />
 
       {participateCheeringMutation.isPending && (

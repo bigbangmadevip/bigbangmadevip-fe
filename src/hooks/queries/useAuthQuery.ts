@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { CACHE_TIME } from '@/constants/cache-time';
 import { getCurrentUser } from '@/lib/auth';
 
 export const AUTH_QUERY_KEYS = {
@@ -12,8 +11,11 @@ export function useCurrentUserQuery(enabled = true) {
     queryKey: AUTH_QUERY_KEYS.currentUser(),
     queryFn: ({ signal }) => getCurrentUser(signal),
     enabled,
-    staleTime: CACHE_TIME.FIVE_MINUTES,
-    gcTime: CACHE_TIME.THIRTY_MINUTES,
+    staleTime: Infinity,
+    gcTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     retry: false,
   });
 }

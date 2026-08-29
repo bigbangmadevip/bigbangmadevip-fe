@@ -1,4 +1,4 @@
-import { BottomNavigation } from '@/components/layout/bottom-navigation';
+import { BottomNavigation } from '@/components/layout/BottomNavigation';
 import { AuthGate } from '@/components/auth/auth-gate';
 
 export default function TabsLayout({
