@@ -47,6 +47,9 @@ export type CurrentUser = {
   provider: string;
   role: UserRole;
   termsAgreed: boolean;
+  urgentPushEnabled: boolean | null;
+  musicPushEnabled: boolean | null;
+  votePushEnabled: boolean | null;
 };
 
 type CurrentUserResponse = {

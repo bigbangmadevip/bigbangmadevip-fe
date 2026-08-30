@@ -1,4 +1,5 @@
 import { api } from '@/lib/api';
+import type { CurrentUser } from '@/lib/auth';
 
 type TermsAgreement = {
   termsAgreed: boolean;
@@ -10,6 +11,21 @@ type TermsAgreementResponse = {
 
 type AuthActionResponse = {
   success: boolean;
+};
+
+type RegisterFcmTokenResponse = {
+  success: boolean;
+};
+
+export type PushSettings = {
+  urgentPushEnabled: boolean;
+  musicPushEnabled: boolean;
+  votePushEnabled: boolean;
+};
+
+type PushSettingsResponse = {
+  data: CurrentUser;
+  success?: boolean;
 };
 
 export async function agreeToTerms() {
@@ -30,4 +46,22 @@ export async function withdrawAccount() {
   const response = await api.delete<AuthActionResponse>('/api/v1/me');
 
   return response.data;
+}
+
+export async function registerFcmToken(fcmToken: string) {
+  const response = await api.patch<RegisterFcmTokenResponse>(
+    '/api/v1/me/fcm-token',
+    { fcmToken },
+  );
+
+  return response.data;
+}
+
+export async function updatePushSettings(settings: PushSettings) {
+  const response = await api.patch<PushSettingsResponse>(
+    '/api/v1/me/push-settings',
+    settings,
+  );
+
+  return response.data.data;
 }

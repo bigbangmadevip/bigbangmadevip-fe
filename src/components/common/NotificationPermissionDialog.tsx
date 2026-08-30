@@ -14,6 +14,7 @@ type NotificationPermissionDialogProps = {
   onEnable: () => void | Promise<void>;
   onLater: () => void | Promise<void>;
   enableDisabled?: boolean;
+  errorMessage?: string | null;
 };
 
 export default function NotificationPermissionDialog({
@@ -22,6 +23,7 @@ export default function NotificationPermissionDialog({
   onEnable,
   onLater,
   enableDisabled = false,
+  errorMessage,
 }: NotificationPermissionDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -62,6 +64,11 @@ export default function NotificationPermissionDialog({
         </div>
 
         <div className="mt-[28px] flex flex-col gap-[8px]">
+          {errorMessage && (
+            <p role="alert" className="text-center text-body-12 text-accent-red">
+              {errorMessage}
+            </p>
+          )}
           <button
             type="button"
             disabled={enableDisabled}
@@ -72,8 +79,9 @@ export default function NotificationPermissionDialog({
           </button>
           <button
             type="button"
+            disabled={enableDisabled}
             onClick={onLater}
-            className="h-[48px] w-full rounded-[12px] bg-secondary-400 text-body-14 font-bold text-secondary-700"
+            className="h-[48px] w-full rounded-[12px] bg-secondary-400 text-body-14 font-bold text-secondary-700 disabled:cursor-not-allowed disabled:bg-secondary-800 disabled:text-secondary-600"
           >
             나중에 할게요
           </button>
