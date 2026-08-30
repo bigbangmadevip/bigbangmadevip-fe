@@ -98,6 +98,7 @@ export function BottomNavigation() {
 
             return (
               <Link
+                prefetch={false}
                 key={tab.href}
                 href={tab.href}
                 onClick={tab.href === '/mypage' ? handleMyPageClick : undefined}

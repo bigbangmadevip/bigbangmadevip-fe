@@ -15,32 +15,32 @@ const CURRENCY_GUIDES = [
   {
     id: 'idolchamp',
     label: '아이돌챔프',
-    iconSrc: '/icon/vote/idolchamp.svg',
+    iconSrc: '/images/voteplan/idolchamp.png',
   },
   {
     id: 'coogoong',
     label: '쿠궁',
-    iconSrc: '/icon/vote/coogoong.svg',
+    iconSrc: '/images/voteplan/coogoong.png',
   },
   {
     id: 'mubeat',
     label: '뮤빗',
-    iconSrc: '/icon/vote/mubeat.svg',
+    iconSrc: '/images/voteplan/mubeat.png',
   },
   {
     id: 'muniverse',
     label: '뮤니버스',
-    iconSrc: '/icon/vote/muniverse.svg',
+    iconSrc: '/images/voteplan/muniverse.png',
   },
   {
     id: 'linc',
     label: '링크',
-    iconSrc: '/icon/vote/linc.svg',
+    iconSrc: '/images/voteplan/linc.png',
   },
   {
     id: 'higher',
     label: '하이어',
-    iconSrc: '/icon/vote/higher.svg',
+    iconSrc: '/images/voteplan/higher.png',
   },
 ] as const;
 
@@ -70,11 +70,11 @@ export default function VoteCurrencyPlanDetail() {
       />
 
       <Image
-        src={'/images/voteplan/votecoin.jpg'}
+        src={'/images/voteplan/votecoin.png'}
         alt="음악방송 재화 적립 가이드"
         priority
-        width={1005}
-        height={1341}
+        width={670}
+        height={894}
         className="mt-[24px] h-auto w-full rounded-[16px]"
       />
 
@@ -101,7 +101,7 @@ export default function VoteCurrencyPlanDetail() {
                   width={28}
                   height={28}
                   aria-hidden="true"
-                  className="h-[28px] w-[28px] rounded-full object-contain"
+                  className="h-[40px] w-[40px] rounded-full object-contain"
                 />
               </span>
               <span className="w-full truncate text-center text-body-13 font-medium text-secondary-100">
