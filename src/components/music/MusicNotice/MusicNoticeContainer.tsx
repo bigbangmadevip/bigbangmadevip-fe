@@ -33,7 +33,7 @@ export default function MusicNoticeContainer() {
               noticeId={String(notice.id)}
               title={notice.title}
               date={formatDate(notice.createdAt)}
-              pinned={false}
+              pinned={notice.pinned}
               showThumbnail={false}
             />
           ))}

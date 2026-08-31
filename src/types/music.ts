@@ -90,6 +90,7 @@ export type MusicNoticeListItem = {
   id: number;
   title: string;
   createdAt: string;
+  pinned: boolean;
 };
 
 export type MusicNoticeLinkItem = {

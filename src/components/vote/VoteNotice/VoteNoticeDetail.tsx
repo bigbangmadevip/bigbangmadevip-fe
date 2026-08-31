@@ -52,9 +52,17 @@ export default function VoteNoticeDetail({ noticeId }: VoteNoticeDetailProps) {
           <h1 className="text-[22px] font-bold text-secondary-1">
             {notice.title}
           </h1>
-          <time className="mt-[12px] mb-[24px] block text-body-12 font-medium text-secondary-600">
+          <time className="mt-[12px] mb-[12px] block text-body-12 font-medium text-secondary-600">
             {formatDate(notice.createdAt)}
           </time>
+          {notice.links.map((link, idx) => (
+            <div
+              key={`${link.label}-${idx}`}
+              className="text-body-12 font-medium text-[#7676ff] mb-[24px]"
+            >
+              <a href={`${link.url}`}>바로가기 {link.label}</a>
+            </div>
+          ))}
 
           <div className="border-t border-secondary-900 pt-[32px] text-body-13 text-secondary-100">
             <p className="whitespace-pre-line leading-[1.7]">

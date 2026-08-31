@@ -5,11 +5,7 @@ export type VoteCategory =
   | 'anniversary'
   | 'etc';
 
-export type VoteGuideCategory =
-  | 'all'
-  | 'music-show'
-  | 'awards'
-  | 'etc';
+export type VoteGuideCategory = 'all' | 'music-show' | 'awards' | 'etc';
 
 export type VoteDetailGuide = {
   guideId: number;
@@ -56,9 +52,16 @@ export type VoteNoticeListItem = {
   id: number;
   title: string;
   createdAt: string;
+  pinned: boolean;
+};
+
+export type VoteNoticeLinkItem = {
+  label: string;
+  url: string;
 };
 
 export type VoteNoticeDetail = VoteNoticeListItem & {
   content: string;
   imageUrls: string[];
+  links: VoteNoticeLinkItem[];
 };
