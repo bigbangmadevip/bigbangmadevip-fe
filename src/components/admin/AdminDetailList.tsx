@@ -61,10 +61,15 @@ export default function AdminDetailList({ adminType }: AdminDetailListProps) {
           eventEndAt: musicItem.eventEndAt,
           checklist: musicItem.checklist,
           imageUrls: musicItem.imageUrls,
+          guideIds: musicItem.guideIds ?? [],
           menuUrgent: musicItem.menuUrgent,
           urgentContent: musicItem.urgentContent,
           active: false,
           scheduledAt: musicItem.scheduledAt,
+          pushEnabled: musicItem.pushEnabled ?? false,
+          pushSendAt: musicItem.pushSendAt ?? null,
+          pushTitle: musicItem.pushTitle ?? null,
+          pushBody: musicItem.pushBody ?? null,
         });
       }
 
@@ -82,6 +87,7 @@ export default function AdminDetailList({ adminType }: AdminDetailListProps) {
         eventEndAt: voteItem.eventEndAt,
         checklist: voteItem.checklist,
         imageUrls: voteItem.imageUrls,
+        guideIds: voteItem.guideIds ?? [],
         ctaButtonLabel: voteItem.ctaButtonLabel,
         menuUrgent: voteItem.menuUrgent,
         urgentContent: voteItem.urgentContent,

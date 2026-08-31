@@ -13,10 +13,15 @@ export type AdminMusicDetailPayload = {
   eventEndAt: string | null;
   checklist: string[];
   imageUrls: string[];
+  guideIds: number[];
   menuUrgent: boolean;
   urgentContent: string | null;
   active: boolean;
   scheduledAt: string | null;
+  pushEnabled: boolean;
+  pushSendAt: string | null;
+  pushTitle: string | null;
+  pushBody: string | null;
 };
 
 export type AdminMusicDetail = AdminDetailBase & AdminMusicDetailPayload;
@@ -27,11 +32,12 @@ export type AdminVoteDetailPayload = {
   musicShowId: number | null;
   rewardDescription: string | null;
   platformIds: number[];
-  platformUrl: string[];
+  platformUrl: string[] | null;
   eventStartAt: string | null;
   eventEndAt: string | null;
   checklist: string[];
   imageUrls: string[];
+  guideIds: number[];
   ctaButtonLabel: string | null;
   menuUrgent: boolean;
   urgentContent: string | null;

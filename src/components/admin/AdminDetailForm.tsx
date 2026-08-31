@@ -718,17 +718,23 @@ export default function AdminDetailForm({
             formData.get('eventEndDate'),
             formData.get('eventEndTime'),
           ),
+          guideIds: [],
+          pushEnabled: false,
+          pushSendAt: null,
+          pushTitle: null,
+          pushBody: null,
         };
         return detailId
           ? updateAdminMusicDetail(detailId, payload)
           : createAdminMusicDetail(payload);
       }
 
+      const platformUrls = formDataStringList(formData, 'platformUrl');
       const payload: AdminVoteDetailPayload = {
         ...common,
         musicShowId: numberOrNull(formData.get('musicShowId')),
         rewardDescription: nullableString(formData.get('rewardDescription')),
-        platformUrl: formDataStringList(formData, 'platformUrl'),
+        platformUrl: platformUrls.length > 0 ? platformUrls : null,
         eventStartAt: combineDateAndTime(
           formData.get('eventStartDate'),
           formData.get('eventStartTime'),
@@ -738,6 +744,7 @@ export default function AdminDetailForm({
           formData.get('eventEndTime'),
         ),
         ctaButtonLabel: '투표 하러가기',
+        guideIds: [],
         pushEnabled: false,
         pushSendAt: null,
         pushTitle: null,
