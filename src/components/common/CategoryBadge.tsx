@@ -13,7 +13,7 @@ export function CategoryBadge({ category }: CategoryBadgeProps) {
 
   return (
     <div
-      className="inline-flex rounded-[4px] px-[8px] py-[4px] text-caption-10 font-bold text-secondary-950"
+      className="inline-flex rounded-[4px] px-[8px] py-[4px] text-body-11 font-bold text-secondary-950"
       style={color ? { backgroundColor: color } : undefined}
     >
       {label}

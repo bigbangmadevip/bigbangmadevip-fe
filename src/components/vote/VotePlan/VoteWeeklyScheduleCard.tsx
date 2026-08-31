@@ -75,7 +75,7 @@ export default function VoteWeeklyScheduleCard({
           <strong className="block truncate text-body-15 font-bold text-secondary-1">
             {schedule.title}
           </strong>
-          <span className="mt-[2px] block truncate text-body-13 text-secondary-400">
+          <span className="mt-[2px] block truncate text-body-13 text-secondary-300">
             {schedule.channel} <b className="px-[4px] text-secondary-700">|</b>{' '}
             {schedule.broadcastTime}
           </span>
@@ -103,18 +103,18 @@ export default function VoteWeeklyScheduleCard({
           id={`weekly-vote-schedule-${schedule.id}`}
           className="px-[16px] pb-[16px]"
         >
-          <p className="text-body-12 leading-[1.6] text-secondary-400">
-            {schedule.description}
-          </p>
+          <span className="text-body-12 py-[6px] px-[12px] bg-secondary-700 text-secondary-200 rounded-full">
+            <strong>사전투표 점수</strong>가 합산되어 차트에 반영됩니다.
+          </span>
 
-          <h3 className="mt-[20px] text-body-13 font-bold text-secondary-1">
+          <p className="mt-[20px] text-body-15 font-bold text-secondary-1">
             투표 일정
-          </h3>
+          </p>
           <div className="mt-[12px] flex flex-col gap-[8px]">
             {schedule.summaries.map((summary) => (
               <div
                 key={`${summary.label}-${summary.time}`}
-                className="grid grid-cols-[100px_minmax(0,1fr)] gap-[8px] text-body-12 font-medium"
+                className="grid grid-cols-[100px_minmax(0,1fr)] gap-[8px] text-body-13 font-medium"
               >
                 <span className={`${TONE_TEXT_CLASS[summary.tone]}`}>
                   {summary.label}
@@ -131,17 +131,17 @@ export default function VoteWeeklyScheduleCard({
                 className="border-b border-secondary-800 py-[20px] last:border-b-0"
               >
                 <div className="flex flex-wrap items-baseline gap-x-[8px] gap-y-[2px]">
-                  <h4
-                    className={`text-body-13 font-bold ${TONE_TEXT_CLASS[detail.tone]}`}
+                  <p
+                    className={`text-body-15 font-bold ${TONE_TEXT_CLASS[detail.tone]}`}
                   >
                     {detail.label}
-                  </h4>
-                  <p className="text-body-11 text-secondary-500">
-                    {detail.time}
                   </p>
+                  {/* <p className="text-body-11 text-secondary-500">
+                    {detail.time}
+                  </p> */}
                 </div>
 
-                <dl className="mt-[14px] grid grid-cols-[92px_minmax(0,1fr)] gap-x-[8px] gap-y-[10px] text-body-12">
+                <dl className="mt-[14px] grid grid-cols-[92px_minmax(0,1fr)] gap-x-[8px] gap-y-[10px] text-body-13">
                   {detail.rows.map((row) => (
                     <div
                       key={`${detail.label}-${row.label}`}
@@ -160,9 +160,9 @@ export default function VoteWeeklyScheduleCard({
 
           {schedule.guides.length > 0 && (
             <div className="mt-[20px]">
-              <h3 className="text-body-13 font-bold text-secondary-1">
+              <p className="text-body-15 font-bold text-secondary-1">
                 관련 가이드
-              </h3>
+              </p>
               <div className="mt-[12px] flex flex-col gap-[8px]">
                 {schedule.guides.map((guide) => {
                   const guideContent = (
@@ -177,7 +177,7 @@ export default function VoteWeeklyScheduleCard({
                           className="object-contain"
                         />
                       </span>
-                      <strong className="min-w-0 flex-1 truncate text-body-13 font-bold text-secondary-1">
+                      <strong className="min-w-0 flex-1 truncate text-body-14 font-bold text-secondary-1">
                         {guide.title}
                       </strong>
                       <Image

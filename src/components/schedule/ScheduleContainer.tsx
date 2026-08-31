@@ -311,7 +311,7 @@ export default function ScheduleContainer() {
               role="tab"
               aria-selected={isActive}
               onClick={() => setCategory(tab.id)}
-              className={`rounded-[6px] py-[6px] text-body-12 ${
+              className={`rounded-[6px] py-[6px] text-body-13 ${
                 isActive
                   ? 'bg-secondary-950 font-bold text-secondary-1'
                   : 'font-normal text-secondary-300'
@@ -367,7 +367,7 @@ export default function ScheduleContainer() {
       />
 
       {category === 'all' && (
-        <div className="mt-[16px] flex items-center gap-[20px] text-body-12 text-secondary-400">
+        <div className="mt-[16px] flex items-center gap-[20px] text-body-13 text-secondary-400">
           <span className="flex items-center gap-[6px]">
             <span className="h-[8px] w-[8px] rounded-full bg-[#1B9CEC]" />
             음원 총공
@@ -388,7 +388,7 @@ export default function ScheduleContainer() {
               ? formatSelectedDate(selectedDate)
               : '날짜를 선택해주세요'}
           </h2>
-          <p className="text-body-13 text-secondary-400">
+          <p className="text-body-14 text-secondary-200">
             총공 <strong>{selectedScheduleItems.length}</strong>개
           </p>
         </div>

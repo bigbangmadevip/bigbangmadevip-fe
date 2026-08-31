@@ -62,13 +62,13 @@ export default function MusicStreamingContainer() {
         <SectionTitle
           action={
             <div className="flex items-baseline">
-              <span className="text-body-13 text-secondary-400">
-                최신 업데이트
+              <span className="text-body-13 text-secondary-300">
+                최종 업데이트
               </span>
               <span className="px-[6px] text-body-13 font-bold text-secondary-700">
                 |
               </span>
-              <span className="text-body-13 text-secondary-400">
+              <span className="text-body-13 text-secondary-300">
                 {formatDateTimeToMinute(data.imagesUpdatedAt)}
               </span>
             </div>
@@ -108,10 +108,7 @@ export default function MusicStreamingContainer() {
         os={currentOs}
       />
 
-      <FloatingShareButton
-        title="음원 스트리밍"
-        className="bottom-[calc(90px+env(safe-area-inset-bottom))]"
-      />
+      <FloatingShareButton title="음원 스트리밍" />
     </>
   );
 }

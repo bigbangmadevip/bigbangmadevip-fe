@@ -33,13 +33,13 @@ export function CheeringCard({
         <div className="h-[92px] w-[92px]" aria-hidden="true" />
       )}
 
-      <p className="mt-[4px] min-h-[36px] whitespace-pre-line text-body-13 font-normal text-secondary-1">
+      <p className="mt-[4px] min-h-[36px] whitespace-pre-line text-body-14 font-normal text-secondary-1">
         {title}
       </p>
 
       <button
         type="button"
-        className={`flex items-center gap-[2px] mt-[6px] rounded-[16px] px-[10px] py-[4px] text-body-11 ${
+        className={`flex items-center gap-[2px] mt-[8px] rounded-[16px] px-[12px] py-[6px] text-body-13 ${
           completed
             ? 'bg-secondary-800 text-secondary-500 border border-[rgba(255,255,255,0.08)]'
             : 'bg-main text-secondary-950 text-body-11 font-bold'
@@ -47,15 +47,6 @@ export function CheeringCard({
         onClick={onParticipate}
         disabled={completed}
       >
-        {completed && (
-          <Image
-            className="h-[12px] w-auto"
-            src={'/icon/line/check_gray-12.svg'}
-            alt="checkIcon"
-            width={12}
-            height={12}
-          />
-        )}
         {ctaText}
       </button>
     </article>

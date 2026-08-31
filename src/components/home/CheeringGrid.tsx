@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { getCheeringIcon } from '@/constants/cheering';
 import type { CheeringItem } from '@/types/home';
 import { CheeringCard } from './CheeringCard';
-import Image from 'next/image';
+import ArrowDown from '@/assets/line/arrow-down.svg';
 
 const DEFAULT_VISIBLE_COUNT = 6;
 
@@ -48,16 +48,11 @@ export default function CheeringGrid({
         <div className="mt-[20px] pt-[16px] border-t border-secondary-800">
           <button
             type="button"
-            className="flex w-full items-center justify-center gap-[6px] text-body-13 font-medium text-secondary-400"
+            className="flex w-full items-center justify-center gap-[6px] text-body-13 font-medium text-secondary-300"
             aria-expanded={isExpanded}
             onClick={() => setIsExpanded(true)}
           >
-            <Image
-              src={'/icon/line/arrow-down_gray-20.svg'}
-              alt="CloseIcon"
-              width={20}
-              height={20}
-            />
+            <ArrowDown className="w-[20px] h-[20px] text-secondary-300" />
             {remainingCount}개 더 보기
           </button>
         </div>

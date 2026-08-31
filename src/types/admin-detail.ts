@@ -27,7 +27,7 @@ export type AdminVoteDetailPayload = {
   musicShowId: number | null;
   rewardDescription: string | null;
   platformIds: number[];
-  platformUrl: string | null;
+  platformUrl: string[];
   eventStartAt: string | null;
   eventEndAt: string | null;
   checklist: string[];
@@ -44,4 +44,7 @@ export type AdminVoteDetailPayload = {
   pushBody: string | null;
 };
 
-export type AdminVoteDetail = AdminDetailBase & AdminVoteDetailPayload;
+export type AdminVoteDetail = AdminDetailBase &
+  Omit<AdminVoteDetailPayload, 'platformUrl'> & {
+    platformUrl: string[] | string | null;
+  };

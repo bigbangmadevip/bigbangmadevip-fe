@@ -54,7 +54,7 @@ export default function MusicNoticeDetail({
           <h1 className="text-[22px] font-bold text-secondary-1">
             {notice.title}
           </h1>
-          <time className="mt-[12px] mb-[12px] block text-body-12 font-medium text-secondary-600">
+          <time className="mt-[12px] mb-[12px] block text-body-12 font-medium text-secondary-400">
             {formatDate(notice.createdAt)}
           </time>
           {notice.links.map((link, idx) => (
@@ -66,7 +66,7 @@ export default function MusicNoticeDetail({
             </div>
           ))}
 
-          <div className="border-t border-secondary-900 pt-[32px] text-body-13 text-secondary-100">
+          <div className="border-t border-secondary-900 pt-[32px] text-body-15 text-secondary-100">
             <p className="whitespace-pre-line leading-[1.7]">
               {notice.content}
             </p>

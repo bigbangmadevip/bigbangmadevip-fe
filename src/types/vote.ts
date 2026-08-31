@@ -21,8 +21,8 @@ export type VoteDetailResponse = {
   eventEndAt: string | null;
   rewardDescription: string | null;
   platformNames: string[];
-  platformUrl: string | null;
-  ctaButtonLabel: string | null;
+  platformUrl?: string | string[] | null;
+  ctaButtonLabel?: string | null;
   checklist: string[];
   imageUrls: string[];
   guides: VoteDetailGuide[];

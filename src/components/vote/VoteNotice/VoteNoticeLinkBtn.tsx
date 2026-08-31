@@ -21,7 +21,7 @@ const VoteNoticeLinkBtn = ({
     <>
       <Link href={href} target="_blank" rel="noopener noreferrer">
         <div className="flex p-[16px] justify-between items-center rounded-[16px] bg-[#1B1B1B]">
-          <div className="flex flex-row gap-[12px] items-center">
+          <div className="flex flex-row gap-[8px] items-center">
             <Image src={iconSrc} alt={'ICON_SVG'} width={40} height={40} />
 
             <div>

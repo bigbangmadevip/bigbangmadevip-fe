@@ -96,7 +96,7 @@ export default function VoteCategoryContent({
 
       {deadlineVotes.length > 0 && (
         <div className="mb-[32px]">
-          <div className="flex items-center gap-[4px] rounded-t-[16px] bg-[#371A1E] px-[18px] py-[12px] text-body-12 font-medium text-accent-red">
+          <div className="flex items-center gap-[4px] rounded-t-[16px] bg-[#371A1E] px-[18px] py-[12px] text-body-13 font-medium text-accent-red">
             <Image
               src="/icon/line/clock_red-16.svg"
               alt=""

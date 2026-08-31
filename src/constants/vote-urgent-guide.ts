@@ -3,6 +3,7 @@ import {
   getVotePlatformLabel,
 } from '@/constants/vote-platform';
 import type { VoteDetailResponse } from '@/types/vote';
+import { getVoteDetailPlatforms } from '@/utils/vote-detail-platform';
 
 export type VoteUrgentGuideLink = {
   id: string;
@@ -99,5 +100,5 @@ export function getVoteUrgentGuideLinks(
 ): VoteUrgentGuideLink[] {
   if (detail.category !== 'MUSIC_SHOW') return [];
 
-  return getMusicShowGuideLinks(detail.platformNames);
+  return getMusicShowGuideLinks(getVoteDetailPlatforms(detail.platformNames));
 }

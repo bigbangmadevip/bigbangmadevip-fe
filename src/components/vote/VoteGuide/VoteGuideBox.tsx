@@ -32,7 +32,7 @@ const VoteGuideBox = ({
 
       <div className="min-w-0 flex-1 py-[5.5px]">
         {caption && (
-          <p className="mb-[16px] truncate text-body-13 text-secondary-500">
+          <p className="mb-[16px] truncate text-body-14 text-secondary-200">
             {caption}
           </p>
         )}
@@ -41,7 +41,7 @@ const VoteGuideBox = ({
             <p className="truncate text-title-15 font-medium text-secondary-1">
               <strong>{title}</strong> 투표 가이드
             </p>
-            <p className="mt-[4px] truncate text-body-12 text-secondary-300">
+            <p className="mt-[4px] truncate text-body-13 text-secondary-400">
               {description ?? '투표 비율 반영과 참여 방법 안내'}
             </p>
           </div>
@@ -119,10 +119,10 @@ const VoteGuideBox = ({
                     )}
 
                     <div className="min-w-0">
-                      <p className="truncate text-body-13 font-bold text-secondary-1">
+                      <p className="truncate text-body-14 font-bold text-secondary-100">
                         {item.title}
                       </p>
-                      <p className="truncate text-body-11 font-medium text-secondary-500">
+                      <p className="truncate text-body-13 font-medium text-secondary-300">
                         {item.caption ?? '투표 가이드'}
                       </p>
                     </div>

@@ -7,6 +7,9 @@ import { useEffect, useRef, useState } from 'react';
 import { CategoryBadge } from '@/components/common/CategoryBadge';
 import CommonErrorScreen from '@/components/common/CommonErrorScreen';
 import FloatingShareButton from '@/components/common/FloatingShareButton';
+import { getVoteDetailLinks } from '@/utils/vote-detail-links';
+import { getVoteDetailPlatforms } from '@/utils/vote-detail-platform';
+import UrgentLinkBottomSheet from '@/components/common/UrgentLinkBottomSheet';
 import { HeaderIconButton } from '@/components/common/HeaderIconButton';
 import LoadingScreen from '@/components/common/LoadingScreen';
 import { PageHeader } from '@/components/common/PageHeader';
@@ -45,6 +48,7 @@ export default function UrgentDetailPage() {
   const pageTitleRef = useRef<HTMLHeadingElement>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [showHeaderTitle, setShowHeaderTitle] = useState(false);
+  const [isLinkSheetOpen, setIsLinkSheetOpen] = useState(false);
   const activeQuery =
     menuType === 'MUSIC'
       ? musicDetailQuery
@@ -87,6 +91,7 @@ export default function UrgentDetailPage() {
     : [];
   const voteGuideLinks = !isMusicDetail ? getVoteUrgentGuideLinks(detail) : [];
   const hasGuides = musicGuideLinks.length > 0 || voteGuideLinks.length > 0;
+  const voteLinks = isMusicDetail ? [] : getVoteDetailLinks(detail);
 
   const handleImageScroll = () => {
     const carousel = carouselRef.current;
@@ -139,7 +144,6 @@ export default function UrgentDetailPage() {
       <section className="bg-secondary-950 px-5 pb-[24px]">
         <div className="pt-[20px]">
           <CategoryBadge category={detail.category} />
-
           <h1
             ref={pageTitleRef}
             className="mt-[20px] whitespace-pre-line text-[22px] font-bold tracking-[-0.04em] text-secondary-1"
@@ -147,7 +151,7 @@ export default function UrgentDetailPage() {
             {detail.title}
           </h1>
 
-          <dl className="mt-[20px] grid grid-cols-[72px_minmax(0,1fr)] gap-x-[16px] gap-y-[10px] text-body-13">
+          <dl className="mt-[20px] grid grid-cols-[72px_minmax(0,1fr)] gap-x-[16px] gap-y-[10px] text-body-14">
             {isMusicDetail ? (
               <>
                 {detail.songName && (
@@ -175,18 +179,9 @@ export default function UrgentDetailPage() {
               </>
             ) : (
               <>
-                {detail.rewardDescription && (
-                  <>
-                    <dt className="text-secondary-300">리워드</dt>
-                    <dd className="font-bold text-secondary-100">
-                      {detail.rewardDescription}
-                    </dd>
-                  </>
-                )}
-
                 <dt className="text-secondary-300">플랫폼</dt>
                 <dd className="font-medium text-secondary-100">
-                  {detail.platformNames.map(getVotePlatformLabel).join(', ')}
+                  {[...new Set(getVoteDetailPlatforms(detail.platformNames))].filter(Boolean).map(getVotePlatformLabel).join(', ')}
                 </dd>
 
                 {detail.eventStartAt && (
@@ -206,6 +201,15 @@ export default function UrgentDetailPage() {
                     </dd>
                   </>
                 )}
+
+                {detail.rewardDescription && (
+                  <>
+                    <dt className="text-secondary-300">1위 리워드</dt>
+                    <dd className="font-bold text-secondary-100">
+                      {detail.rewardDescription}
+                    </dd>
+                  </>
+                )}
               </>
             )}
           </dl>
@@ -214,17 +218,6 @@ export default function UrgentDetailPage() {
             <p className="mt-[20px] whitespace-pre-line text-body-13 text-secondary-200">
               {detail.description}
             </p>
-          )}
-
-          {!isMusicDetail && detail.platformUrl && (
-            <a
-              href={detail.platformUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-[20px] flex w-full items-center justify-center rounded-[12px] bg-main py-[14px] text-body-15 font-bold text-secondary-950"
-            >
-              {detail.ctaButtonLabel || '투표하러 가기'}
-            </a>
           )}
         </div>
       </section>
@@ -238,7 +231,7 @@ export default function UrgentDetailPage() {
               <h2 className="shrink-0 text-title-15 font-bold text-secondary-1">
                 가이드 바로 가기
               </h2>
-              <p className="text-body-11 font-medium text-secondary-300">
+              <p className="text-body-12 font-medium text-secondary-300">
                 처음 참여하는 VIP라면 가이드를 먼저 확인해주세요!
               </p>
             </div>
@@ -264,21 +257,23 @@ export default function UrgentDetailPage() {
                       className="h-[40px] w-[40px] shrink-0 rounded-full"
                     />
                     <span className="ml-[8px] min-w-0 flex-1">
-                      <strong className="block truncate text-body-13 font-bold text-secondary-1">
+                      <strong className="block truncate text-body-15 font-bold text-secondary-1">
                         {guide.title}
                       </strong>
-                      <span className="block truncate text-body-11 text-secondary-300">
+                      <span className="block truncate text-body-13 text-secondary-300">
                         {guide.description}
                       </span>
                     </span>
-                    <Image
-                      src="/icon/line/arrow-right_gray-24.svg"
-                      alt=""
-                      width={24}
-                      height={24}
-                      aria-hidden="true"
-                      className="shrink-0"
-                    />
+                    {musicGuideLinks.length === 1 && (
+                      <Image
+                        src="/icon/line/arrow-right_gray-24.svg"
+                        alt=""
+                        width={24}
+                        height={24}
+                        aria-hidden="true"
+                        className="shrink-0"
+                      />
+                    )}
                   </Link>
                 ))}
               </div>
@@ -303,21 +298,23 @@ export default function UrgentDetailPage() {
                       className="h-[40px] w-[40px] shrink-0 rounded-full object-contain"
                     />
                     <span className="ml-[8px] min-w-0 flex-1">
-                      <strong className="block line-clamp-2 text-body-13 font-bold text-secondary-1">
+                      <strong className="block line-clamp-2 text-body-15 font-bold text-secondary-1">
                         {guide.title}
                       </strong>
-                      <span className="block text-body-11 text-secondary-300">
+                      <span className="block text-body-13 text-secondary-300">
                         {guide.description}
                       </span>
                     </span>
-                    <Image
-                      src="/icon/line/arrow-right_gray-24.svg"
-                      alt=""
-                      width={24}
-                      height={24}
-                      aria-hidden="true"
-                      className="shrink-0"
-                    />
+                    {voteGuideLinks.length === 1 && (
+                      <Image
+                        src="/icon/line/arrow-right_gray-24.svg"
+                        alt=""
+                        width={24}
+                        height={24}
+                        aria-hidden="true"
+                        className="shrink-0"
+                      />
+                    )}
                   </Link>
                 ))}
               </div>
@@ -342,11 +339,11 @@ export default function UrgentDetailPage() {
                   >
                     <span
                       aria-hidden="true"
-                      className="mt-[1px] text-body-13 font-medium text-secondary-500"
+                      className="mt-[1px] text-body-14 font-medium text-secondary-500"
                     >
-                      ✓
+                      ✔️
                     </span>
-                    <span className="text-body-13 font-medium text-secondary-200">
+                    <span className="text-body-14 font-medium text-secondary-200">
                       {item}
                     </span>
                   </li>
@@ -426,6 +423,39 @@ export default function UrgentDetailPage() {
             </>
           )}
         </section>
+      )}
+
+      {voteLinks.length > 0 && (
+        <div className="flex flex-col gap-[8px] bg-secondary-950 px-5 py-[20px]">
+          {voteLinks.length === 1 ? (
+            <a
+              href={voteLinks[0].url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-center rounded-[12px] bg-main px-4 py-[14px] text-center text-body-15 font-bold text-secondary-950"
+            >
+              {(!isMusicDetail && detail.ctaButtonLabel?.trim()) || voteLinks[0].label?.trim() || '투표하러 가기'}
+            </a>
+          ) : (
+            <button
+              type="button"
+              aria-haspopup="dialog"
+              onClick={() => setIsLinkSheetOpen(true)}
+              className="flex w-full items-center justify-center rounded-[12px] bg-main px-4 py-[14px] text-center text-body-15 font-bold text-secondary-950"
+            >
+              {!isMusicDetail && detail.ctaButtonLabel?.trim() || '투표하러 가기'}
+            </button>
+          )}
+        </div>
+      )}
+
+      {voteLinks.length > 1 && (
+        <UrgentLinkBottomSheet
+          open={isLinkSheetOpen}
+          onOpenChange={setIsLinkSheetOpen}
+          title={!isMusicDetail && detail.ctaButtonLabel?.trim() || '투표하러 가기'}
+          links={voteLinks}
+        />
       )}
 
       <FloatingShareButton title={detail.title} />

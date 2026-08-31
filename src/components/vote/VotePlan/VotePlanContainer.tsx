@@ -34,10 +34,10 @@ const VotePlanContentBox = ({
 }: VotePlanContentBoxProps) => {
   return (
     <div className="w-full pt-[32px] pb-[14px] px-[20px] bg-[rgba(0,149,253,1)] rounded-[16px]">
-      <p className="mb-[2px] text-body-13 font-medium text-secondary-100">
+      <p className="mb-[2px] text-body-14 font-medium text-secondary-100">
         {caption}
       </p>
-      <h3 className="mb-[8px] text-[20px] font-bold text-secondary-1">
+      <h3 className="mb-[8px] text-[22px] font-bold text-secondary-1">
         {title}
       </h3>
       <Image
@@ -49,7 +49,7 @@ const VotePlanContentBox = ({
       />
       <Link
         href={ctaLink}
-        className="mt-[16px] -mx-[4px] flex w-full items-center justify-center rounded-full border border-[rgba(255,255,255,0.6)] bg-[rgba(255,255,255,0.12)] py-[12px] text-body-13 font-bold"
+        className="mt-[16px] -mx-[4px] flex w-full items-center justify-center rounded-full border border-[rgba(255,255,255,0.6)] bg-[rgba(255,255,255,0.12)] py-[12px] text-body-14 font-bold"
       >
         {ctaText}
       </Link>

@@ -8,10 +8,12 @@ export default function TabsLayout({
 }>) {
   return (
     <AuthGate>
-      <div className="min-h-[calc(100dvh-env(safe-area-inset-top))] px-5 pb-[calc(146px+env(safe-area-inset-bottom))]">
-        {children}
+      <div className="[--floating-share-bottom:115px]">
+        <div className="min-h-[calc(100dvh-env(safe-area-inset-top))] px-5 pb-[calc(146px+env(safe-area-inset-bottom))]">
+          {children}
+        </div>
+        <BottomNavigation />
       </div>
-      <BottomNavigation />
     </AuthGate>
   );
 }

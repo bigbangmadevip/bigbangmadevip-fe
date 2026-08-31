@@ -76,9 +76,9 @@ export default function XGuideContainer() {
         title="X 활동 가이드"
         leftAction={
           <HeaderIconButton
-            label="뒤로가기"
+            label="홈으로 가기"
             align="start"
-            onClick={() => router.back()}
+            onClick={() => router.push('/')}
           >
             <Image
               src="/icon/line/arrow-left_white-28.svg"

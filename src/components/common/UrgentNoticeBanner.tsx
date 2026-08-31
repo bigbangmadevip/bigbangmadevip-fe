@@ -22,8 +22,8 @@ const UrgentNoticeBanner = ({
       )}
     >
       <div className="flex gap-[4px]">
-        <p className="font-bold text-body-13">🚨</p>
-        <p className="font-bold text-body-13">{title}</p>
+        <p className="font-bold text-body-14">🚨</p>
+        <p className="font-bold text-body-14">{title}</p>
       </div>
       <Image
         src={'/icon/line/arrow-right_gray-24.svg'}

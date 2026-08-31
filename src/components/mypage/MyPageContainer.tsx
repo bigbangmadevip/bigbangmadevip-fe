@@ -199,10 +199,10 @@ export default function MyPageContainer() {
 
         <div className="mt-[40px] rounded-[16px] bg-secondary-900 p-[16px]">
           <div className="flex items-center justify-between">
-            <span className="rounded-[8px] border border-secondary-800 px-[12px] py-[6px] text-body-12 font-medium text-secondary-300">
+            <span className="rounded-[8px] border border-secondary-800 px-[12px] py-[6px] text-body-13 font-medium text-secondary-300">
               오늘의 응원 현황
             </span>
-            <p className="text-body-13 text-secondary-400">
+            <p className="text-body-14 text-secondary-400">
               <strong className="text-secondary-1">
                 {todayCheering?.completedCount ?? 0}
               </strong>
@@ -226,7 +226,7 @@ export default function MyPageContainer() {
 
           <Link
             href="/"
-            className="mt-[16px] flex items-center justify-between rounded-full bg-secondary-800 pl-[20px] pr-[12px] py-[12px] text-body-13 font-medium text-secondary-1"
+            className="mt-[16px] flex items-center justify-between rounded-full bg-secondary-800 pl-[20px] pr-[12px] py-[12px] text-body-14 font-medium text-secondary-1"
           >
             오늘의 응원 하러 가기
             <Image
@@ -247,32 +247,32 @@ export default function MyPageContainer() {
             <strong className="font-suit text-[80px] leading-[66px] font-bold text-main">
               {cheeringRecord?.totalParticipationCount ?? 0}
             </strong>
-            <span className="text-body-12 text-secondary-100">번 응원</span>
+            <span className="text-body-13 text-secondary-100">번 응원</span>
           </div>
 
           <dl className="min-w-0 border-t border-secondary-900 pt-[12px]">
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-[8px] border-b border-secondary-900 px-[4px] pb-[20px]">
-              <dt className="text-body-11 text-secondary-400">응원한 날</dt>
+              <dt className="text-body-13 text-secondary-300">응원한 날</dt>
               <dd className="font-suit text-[24px] leading-none font-bold text-secondary-1">
                 {cheeringRecord?.participatedDayCount ?? 0}
-                <small className="ml-[4px] inline-block align-top text-body-11 leading-none">
+                <small className="ml-[4px] inline-block align-top text-body-13 leading-none">
                   일째
                 </small>
               </dd>
             </div>
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-[8px] border-b border-secondary-900 px-[4px] py-[20px]">
-              <dt className="text-body-11 text-secondary-400">
+              <dt className="text-body-13 text-secondary-300">
                 이번 달 응원한 날
               </dt>
               <dd className="font-suit text-[24px] leading-none font-bold text-secondary-1">
                 {cheeringRecord?.participatedDayCountThisMonth ?? 0}
-                <small className="ml-[4px] inline-block align-top text-body-11 leading-none">
+                <small className="ml-[4px] inline-block align-top text-body-13 leading-none">
                   일
                 </small>
               </dd>
             </div>
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-[8px] px-[4px] pt-[14px]">
-              <dt className="text-body-11 text-secondary-400">첫 응원</dt>
+              <dt className="text-body-13 text-secondary-300">첫 응원</dt>
               <dd className="whitespace-nowrap font-suit text-[24px] leading-none font-bold text-secondary-1">
                 {formatShortDate(cheeringRecord?.firstParticipatedDate)}
               </dd>

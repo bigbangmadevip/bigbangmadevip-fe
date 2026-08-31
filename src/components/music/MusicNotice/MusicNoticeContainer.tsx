@@ -13,7 +13,7 @@ export default function MusicNoticeContainer() {
   return (
     <section className="mt-[24px]">
       <MusicNoticeLinkBtn
-        iconSrc={'/icon/x-logo-circle.svg'}
+        iconSrc={'/images/xprofile/x_logo.png'}
         title={'음원총공팀 X 바로가기'}
         description={'실시간 공지와 긴급 안내를 확인하세요!'}
         href={'https://x.com/__VIPWAVE__'}

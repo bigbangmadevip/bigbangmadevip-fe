@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ChangeEventHandler } from 'react';
 
 export const INPUT_CLASS =
   'mt-[7px] w-full rounded-[10px] border border-secondary-800 bg-secondary-900 px-[13px] py-[12px] text-body-13 text-secondary-1 outline-none placeholder:text-secondary-600 focus:border-secondary-500';
@@ -16,6 +16,8 @@ export function Field({
   required = false,
   type = 'text',
   placeholder,
+  value,
+  onChange,
 }: {
   label: string;
   name: string;
@@ -23,6 +25,8 @@ export function Field({
   required?: boolean;
   type?: 'text' | 'number' | 'url' | 'datetime-local';
   placeholder?: string;
+  value?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
 }) {
   return (
     <label className="block text-body-12 text-secondary-300">
@@ -32,7 +36,9 @@ export function Field({
         name={name}
         type={type}
         required={required}
-        defaultValue={defaultValue ?? ''}
+        defaultValue={value === undefined ? defaultValue ?? '' : undefined}
+        value={value}
+        onChange={onChange}
         placeholder={placeholder}
         className={INPUT_CLASS}
       />

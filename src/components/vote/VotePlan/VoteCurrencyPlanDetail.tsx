@@ -104,7 +104,7 @@ export default function VoteCurrencyPlanDetail() {
                   className="h-[40px] w-[40px] rounded-full object-contain"
                 />
               </span>
-              <span className="w-full truncate text-center text-body-13 font-medium text-secondary-100">
+              <span className="w-full truncate text-center text-body-14 font-medium text-secondary-100">
                 {guide.label}
               </span>
             </button>

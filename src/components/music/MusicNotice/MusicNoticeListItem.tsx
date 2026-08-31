@@ -32,7 +32,7 @@ export default function MusicNoticeListItem({
           <p className="mt-[8px] line-clamp-2 whitespace-pre-line text-title-15 font-medium text-secondary-1">
             {title}
           </p>
-          <time className="mt-[8px] block text-body-12 text-secondary-600">
+          <time className="mt-[8px] block text-body-12 text-secondary-400">
             {date}
           </time>
         </div>

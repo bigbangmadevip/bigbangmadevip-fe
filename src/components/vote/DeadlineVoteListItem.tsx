@@ -30,8 +30,11 @@ export default function DeadlineVoteListItem({
     <article className="border-b border-secondary-800 pb-[20px] last:border-0">
       <div className="mb-[16px] flex justify-between">
         <CategoryBadge category={category} />
-        <p className="text-body-12 font-medium text-accent-red">
-          <span className="tracking-[0.02em]">{remainingTime}</span> 남음
+        <p className="text-body-13 font-regular text-accent-red">
+          <span className="tracking-[0.02em]">
+            <strong>{remainingTime}</strong>
+          </span>{' '}
+          남음
         </p>
       </div>
 

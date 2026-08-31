@@ -407,15 +407,18 @@ function UrgentSetting({
 }
 
 function ShortcutButtonSetting({
-  ctaButtonLabel,
   platformUrl,
 }: {
-  ctaButtonLabel?: string | null;
-  platformUrl?: string | null;
+  platformUrl?: string[] | string | null;
 }) {
-  const [enabled, setEnabled] = useState(
-    Boolean(ctaButtonLabel || platformUrl),
+  const initialUrls = Array.isArray(platformUrl)
+    ? platformUrl
+    : platformUrl ? [platformUrl] : [];
+  const [enabled, setEnabled] = useState(initialUrls.length > 0);
+  const [links, setLinks] = useState(() =>
+    (initialUrls.length ? initialUrls : ['']).map((url, index) => ({ id: index, url })),
   );
+  const nextId = useRef(links.length);
 
   return (
     <div className="flex flex-col gap-[10px]">
@@ -426,21 +429,41 @@ function ShortcutButtonSetting({
       />
       {enabled && (
         <>
-          <Field
-            label="버튼명"
-            name="ctaButtonLabel"
-            required
-            defaultValue={ctaButtonLabel}
-            placeholder="투표하러 가기"
-          />
-          <Field
-            label="버튼 연결 URL"
-            name="platformUrl"
-            type="url"
-            required
-            defaultValue={platformUrl}
-            placeholder="https://"
-          />
+          <p className="text-body-12 text-secondary-300">
+            버튼명은 ‘투표 하러가기’로 표시됩니다. 노출할 순서대로 링크를 입력해주세요.
+          </p>
+          {links.map((link, index) => (
+            <div key={link.id} className="flex items-end gap-[8px]">
+              <div className="min-w-0 flex-1">
+                <Field
+                  label={`버튼 연결 URL ${index + 1}`}
+                  name="platformUrl"
+                  type="url"
+                  required
+                  placeholder="https://"
+                  value={link.url}
+                  onChange={(event) => setLinks((items) => items.map((item) =>
+                    item.id === link.id ? { ...item, url: event.target.value } : item,
+                  ))}
+                />
+              </div>
+              {links.length > 1 && (
+                <button type="button" aria-label={`${index + 1}번 링크 삭제`}
+                  className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-[10px] border border-secondary-800 text-[20px] text-secondary-400"
+                  onClick={() => setLinks((items) => items.filter((item) => item.id !== link.id))}>
+                  −
+                </button>
+              )}
+            </div>
+          ))}
+          <button type="button"
+            className="flex w-full items-center justify-center rounded-[10px] border border-secondary-800 py-[11px] text-body-13 font-bold text-secondary-300"
+            onClick={() => {
+              const id = nextId.current++;
+              setLinks((items) => [...items, { id, url: '' }]);
+            }}>
+            + 링크 추가
+          </button>
         </>
       )}
     </div>
@@ -705,7 +728,7 @@ export default function AdminDetailForm({
         ...common,
         musicShowId: numberOrNull(formData.get('musicShowId')),
         rewardDescription: nullableString(formData.get('rewardDescription')),
-        platformUrl: nullableString(formData.get('platformUrl')),
+        platformUrl: formDataStringList(formData, 'platformUrl'),
         eventStartAt: combineDateAndTime(
           formData.get('eventStartDate'),
           formData.get('eventStartTime'),
@@ -714,7 +737,7 @@ export default function AdminDetailForm({
           formData.get('eventEndDate'),
           formData.get('eventEndTime'),
         ),
-        ctaButtonLabel: nullableString(formData.get('ctaButtonLabel')),
+        ctaButtonLabel: '투표 하러가기',
         pushEnabled: false,
         pushSendAt: null,
         pushTitle: null,
@@ -874,7 +897,6 @@ export default function AdminDetailForm({
               }}
             />
             <ShortcutButtonSetting
-              ctaButtonLabel={voteInitial?.ctaButtonLabel}
               platformUrl={voteInitial?.platformUrl}
             />
             <UrgentSetting

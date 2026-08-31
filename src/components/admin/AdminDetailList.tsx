@@ -75,7 +75,9 @@ export default function AdminDetailList({ adminType }: AdminDetailListProps) {
         musicShowId: voteItem.musicShowId,
         rewardDescription: voteItem.rewardDescription,
         platformIds: voteItem.platformIds,
-        platformUrl: voteItem.platformUrl,
+        platformUrl: Array.isArray(voteItem.platformUrl)
+          ? voteItem.platformUrl
+          : voteItem.platformUrl ? [voteItem.platformUrl] : [],
         eventStartAt: voteItem.eventStartAt,
         eventEndAt: voteItem.eventEndAt,
         checklist: voteItem.checklist,

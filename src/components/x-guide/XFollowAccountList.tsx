@@ -42,7 +42,7 @@ export default function XFollowAccountList({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${account.name} X 계정 열기`}
-                    className="flex min-h-[88px] w-full items-center rounded-[16px] bg-secondary-900 px-[16px] text-left"
+                    className="flex w-full items-center rounded-[16px] bg-secondary-900 p-[16px] pr-[12px] text-left"
                   >
                     <Image
                       src={getXAccountIconSrc(account.handle)}

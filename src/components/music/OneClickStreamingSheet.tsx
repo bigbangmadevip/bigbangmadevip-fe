@@ -97,7 +97,7 @@ export default function OneClickStreamingSheet({
           </div>
         )}
 
-        <DialogDescription className="mt-[12px] text-body-12 font-medium text-accent-red">
+        <DialogDescription className="mt-[12px] text-body-13 font-medium text-accent-red">
           * 정상 반영을 위해 중복곡 허용 설정 후, 기존 재생목록을 삭제하고
           1번부터 순서대로 진행해주세요.
         </DialogDescription>

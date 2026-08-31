@@ -28,8 +28,8 @@ export default function OngoingVoteListItem({
     <article className="rounded-[16px] bg-secondary-900 p-[16px]">
       <div className="mb-[16px] flex justify-between">
         <CategoryBadge category={category} />
-        <p className="text-body-12 font-medium text-[#8D8D8D]">
-          {remainingTime} 남음
+        <p className="text-body-13 font-regular text-secondary-300">
+          <strong>{remainingTime}</strong> 남음
         </p>
       </div>
 

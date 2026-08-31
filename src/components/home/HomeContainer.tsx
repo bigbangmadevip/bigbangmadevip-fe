@@ -241,20 +241,20 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
       >
         <div className="relative z-10 flex py-[20px] h-full flex-col justify-center text-center items-center">
           <div>
-            <p className="mb-[2px] text-body-11 text-secondary-400">
+            <p className="mb-[2px] text-body-13 text-secondary-400">
               VIP 활동 가이드
             </p>
             <h2 className="mb-[6px] text-[20px] font-bold text-secondary-1">
               X에서 화력 모으기
             </h2>
-            <p className="mb-[14px] text-body-13 text-secondary-300">
+            <p className="mb-[14px] text-body-14 text-secondary-300">
               필수 계정과 오늘의 해시태그를 한눈에 확인해요
             </p>
           </div>
 
           <Link
             href="/x-guide"
-            className="rounded-full bg-white px-[24px] py-[6px] text-body-11 font-bold text-secondary-950"
+            className="rounded-full bg-white px-[20px] py-[6px] text-body-13 font-bold text-secondary-950"
           >
             보러가기
           </Link>

@@ -85,7 +85,7 @@ export default function FloatingShareButton({
   return (
     <div
       className={cn(
-        'pointer-events-none fixed right-0 bottom-[calc(20px+env(safe-area-inset-bottom))] left-0 z-40 mx-auto flex w-full max-w-[430px] justify-end px-[18px] py-[64px]',
+        'pointer-events-none fixed right-0 bottom-[var(--floating-share-bottom,56px)] left-0 z-40 mx-auto flex w-full max-w-[430px] justify-end px-[18px]',
         className,
       )}
     >

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import HomeActiveIcon from '@/assets/navigation/home-active.svg';
 import HomeDefaultIcon from '@/assets/navigation/home-default.svg';
 import MusicActiveIcon from '@/assets/navigation/music-active.svg';
@@ -50,6 +50,29 @@ const tabs = [
 ];
 
 export function BottomNavigation() {
+  const navigationRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const navigation = navigationRef.current;
+    const layout = navigation?.parentElement;
+    if (!navigation || !layout) return;
+
+    // 탭 높이가 변경되어도 공유 버튼과의 간격은 24px로 유지합니다.
+    const updateSharePosition = () => {
+      layout.style.setProperty(
+        '--floating-share-bottom',
+        `${navigation.getBoundingClientRect().height + 24}px`,
+      );
+    };
+    updateSharePosition();
+    const observer = new ResizeObserver(updateSharePosition);
+    observer.observe(navigation);
+    return () => {
+      observer.disconnect();
+      layout.style.removeProperty('--floating-share-bottom');
+    };
+  }, []);
+
   const pathname = usePathname();
   const router = useRouter();
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
@@ -82,13 +105,14 @@ export function BottomNavigation() {
   return (
     <>
       <nav
+        ref={navigationRef}
         className={`fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-[430px] border-t pb-[30px] pt-[12px] text-secondary-1 ${
           isSchedulePage
             ? 'border-secondary-700 bg-secondary-800'
             : 'border-[rgba(255,255,255,0.08)] bg-secondary-950'
         }`}
       >
-        <div className="grid h-16 grid-cols-5 items-center text-center">
+        <div className="grid grid-cols-5 items-center text-center">
           {tabs.map((tab) => {
             const isActive =
               tab.href === '/'
@@ -107,7 +131,7 @@ export function BottomNavigation() {
               >
                 <Icon aria-hidden="true" className="h-[28px] w-[28px]" />
                 <span
-                  className={`text-caption-10 ${isActive ? 'text-secondary-1' : 'text-secondary-400'}`}
+                  className={`text-body-11 ${isActive ? 'text-secondary-1' : 'text-secondary-400'}`}
                 >
                   {tab.label}
                 </span>

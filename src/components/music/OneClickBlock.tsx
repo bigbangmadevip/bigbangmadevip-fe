@@ -87,7 +87,7 @@ const OneClickBlock = ({ platform, onClick }: OneClickBlockProps) => {
       ) : (
         <span className="h-[40px] w-[40px] rounded-full bg-secondary-800" />
       )}
-      <span className="text-body-13 text-secondary-100">{platformLabel}</span>
+      <span className="text-body-14 text-secondary-100">{platformLabel}</span>
     </button>
   );
 };
