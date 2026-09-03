@@ -18,7 +18,7 @@ export function CheeringCard({
   completed,
   onParticipate,
 }: CheeringCardProps) {
-  const ctaText = completed ? '완료' : '참여하기';
+  const ctaText = completed ? '참여완료' : '참여하기';
   return (
     <article className="flex min-w-0 flex-col items-center text-center">
       {iconSrc ? (

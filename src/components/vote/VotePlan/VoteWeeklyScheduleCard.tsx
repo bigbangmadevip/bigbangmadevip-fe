@@ -159,7 +159,7 @@ export default function VoteWeeklyScheduleCard({
           </div>
 
           {schedule.guides.length > 0 && (
-            <div className="mt-[20px]">
+            <div className="pt-[20px] border-t border-secondary-800">
               <p className="text-body-15 font-bold text-secondary-1">
                 관련 가이드
               </p>

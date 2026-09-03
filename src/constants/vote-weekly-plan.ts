@@ -74,11 +74,11 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
           },
           {
             label: '가능 횟수',
-            value: '1일 5회 투표 (다수 기기 다계정 투표 가능)',
+            value: '1기기 당 1계정 투표 (다수 기기 다계정 투표 가능)',
           },
           {
             label: '유의 사항',
-            value: '동시에 진행되는 투표로 착오 없도록 더블 체크',
+            value: '동시에 진행되는 투표와 착오 없도록 더블 체크 권장',
           },
         ],
       },
@@ -98,7 +98,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
           },
           {
             label: '유의 사항',
-            value: '동시에 진행되는 투표로 착오 없도록 더블 체크',
+            value: '동시에 진행되는 투표와 착오 없도록 더블 체크',
           },
         ],
       },
@@ -137,11 +137,11 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
             label: '투표 방법',
             value: '뮤직뱅크 배너 클릭 → ‘빅뱅’ 선택 → 투표',
           },
-          { label: '필요 재화', value: '1표 = 골드하트 50개 / 블루하트 30개' },
+          { label: '필요 재화', value: '1표 = 골드하트 50개 / 블루하트 50개' },
           { label: '가능 횟수', value: '무제한 투표 (다계정 투표 가능)' },
           {
             label: '유의 사항',
-            value: '동시에 진행되는 투표로 착오 없도록 더블 체크',
+            value: '1회 최대 500표, 투표 후 10분 쿨타임',
           },
         ],
       },
@@ -170,30 +170,34 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
       },
       {
         label: '사전 투표 2',
-        time: '매주 토요일 00:00 ~ 화요일 23:59',
+        time: '매주 화요일 18:00 ~ 목요일 11:00',
         tone: 'advance',
       },
       {
-        label: '사전 투표 3',
-        time: '매주 토요일 00:00 ~ 화요일 23:59',
+        label: '시청자 위원회',
+        time: '매주 수요일 09:00 ~ 목요일 11:00',
         tone: 'advance',
       },
       {
         label: '생방송 투표 1',
-        time: '매주 토요일 15:20 ~ 16:10',
+        time: '매주 토요일 15:30 ~ 생방송 투표 종료 전',
         tone: 'live',
       },
       {
         label: '생방송 투표 2',
-        time: '매주 토요일 18:00 ~ 생방송 투표 종료 전',
+        time: '매주 토요일 15:30 ~ 생방송 투표 종료 전',
         tone: 'live',
       },
-      { label: '문자 투표', time: '매주 토요일 15:30 ~ 16:20', tone: 'text' },
       {
-        label: 'M PICK 투표',
-        time: '매주 토요일 17:00 ~ 목요일 10:59',
-        tone: 'special',
+        label: '문자 투표',
+        time: '매주 토요일 15:30 ~ 생방송 투표 종료 전',
+        tone: 'text',
       },
+      // {
+      //   label: 'M PICK 투표',
+      //   time: '매주 토요일 15:30 ~ 생방송 투표 종료 전',
+      //   tone: 'special',
+      // },
     ],
     details: [
       {
@@ -205,10 +209,6 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
           { label: '투표 방법', value: '글로벌 사전투표 → ‘빅뱅’ 선택 → 투표' },
           { label: '필요 재화', value: '1표 = 5 애드루미' },
           { label: '가능 횟수', value: '무제한 투표 (다계정 투표 가능)' },
-          {
-            label: '유의 사항',
-            value: '동시에 진행되는 투표로 착오 없도록 더블 체크',
-          },
         ],
       },
       {
@@ -223,7 +223,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
         ],
       },
       {
-        label: '사전 투표 3 (시청자 위원회)',
+        label: '시청자 위원회 투표',
         time: '매주 수요일 09:00 ~ 목요일 11:00',
         tone: 'advance',
         rows: [
@@ -238,55 +238,59 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
       },
       {
         label: '생방송 투표 1',
-        time: '매주 토요일 15:20 ~ 16:10',
+        time: '매주 토요일 15:30 ~ 생방송 투표 종료 전',
         tone: 'live',
         rows: [
           { label: '투표 플랫폼', value: '뮤니버스' },
-          { label: '투표 방법', value: 'STAGE M PICK → ‘빅뱅’ 선택 → 투표' },
+          { label: '투표 방법', value: '생방송 앱 투표 → ‘빅뱅’ 선택 → 투표' },
           { label: '필요 재화', value: '1표 = 50 프리루미 / 60 골드루미' },
           { label: '가능 횟수', value: '1계정당 최대 5표 (다계정 투표 가능)' },
         ],
       },
       {
         label: '생방송 투표 2',
-        time: '매주 토요일 15:20 ~ 생방송 투표 종료 전',
+        time: '매주 토요일 15:30 ~ 생방송 투표 종료 전',
         tone: 'live',
         rows: [
           { label: '투표 플랫폼', value: '뮤빗' },
-          { label: '투표 방법', value: 'STAGE M PICK → ‘빅뱅’ 선택 → 투표' },
+          { label: '투표 방법', value: '생방송 앱  투표 → ‘빅뱅’ 선택 → 투표' },
           { label: '필요 재화', value: '5표 = 하트비트 150개' },
           { label: '가능 횟수', value: '1계정당 최대 5표 (다계정 투표 가능)' },
         ],
       },
       {
         label: '문자 투표',
-        time: '매주 토요일 15:30 ~ 16:20',
+        time: '매주 토요일 15:30 ~ 생방송 투표 종료 전',
         tone: 'text',
         rows: [
           { label: '투표 플랫폼', value: '문자' },
           {
             label: '투표 방법',
-            value: '#0505로 해당 고유번호 혹은 ‘빅뱅’ 전송',
+            value: `#0505로 '생방송 공개 고유 번호' 또는 '빅뱅' 또는 BIGBANG' 전송`,
           },
           { label: '가능 횟수', value: '1인 1회 (유료 100원)' },
-          { label: '유의 사항', value: '투표 안내 후 참여 가능' },
-        ],
-      },
-      {
-        label: 'STAGE M PICK 투표',
-        time: '매주 토요일 17:00 ~ 목요일 10:59',
-        tone: 'special',
-        rows: [
-          { label: '투표 플랫폼', value: '뮤니버스' },
-          { label: '투표 방법', value: 'STAGE M PICK → ‘빅뱅’ 선택 → 투표' },
-          { label: '필요 재화', value: '1표 = 10 프리루미 / 골드루미' },
           {
-            label: '가능 횟수',
-            value: '프리루미 - 1일 최대 10표 / 골드루미 무제한 투표',
+            label: '유의 사항',
+            value:
+              '- 오타로 인한 무효표 방지를 위해 생방송 고개 고유 번호 전송 권장\n- 문자를 연속으로 전송할 경우, 무효 처리 위험 → 단 1번만 문자 전송',
           },
-          { label: '유의 사항', value: '방송 종료 후 진행 / 100% 팬 투표' },
         ],
       },
+      // {
+      //   label: 'STAGE M PICK 투표',
+      //   time: '매주 토요일 17:00 ~ 목요일 10:59',
+      //   tone: 'special',
+      //   rows: [
+      //     { label: '투표 플랫폼', value: '뮤니버스' },
+      //     { label: '투표 방법', value: 'STAGE M PICK → ‘빅뱅’ 선택 → 투표' },
+      //     { label: '필요 재화', value: '1표 = 10 프리루미 / 골드루미' },
+      //     {
+      //       label: '가능 횟수',
+      //       value: '프리루미 - 1일 최대 10표 / 골드루미 무제한 투표',
+      //     },
+      //     { label: '유의 사항', value: '방송 종료 후 진행 / 100% 팬 투표' },
+      //   ],
+      // },
     ],
     guides: [
       {
@@ -321,11 +325,11 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
         time: '매주 일요일 15:20 ~ 생방송 투표 종료 전',
         tone: 'live',
       },
-      {
-        label: '핫스테이지',
-        time: '매주 일요일 생방송 종료 후 ~ 차주 목요일 12:00',
-        tone: 'special',
-      },
+      // {
+      //   label: '핫스테이지',
+      //   time: '매주 일요일 생방송 종료 후 ~ 차주 목요일 12:00',
+      //   tone: 'special',
+      // },
     ],
     details: [
       {
@@ -367,20 +371,20 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
           },
         ],
       },
-      {
-        label: '핫스테이지 투표',
-        time: '매주 일요일 생방송 종료 후 ~ 차주 목요일 12:00',
-        tone: 'special',
-        rows: [
-          { label: '투표 플랫폼', value: '하이어' },
-          {
-            label: '투표 방법',
-            value: '인기가요 핫스테이지 → ‘빅뱅’ 선택 → 투표',
-          },
-          { label: '필요 재화', value: '10표 = 루비 300개 / 다이아 30개' },
-          { label: '가능 횟수', value: '계정 당 매일 10회 투표' },
-        ],
-      },
+      // {
+      //   label: '핫스테이지 투표',
+      //   time: '매주 일요일 생방송 종료 후 ~ 차주 목요일 12:00',
+      //   tone: 'special',
+      //   rows: [
+      //     { label: '투표 플랫폼', value: '하이어' },
+      //     {
+      //       label: '투표 방법',
+      //       value: '인기가요 핫스테이지 → ‘빅뱅’ 선택 → 투표',
+      //     },
+      //     { label: '필요 재화', value: '10표 = 루비 300개 / 다이아 30개' },
+      //     { label: '가능 횟수', value: '계정 당 매일 10회 투표' },
+      //   ],
+      // },
     ],
     guides: [
       {
@@ -415,7 +419,7 @@ export const VOTE_WEEKLY_SCHEDULES: VoteWeeklySchedule[] = [
     details: [
       {
         label: '사전 투표',
-        time: '매주 금요일 20:00 ~ 월요일 14:59',
+        time: '매주 금요일 17:00 ~ 월요일 10:00',
         tone: 'advance',
         rows: [
           { label: '투표 플랫폼', value: '빅크 BIGC' },

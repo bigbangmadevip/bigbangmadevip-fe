@@ -60,9 +60,9 @@ const VoteGuideBox = ({
   return (
     <article className="rounded-[16px] border border-secondary-900 bg-secondary-900 p-[16px]">
       {title && hasPlatforms && (
-        <h2 className="mb-[18px] text-title-17 font-bold text-secondary-1">
+        <p className="mb-[18px] text-title-17 font-bold text-secondary-1">
           {title}
-        </h2>
+        </p>
       )}
 
       {href ? (
@@ -70,7 +70,7 @@ const VoteGuideBox = ({
           href={href}
           className={`flex items-center gap-[16px] ${
             hasPlatforms
-              ? 'mb-[20px] border-b border-b-secondary-800 pb-[24px]'
+              ? 'mb-[16px] border-b border-b-secondary-800 pb-[12px]'
               : ''
           }`}
         >
@@ -80,7 +80,7 @@ const VoteGuideBox = ({
         <div
           className={`flex items-center gap-[16px] ${
             hasPlatforms
-              ? 'mb-[20px] border-b border-b-secondary-800 pb-[24px]'
+              ? 'mb-[16px] border-b border-b-secondary-800 pb-[12px]'
               : ''
           }`}
         >
@@ -90,12 +90,12 @@ const VoteGuideBox = ({
 
       {hasPlatforms && (
         <section>
-          <h3 className="text-title-15 font-medium text-secondary-1">
+          <p className="text-body-14 font-medium text-secondary-300">
             사용 투표 플랫폼
-          </h3>
+          </p>
 
           <div
-            className={`mt-[12px] grid gap-[7px] ${
+            className={`mt-[8px] grid gap-[7px] ${
               platform?.length === 1 ? 'grid-cols-1' : 'grid-cols-2'
             }`}
           >

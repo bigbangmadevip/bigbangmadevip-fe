@@ -116,7 +116,11 @@ export default function UrgentDetailPage() {
   };
 
   return (
-    <main data-detail-id={detailId} data-menu-type={menuType} className="-mx-5">
+    <main
+      data-detail-id={detailId}
+      data-menu-type={menuType}
+      className={`-mx-5 ${voteLinks.length > 0 ? 'pb-[49px]' : ''}`}
+    >
       <PageHeader
         sticky
         className="bg-secondary-950 px-5"
@@ -181,7 +185,10 @@ export default function UrgentDetailPage() {
               <>
                 <dt className="text-secondary-300">플랫폼</dt>
                 <dd className="font-medium text-secondary-100">
-                  {[...new Set(getVoteDetailPlatforms(detail.platformNames))].filter(Boolean).map(getVotePlatformLabel).join(', ')}
+                  {[...new Set(getVoteDetailPlatforms(detail.platformNames))]
+                    .filter(Boolean)
+                    .map(getVotePlatformLabel)
+                    .join(', ')}
                 </dd>
 
                 {detail.eventStartAt && (
@@ -228,7 +235,7 @@ export default function UrgentDetailPage() {
         <>
           <section className="bg-secondary-950 px-5 py-[24px]">
             <div className="mb-[16px] flex items-baseline gap-[8px]">
-              <h2 className="shrink-0 text-title-15 font-bold text-secondary-1">
+              <h2 className="shrink-0 text-title-14 font-bold text-secondary-1">
                 가이드 바로 가기
               </h2>
               <p className="text-body-12 font-medium text-secondary-300">
@@ -426,7 +433,7 @@ export default function UrgentDetailPage() {
       )}
 
       {voteLinks.length > 0 && (
-        <div className="flex flex-col gap-[8px] bg-secondary-950 px-5 py-[20px]">
+        <div className="fixed inset-x-0 bottom-0 z-50 mx-auto flex w-full max-w-[430px] flex-col gap-[8px] bg-secondary-950 px-5 pt-[20px] pb-[calc(20px+env(safe-area-inset-bottom))]">
           {voteLinks.length === 1 ? (
             <a
               href={voteLinks[0].url}
@@ -434,7 +441,9 @@ export default function UrgentDetailPage() {
               rel="noopener noreferrer"
               className="flex w-full items-center justify-center rounded-[12px] bg-main px-4 py-[14px] text-center text-body-15 font-bold text-secondary-950"
             >
-              {(!isMusicDetail && detail.ctaButtonLabel?.trim()) || voteLinks[0].label?.trim() || '투표하러 가기'}
+              {(!isMusicDetail && detail.ctaButtonLabel?.trim()) ||
+                voteLinks[0].label?.trim() ||
+                '투표하러 가기'}
             </a>
           ) : (
             <button
@@ -443,7 +452,8 @@ export default function UrgentDetailPage() {
               onClick={() => setIsLinkSheetOpen(true)}
               className="flex w-full items-center justify-center rounded-[12px] bg-main px-4 py-[14px] text-center text-body-15 font-bold text-secondary-950"
             >
-              {!isMusicDetail && detail.ctaButtonLabel?.trim() || '투표하러 가기'}
+              {(!isMusicDetail && detail.ctaButtonLabel?.trim()) ||
+                '투표하러 가기'}
             </button>
           )}
         </div>
@@ -453,12 +463,21 @@ export default function UrgentDetailPage() {
         <UrgentLinkBottomSheet
           open={isLinkSheetOpen}
           onOpenChange={setIsLinkSheetOpen}
-          title={!isMusicDetail && detail.ctaButtonLabel?.trim() || '투표하러 가기'}
+          title={
+            (!isMusicDetail && detail.ctaButtonLabel?.trim()) || '투표하러 가기'
+          }
           links={voteLinks}
         />
       )}
 
-      <FloatingShareButton title={detail.title} />
+      <FloatingShareButton
+        title={detail.title}
+        className={
+          voteLinks.length > 0
+            ? 'bottom-[calc(97px+env(safe-area-inset-bottom))]'
+            : undefined
+        }
+      />
     </main>
   );
 }

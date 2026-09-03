@@ -25,7 +25,7 @@ const MusicNoticeLinkBtn = ({
             <Image src={iconSrc} alt={'ICON_SVG'} width={40} height={40} />
 
             <div>
-              <p className="text-body-15 font-bold">{title}</p>
+              <p className="text-body-14 font-bold">{title}</p>
               <span className="text-body-13 text-secondary-400">
                 {description}
               </span>
