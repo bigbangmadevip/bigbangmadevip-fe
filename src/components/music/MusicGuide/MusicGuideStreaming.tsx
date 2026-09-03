@@ -25,7 +25,11 @@ const STREMING_INTERNATIONAL_GUIDE_MOCK: TEMP_TYPE[] = [
     platform: 'youtubemusic',
     link: '/music/guide/streaming/youtubemusic',
   },
-  // { id: '2', platform: 'applemusic', link: '/music/guide/streaming/applemusic' },
+  {
+    id: '2',
+    platform: 'applemusic',
+    link: '/music/guide/streaming/applemusic',
+  },
   // { id: '3', platform: 'linemusic', link: '' },
   // { id: '4', platform: 'stationhead', link: '' },
 ];

@@ -7,12 +7,14 @@ import MusicGuideStreaming from './MusicGuideStreaming';
 import MusicGuideDownload from './MusicGuideDownload';
 import MusicGuideGenieShare from './MusicGuideGenieShare';
 import MusicGuideReplay from './MusicGuideReplay';
+import MusicGuideRadioApply from './MusicGuideRadioApply';
 
 const GUIDE_TABS = [
   { id: 'streaming', label: '스트리밍' },
   { id: 'download', label: '다운로드' },
   { id: 'youtubemv', label: '뮤비 반복재생' },
   { id: 'genieshare', label: '지니 음악나누기' },
+  { id: 'radioapply', label: '라디오 신청' },
   // { id: 'account', label: '아이디 생성' },
   // { id: 'melon-kchart', label: '멜론 K차트' },
 ] as const;
@@ -24,6 +26,7 @@ const GUIDE_CONTENT = {
   download: MusicGuideDownload,
   genieshare: MusicGuideGenieShare,
   youtubemv: MusicGuideReplay,
+  radioapply: MusicGuideRadioApply,
   // account: MusicGuideMakeId,
   // 'melon-kchart': MusicGuideKChart,
 } satisfies Record<GuideTab, ComponentType>;

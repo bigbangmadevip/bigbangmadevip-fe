@@ -8,6 +8,7 @@ import VoteGuideContainer from '@/components/vote/VoteGuide/VoteGuideContainer';
 import VotePlanContainer from '@/components/vote/VotePlan/VotePlanContainer';
 import VoteDailyContainer from '@/components/vote/VoteDailyContainer';
 import VoteNoticeContainer from '@/components/vote/VoteNotice/VoteNoticeContainer';
+import HeaderXButton from '@/components/common/HeaderXButton';
 
 const VOTE_TABS = [
   { id: 'daily', label: '오늘의 투표' },
@@ -75,7 +76,12 @@ function VotePageContent() {
 
   return (
     <main>
-      <PageHeader title="투표" />
+      <PageHeader
+        title="투표"
+        rightAction={
+          <HeaderXButton href="https://x.com/_voteinpeace" teamNm="vote" />
+        }
+      />
 
       <UnderlineTabs
         key={stickyTabsRenderKey}

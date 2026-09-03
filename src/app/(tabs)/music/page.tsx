@@ -8,6 +8,7 @@ import MusicGuideContainer from '@/components/music/MusicGuide/MusicGuideContain
 import MusicNoticeContainer from '@/components/music/MusicNotice/MusicNoticeContainer';
 import MusicStreamingContainer from '@/components/music/MusicStreamingContainer';
 import ComingSoon from '@/components/common/ComingSoon';
+import HeaderXButton from '@/components/common/HeaderXButton';
 
 const MUSIC_TABS = [
   { id: 'streaming', label: '스트리밍' },
@@ -44,7 +45,12 @@ function MusicPageContent() {
   return (
     <>
       <main>
-        <PageHeader title="음원" />
+        <PageHeader
+          title="음원"
+          rightAction={
+            <HeaderXButton href="https://x.com/__VIPWAVE__" teamNm="music" />
+          }
+        />
         {/* TABS */}
         <UnderlineTabs
           tabs={MUSIC_TABS}

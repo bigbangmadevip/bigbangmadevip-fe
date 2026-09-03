@@ -18,6 +18,7 @@ import type { HomeResponse } from '@/types/home';
 import CheeringGrid from './CheeringGrid';
 import { CHEERING_DIALOG_CONFIG } from './constants';
 import HomeUrgentCarousel from './HomeUrgentCarousel';
+import SnsLinkContainer from './SnsLinkContainer';
 
 type DialogStep = 'CONFIRM' | 'COMPLETE';
 
@@ -234,7 +235,7 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
       </div>
 
       <div
-        className="relative aspect-[335/152] w-full overflow-hidden rounded-[16px] bg-cover bg-center bg-no-repeat bg-secondary-950 border border-secondary-800"
+        className="relative aspect-[335/152] w-full overflow-hidden rounded-[16px] bg-cover bg-center bg-no-repeat bg-secondary-950 border border-secondary-800 my-[16px]"
         style={{
           backgroundImage: "url('/mainX-banner.png')",
         }}
@@ -259,6 +260,11 @@ export default function HomeContainer({ initialData }: HomeContainerProps) {
             보러가기
           </Link>
         </div>
+      </div>
+
+      <div className="mt-[36px]">
+        <SectionTitle>매일매일 빅뱅 보기</SectionTitle>
+        <SnsLinkContainer />
       </div>
 
       <AppDialog

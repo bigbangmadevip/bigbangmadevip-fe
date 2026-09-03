@@ -21,21 +21,21 @@ export function PageHeader({
   return (
     <header
       className={cn(
-        'grid h-[56px] shrink-0 grid-cols-[40px_minmax(0,1fr)_40px] items-center bg-background',
+        'grid h-[56px] shrink-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center bg-background',
         sticky && 'sticky top-[env(safe-area-inset-top)] z-40',
         className,
       )}
     >
-      <div className="flex justify-self-start">{leftAction}</div>
+      <div className="flex min-w-0 justify-self-start">{leftAction}</div>
       <div
         className={cn(
-          'min-w-0 truncate text-center text-title-17 font-bold text-secondary-1',
+          'min-w-0 max-w-full truncate text-center text-title-17 font-bold text-secondary-1',
           titleClassName,
         )}
       >
         {title}
       </div>
-      <div className="flex justify-self-end">{rightAction}</div>
+      <div className="flex min-w-0 justify-self-end">{rightAction}</div>
     </header>
   );
 }

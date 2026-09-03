@@ -11,7 +11,14 @@ import { PLATFORM_LABEL } from '@/types/music';
 
 type StreamingGuidePlatform = Extract<
   Platform,
-  'melon' | 'genie' | 'bugs' | 'flo' | 'vibe' | 'spotify' | 'youtubemusic'
+  | 'melon'
+  | 'genie'
+  | 'bugs'
+  | 'flo'
+  | 'vibe'
+  | 'spotify'
+  | 'youtubemusic'
+  | 'applemusic'
 >;
 
 type DownloadGuidePlatform = Extract<
@@ -23,6 +30,8 @@ type GenieShareGuideId = 'genieshare';
 type ReplayGuideId = 'youtubemv';
 
 type YoutubeMvGuideId = 'youtubemv';
+
+type RadioApplyGuideId = 'radioapply';
 
 export type ImageSize = {
   src: string;
@@ -89,6 +98,11 @@ const STREAMING_GUIDE_IMAGES: Record<StreamingGuidePlatform, ImageSize> = {
     width: 2000,
     height: 11922,
   },
+  applemusic: {
+    src: '/images/musicguide/streaming/applemusic.jpg',
+    width: 2000,
+    height: 8542,
+  },
 };
 
 const GENIESHARE_GUIDE_IMAGES: Record<GenieShareGuideId, ImageSize> = {
@@ -115,6 +129,14 @@ const YOUTUBEMV_GUIDE_IMAGES: Record<YoutubeMvGuideId, ImageSize> = {
   },
 };
 
+const RADIOAPPLY_GUIDE_IMAGES: Record<RadioApplyGuideId, ImageSize> = {
+  radioapply: {
+    src: '/images/musicguide/radioapply/radioapply.jpg',
+    width: 1920,
+    height: 3672,
+  },
+};
+
 function isStreamingGuidePlatform(
   value: string,
 ): value is StreamingGuidePlatform {
@@ -137,6 +159,10 @@ function isReplayGuideId(value: string): value is ReplayGuideId {
 
 function isYoutubeMvGuideId(value: string): value is YoutubeMvGuideId {
   return value in YOUTUBEMV_GUIDE_IMAGES;
+}
+
+function isRadioApplyGuideId(value: string): value is RadioApplyGuideId {
+  return value in RADIOAPPLY_GUIDE_IMAGES;
 }
 
 function getGuideDetail(category: string, guideId: string) {
@@ -172,6 +198,13 @@ function getGuideDetail(category: string, guideId: string) {
     return {
       image: REPLAY_GUIDE_IMAGES[guideId],
       title: '유튜브 뮤직 반복재생 가이드',
+    };
+  }
+
+  if (category === 'radioapply' && isRadioApplyGuideId(guideId)) {
+    return {
+      image: RADIOAPPLY_GUIDE_IMAGES[guideId],
+      title: '빅뱅 라디오 신청 가이드',
     };
   }
 

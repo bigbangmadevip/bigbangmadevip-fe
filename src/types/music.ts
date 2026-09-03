@@ -12,7 +12,8 @@ export type Platform =
   | 'stationhead'
   | 'kakaomusic'
   | 'youtube'
-  | 'melonmv';
+  | 'melonmv'
+  | 'etc';
 
 export const PLATFORM_LABEL = {
   melon: '멜론',
@@ -29,6 +30,7 @@ export const PLATFORM_LABEL = {
   kakaomusic: '카카오뮤직',
   youtube: '유튜브 뮤비',
   melonmv: '멜론 뮤비',
+  etc: '빅뱅',
 } satisfies Record<Platform, string>;
 
 export type MusicDetailGuide = {
