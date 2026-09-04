@@ -23,7 +23,7 @@ type StreamingGuidePlatform = Extract<
 
 type DownloadGuidePlatform = Extract<
   Platform,
-  'melon' | 'genie' | 'bugs' | 'kakaomusic'
+  'melon' | 'genie' | 'bugs' | 'kakaomusic' | 'vcoloring'
 >;
 
 type GenieShareGuideId = 'genieshare';
@@ -59,6 +59,11 @@ const DOWNLOAD_GUIDE_IMAGES: Record<DownloadGuidePlatform, ImageSize> = {
     src: '/images/musicguide/download/kakaomusic.jpg',
     width: 2000,
     height: 4374,
+  },
+  vcoloring: {
+    src: '/images/musicguide/download/vcoloring.png',
+    width: 1870,
+    height: 6067,
   },
 };
 

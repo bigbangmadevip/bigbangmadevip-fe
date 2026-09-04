@@ -17,6 +17,7 @@ const DOWNLOAD_GUIDES: TEMP_TYPE[] = [
     platform: 'kakaomusic',
     link: '/music/guide/download/kakaomusic',
   },
+  { id: '4', platform: 'vcoloring', link: '/music/guide/download/vcoloring' },
 ];
 
 const MusicGuideDownload = () => {

@@ -202,6 +202,7 @@ const MUSIC_PLATFORM_OPTIONS = {
   youtubemusic: { id: 9, label: '유튜브뮤직' },
   melonmv: { id: 21, label: '멜론뮤비' },
   kakaomusic: { id: 22, label: '카카오뮤직' },
+  youtube: { id: 24, label: '유튜브' },
 };
 
 const MUSIC_CATEGORY_OPTIONS = [
@@ -224,6 +225,7 @@ const MUSIC_PLATFORMS_BY_CATEGORY: Record<
     MUSIC_PLATFORM_OPTIONS.spotify,
     MUSIC_PLATFORM_OPTIONS.applemusic,
     MUSIC_PLATFORM_OPTIONS.youtubemusic,
+    MUSIC_PLATFORM_OPTIONS.youtube,
   ],
   DOWNLOAD: [
     MUSIC_PLATFORM_OPTIONS.melon,
@@ -413,10 +415,15 @@ function ShortcutButtonSetting({
 }) {
   const initialUrls = Array.isArray(platformUrl)
     ? platformUrl
-    : platformUrl ? [platformUrl] : [];
+    : platformUrl
+      ? [platformUrl]
+      : [];
   const [enabled, setEnabled] = useState(initialUrls.length > 0);
   const [links, setLinks] = useState(() =>
-    (initialUrls.length ? initialUrls : ['']).map((url, index) => ({ id: index, url })),
+    (initialUrls.length ? initialUrls : ['']).map((url, index) => ({
+      id: index,
+      url,
+    })),
   );
   const nextId = useRef(links.length);
 
@@ -430,7 +437,8 @@ function ShortcutButtonSetting({
       {enabled && (
         <>
           <p className="text-body-12 text-secondary-300">
-            버튼명은 ‘투표 하러가기’로 표시됩니다. 노출할 순서대로 링크를 입력해주세요.
+            버튼명은 ‘투표 하러가기’로 표시됩니다. 노출할 순서대로 링크를
+            입력해주세요.
           </p>
           {links.map((link, index) => (
             <div key={link.id} className="flex items-end gap-[8px]">
@@ -442,26 +450,41 @@ function ShortcutButtonSetting({
                   required
                   placeholder="https://"
                   value={link.url}
-                  onChange={(event) => setLinks((items) => items.map((item) =>
-                    item.id === link.id ? { ...item, url: event.target.value } : item,
-                  ))}
+                  onChange={(event) =>
+                    setLinks((items) =>
+                      items.map((item) =>
+                        item.id === link.id
+                          ? { ...item, url: event.target.value }
+                          : item,
+                      ),
+                    )
+                  }
                 />
               </div>
               {links.length > 1 && (
-                <button type="button" aria-label={`${index + 1}번 링크 삭제`}
+                <button
+                  type="button"
+                  aria-label={`${index + 1}번 링크 삭제`}
                   className="flex h-[44px] w-[44px] shrink-0 items-center justify-center rounded-[10px] border border-secondary-800 text-[20px] text-secondary-400"
-                  onClick={() => setLinks((items) => items.filter((item) => item.id !== link.id))}>
+                  onClick={() =>
+                    setLinks((items) =>
+                      items.filter((item) => item.id !== link.id),
+                    )
+                  }
+                >
                   −
                 </button>
               )}
             </div>
           ))}
-          <button type="button"
+          <button
+            type="button"
             className="flex w-full items-center justify-center rounded-[10px] border border-secondary-800 py-[11px] text-body-13 font-bold text-secondary-300"
             onClick={() => {
               const id = nextId.current++;
               setLinks((items) => [...items, { id, url: '' }]);
-            }}>
+            }}
+          >
             + 링크 추가
           </button>
         </>
@@ -903,9 +926,7 @@ export default function AdminDetailForm({
                 voteImageItemsRef.current = items;
               }}
             />
-            <ShortcutButtonSetting
-              platformUrl={voteInitial?.platformUrl}
-            />
+            <ShortcutButtonSetting platformUrl={voteInitial?.platformUrl} />
             <UrgentSetting
               menuUrgent={voteInitial?.menuUrgent}
               urgentContent={voteInitial?.urgentContent}
