@@ -10,10 +10,10 @@ interface TEMP_TYPE {
 
 const DOWNLOAD_GUIDES: TEMP_TYPE[] = [
   { id: '0', platform: 'melon', link: '/music/guide/download/melon' },
-  { id: '1', platform: 'melon', link: '/music/guide/download/melonmv' },
+  { id: '1', platform: 'melonmv', link: '/music/guide/download/melonmv' },
   { id: '2', platform: 'genie', link: '/music/guide/download/genie' },
   { id: '3', platform: 'bugs', link: '/music/guide/download/bugs' },
-  { id: '4', platform: 'bugs', link: '/music/guide/download/bugsmv' },
+  { id: '4', platform: 'bugsmv', link: '/music/guide/download/bugsmv' },
   {
     id: '5',
     platform: 'kakaomusic',

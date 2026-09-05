@@ -16,18 +16,18 @@ export const VOTE_PLATFORM_ICON = {
 export type VotePlatformCode = keyof typeof VOTE_PLATFORM_ICON;
 
 export const VOTE_PLATFORM_LABEL: Record<VotePlatformCode, string> = {
-  bigc: '빅크',
+  bigc: '빅크 (Bigc)',
   bugs: '벅스 (Bugs)',
   choiaedol: '최애돌',
   higher: '하이어 (Higher)',
-  idolchamp: '아이돌챔프',
-  coogoong: '쿠궁',
-  linc: '링크',
-  melon: '멜론',
+  idolchamp: '아이돌챔프 (IdolChamp)',
+  coogoong: '쿠궁 (Coogoong)',
+  linc: '링크 (Linc)',
+  melon: '멜론 (Melon)',
   mnetplus: '엠넷플러스 (Mnet plus)',
-  mubeat: '뮤빗',
-  muniverse: '뮤니버스',
-  podoal: '포도알',
+  mubeat: '뮤빗 (Mubeat)',
+  muniverse: '뮤니버스 (Muniverse)',
+  podoal: '포도알 (Podoal)',
 };
 
 const VOTE_PLATFORM_CODE_ALIAS: Record<string, VotePlatformCode> = {

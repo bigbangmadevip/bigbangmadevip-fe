@@ -203,6 +203,7 @@ const MUSIC_PLATFORM_OPTIONS = {
   melonmv: { id: 21, label: '멜론뮤비' },
   kakaomusic: { id: 22, label: '카카오뮤직' },
   youtube: { id: 24, label: '유튜브' },
+  bugsmv: { id: 25, label: '벅스뮤비' },
 };
 
 const MUSIC_CATEGORY_OPTIONS = [
@@ -232,6 +233,7 @@ const MUSIC_PLATFORMS_BY_CATEGORY: Record<
     MUSIC_PLATFORM_OPTIONS.genie,
     MUSIC_PLATFORM_OPTIONS.bugs,
     MUSIC_PLATFORM_OPTIONS.melonmv,
+    MUSIC_PLATFORM_OPTIONS.bugsmv,
     MUSIC_PLATFORM_OPTIONS.kakaomusic,
   ],
   ETC: [

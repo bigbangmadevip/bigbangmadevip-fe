@@ -8,8 +8,9 @@ export const PLATFORM_LABEL = {
   spotify: '스포티파이 (Spotify)',
   applemusic: '애플뮤직 (Apple Music)',
   youtubemusic: '유튜브 뮤직 (YouTube Music)',
-  musicvideo: '유튜브 뮤직비디오 (YouTube Music Video)',
-  melonmv: '멜론 뮤비 (Melon MV)',
+  youtube: '유튜브 뮤비 (YouTube MV)',
+  melonmv: '멜론 (Melon)',
+  bugsmv: '벅스 (Bugs)',
 } as const;
 
 export const PLATFORM_KOREAN_LABEL = {
@@ -23,6 +24,7 @@ export const PLATFORM_KOREAN_LABEL = {
   applemusic: '애플뮤직',
   youtubemusic: '유튜브 뮤직',
   melonmv: '멜론 뮤비',
+  bugsmv: '벅스 뮤비',
 } as const;
 
 export type PlatformCode = keyof typeof PLATFORM_LABEL;

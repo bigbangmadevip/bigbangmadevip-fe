@@ -57,6 +57,13 @@ const PLATFORM_ALIASES: Partial<Record<Platform, string[]>> = {
     '카카오뮤직(kakao music)',
   ],
   youtube: ['youtube', '유튜브'],
+  melonmv: ['melonmv', 'Melon MV'],
+  bugsmv: ['bugsmv', 'Bugs MV', '벅스뮤비', '벅스 뮤비'],
+};
+
+const GUIDE_ICON_PLATFORM: Partial<Record<Platform, Platform>> = {
+  melonmv: 'melon',
+  bugsmv: 'bugs',
 };
 
 function normalizePlatformName(platformName: string) {
@@ -93,13 +100,15 @@ export function getMusicGuideLinks(
       return guides;
     }
 
+    const iconPlatform = GUIDE_ICON_PLATFORM[platform] ?? platform;
+
     guides.push({
       id: `${guideCategory}-${platform}`,
       platform,
       title: PLATFORM_LABEL[platform],
       description: GUIDE_CATEGORY_LABEL[category],
       href: `/music/guide/${guideCategory}/${platform}`,
-      iconSrc: `/images/musicguide/filledlogo/${platform}.png`,
+      iconSrc: `/images/musicguide/filledlogo/${iconPlatform}.png`,
     });
 
     return guides;

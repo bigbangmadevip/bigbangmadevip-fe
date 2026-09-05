@@ -13,6 +13,9 @@ const MusicGuideLinkButton = ({
   platform,
   link,
 }: MusicGuideLnkButtonProps) => {
+  const iconPlatform =
+    platform === 'melonmv' ? 'melon' : platform === 'bugsmv' ? 'bugs' : platform;
+
   return (
     <>
       <Link
@@ -22,7 +25,7 @@ const MusicGuideLinkButton = ({
         <div className="flex items-center gap-[12px]">
           <Image
             className="rounded-full"
-            src={`/images/musicguide/filledlogo/${platform}.png`}
+            src={`/images/musicguide/filledlogo/${iconPlatform}.png`}
             alt={`${platform}Logo`}
             width={40}
             height={40}
