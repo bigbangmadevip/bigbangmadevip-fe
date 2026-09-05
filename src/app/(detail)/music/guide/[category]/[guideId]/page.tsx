@@ -23,7 +23,7 @@ type StreamingGuidePlatform = Extract<
 
 type DownloadGuidePlatform = Extract<
   Platform,
-  'melon' | 'genie' | 'bugs' | 'kakaomusic' | 'vcoloring'
+  'melon' | 'genie' | 'bugs' | 'kakaomusic' | 'vcoloring' | 'melonmv' | 'bugsmv'
 >;
 
 type GenieShareGuideId = 'genieshare';
@@ -32,6 +32,8 @@ type ReplayGuideId = 'youtubemv';
 type YoutubeMvGuideId = 'youtubemv';
 
 type RadioApplyGuideId = 'radioapply';
+
+type CreateIdGuideId = 'genie';
 
 export type ImageSize = {
   src: string;
@@ -45,6 +47,11 @@ const DOWNLOAD_GUIDE_IMAGES: Record<DownloadGuidePlatform, ImageSize> = {
     width: 2000,
     height: 7880,
   },
+  melonmv: {
+    src: '/images/musicguide/download/melonmv.png',
+    width: 750,
+    height: 3900,
+  },
   genie: {
     src: '/images/musicguide/download/genie.jpg',
     width: 2000,
@@ -54,6 +61,11 @@ const DOWNLOAD_GUIDE_IMAGES: Record<DownloadGuidePlatform, ImageSize> = {
     src: '/images/musicguide/download/bugs.jpg',
     width: 2000,
     height: 7348,
+  },
+  bugsmv: {
+    src: '/images/musicguide/download/bugsmv.png',
+    width: 750,
+    height: 3570,
   },
   kakaomusic: {
     src: '/images/musicguide/download/kakaomusic.jpg',
@@ -142,6 +154,14 @@ const RADIOAPPLY_GUIDE_IMAGES: Record<RadioApplyGuideId, ImageSize> = {
   },
 };
 
+const CREATEID__GUIDE_IMAGES: Record<CreateIdGuideId, ImageSize> = {
+  genie: {
+    src: '/images/musicguide/createid/genie.png',
+    width: 750,
+    height: 2060,
+  },
+};
+
 function isStreamingGuidePlatform(
   value: string,
 ): value is StreamingGuidePlatform {
@@ -168,6 +188,10 @@ function isYoutubeMvGuideId(value: string): value is YoutubeMvGuideId {
 
 function isRadioApplyGuideId(value: string): value is RadioApplyGuideId {
   return value in RADIOAPPLY_GUIDE_IMAGES;
+}
+
+function isCreateIdGuideId(value: string): value is CreateIdGuideId {
+  return value in CREATEID__GUIDE_IMAGES;
 }
 
 function getGuideDetail(category: string, guideId: string) {
@@ -210,6 +234,13 @@ function getGuideDetail(category: string, guideId: string) {
     return {
       image: RADIOAPPLY_GUIDE_IMAGES[guideId],
       title: '빅뱅 라디오 신청 가이드',
+    };
+  }
+
+  if (category === 'createid' && isCreateIdGuideId(guideId)) {
+    return {
+      image: CREATEID__GUIDE_IMAGES[guideId],
+      title: '아이디 생성 가이드',
     };
   }
 

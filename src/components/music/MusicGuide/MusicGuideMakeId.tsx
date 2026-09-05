@@ -8,8 +8,8 @@ interface TEMP_TYPE {
 }
 
 const STREAMING_NATIONAL_GUIDE_MOCK: TEMP_TYPE[] = [
-  { id: '1', platform: 'genie', link: '' },
-  { id: '2', platform: 'bugs', link: '' },
+  { id: '0', platform: 'genie', link: '/music/guide/createid/genie' },
+  // { id: '2', platform: 'bugs', link: '/music/guide/createid/bugs' },
 ];
 
 const MusicGuideMakeId = () => {

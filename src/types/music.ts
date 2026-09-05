@@ -13,6 +13,7 @@ export type Platform =
   | 'kakaomusic'
   | 'youtube'
   | 'melonmv'
+  | 'bugsmv'
   | 'vcoloring'
   | 'etc';
 
@@ -31,6 +32,7 @@ export const PLATFORM_LABEL = {
   kakaomusic: '카카오뮤직',
   youtube: '유튜브 뮤비',
   melonmv: '멜론 뮤비',
+  bugsmv: '벅스 뮤비',
   vcoloring: 'V컬러링',
   etc: '빅뱅',
 } satisfies Record<Platform, string>;
